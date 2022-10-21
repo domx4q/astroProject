@@ -20,3 +20,9 @@ if (module.hot) { // todo: fix webstorm pseudo errors
         if (status === "prepare") prepareHotReload();
     });
 }
+
+window.onbeforeunload = function () {
+    window.scrollTo(0, 0);
+    window.location.reload(true);
+    return false;
+}
