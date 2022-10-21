@@ -18,8 +18,10 @@
 
       @load="updatePlanet">
     <div class="controls">
-      <input type="file" @change="onFileChange" id="textureInput" accept="image/*"/>
-    </div>
+      <div id="buttons">
+        <input type="file" @change="onFileChange" id="textureInput" accept="image/*" class="button"/>
+        <button @click="applyRandomTexture" class="button" id="randomTextureButton">Zufällige Textur</button>
+      </div></div>
   </model-viewer>
 </template>
 
@@ -61,17 +63,19 @@ export default {
       material.pbrMetallicRoughness['baseColorTexture'].setTexture(texture)
 
     },
-    updatePlanet () {
+    applyRandomTexture () {
+      this.createAndApplyTexture(this.randomTexture())
+    }, updatePlanet () {
       this.planet = document.querySelector('model-viewer#planet')
       this.loaded = true
 
       this.planet.addEventListener('keyup', () => {
         // console.log('click')
         // console.log(this.planet.model.materials[0])
-        this.createAndApplyTexture(this.randomTexture())
+        this.applyRandomTexture()
       })
 
-      this.createAndApplyTexture(this.randomTexture())
+      this.applyRandomTexture();
     },
     onFileChange (e) {
       const file = e.target.files[0]
@@ -82,7 +86,7 @@ export default {
 </script>
 <!--create the style-->
 <style scoped>
-  #textureInput {
+  .button {
     border-radius: 10px;
     padding: 10px;
     margin: 10px;
@@ -103,10 +107,24 @@ export default {
     outline: none;
 
   }
-  #textureInput:hover {
+  .button:hover {
     background-color: hsl(197, 45%, 49%);
     color: #fff;
   }
   input[type='file'] { font-size: 0; }
   ::file-selector-button { font-size: initial; }
+
+  #buttons{
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+  #randomTextureButton {
+    font-size: 1.05em;
+  }
 </style>
