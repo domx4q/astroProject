@@ -1,40 +1,26 @@
 <template>
-<!--  <model-viewer-->
-<!--      :src="modelSrc"-->
-<!--      alt="A 3D model of an astronaut"-->
-<!--      ar-->
-<!--      ar-modes="webxr scene-viewer quick-look"-->
-<!--      touch-action="pan-x"-->
-<!--      camera-controls-->
-<!--      auto-rotate-->
-<!--      shadow-intensity="1"-->
-<!--      exposure="1"-->
-<!--      environment-image="neutral"-->
-<!--      background-color="transparent"-->
-<!--      poster="https://modelviewer.dev/shared-assets/models/Astronaut.png"-->
-<!--      ios-src="https://modelviewer.dev/shared-assets/models/Astronaut.usdz"-->
+  <model-viewer
+      :src="modelSrc"
+      alt="A 3D model of an astronaut"
+      ar
+      touch-action="pan-y pinch-zoom"
+      camera-controls
+      auto-rotate
+      shadow-intensity="1"
+      exposure="1"
+      environment-image="neutral"
+      background-color="transparent"
 
-<!--      id="planet"-->
-<!--      style="width: 100%; height: 100vh"-->
+      disable-pan
 
-<!--      @load="updatePlanet">-->
-<!--    <div class="controls">-->
-<!--      <input type="file" @change="onFileChange"/>-->
-<!--    </div>-->
-<!--    <button slot="ar-button" id="ar-button"></button>-->
-<!--  </model-viewer>-->
-  <model-viewer src="models/astronaut.glb" ar ar-modes="webxr scene-viewer quick-look" camera-controls poster="poster.webp" shadow-intensity="1">
-    <div class="progress-bar hide" slot="progress-bar">
-      <div class="update-bar"></div>
-    </div>
-    <button slot="ar-button" id="ar-button">
-      View in your space
-    </button>
-    <div id="ar-prompt">
-      <img src="https://modelviewer.dev/shared-assets/icons/hand.png">
+      id="planet"
+      style="width: 100%; height: 100vh"
+
+      @load="updatePlanet">
+    <div class="controls">
+      <input type="file" @change="onFileChange" id="textureInput" accept="image/*"/>
     </div>
   </model-viewer>
-
 </template>
 
 <script>
@@ -94,3 +80,33 @@ export default {
   }
 }
 </script>
+<!--create the style-->
+<style scoped>
+  #textureInput {
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px;
+    background-color: #fff;
+    color: hsl(197, 45%, 49%);
+    border: none;
+    outline: none;
+
+    transition: background-color 0.2s linear, color 0.2s linear;
+
+    box-shadow: 0 0 0 5px hsl(197, 45%, 49%);
+  }
+  #textureInput::file-selector-button {
+    background-color: inherit;
+    color: inherit;
+    border: none;
+    border-radius: 4px;
+    outline: none;
+
+  }
+  #textureInput:hover {
+    background-color: hsl(197, 45%, 49%);
+    color: #fff;
+  }
+  input[type='file'] { font-size: 0; }
+  ::file-selector-button { font-size: initial; }
+</style>
