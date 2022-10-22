@@ -2,7 +2,7 @@ const {defineConfig} = require('@vue/cli-service')
 module.exports = defineConfig({
     transpileDependencies: true,
     lintOnSave: false,
-    devServer: {port: 8080, open: true, hot: true, overlay: {warnings: true, errors: true},},
+    devServer: {port: 8080, open: true, hot: true,},
     pwa: {
         name: 'AstroProjekt',
         themeColor: '#0d245b',

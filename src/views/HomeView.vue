@@ -16,7 +16,8 @@
       id="planet"
       style="width: 100%; height: 100vh"
 
-      @load="updatePlanet">
+      @load="updatePlanet"
+      @keyup.space="applyRandomTexture">
     <div class="controls">
       <div id="buttons">
         <input type="file" @change="onFileChange" id="textureInput" accept="image/*" class="button"/>
@@ -36,16 +37,22 @@ export default {
       modelSrc: 'models/sphere.glb',
       planet: null,
       loaded: false,
+      currentTexture: "/textures/8k_jupiter.jpg",
 
       textures: [
-          "/textures/8k_mercury.jpg",
-          "/textures/8k_venus_surface.jpg",
-          "/textures/4k_venus_atmosphere.jpg",
-          "/textures/8k_mars.jpg",
-          "/textures/8k_jupiter.jpg",
-          "/textures/8k_saturn.jpg",
-          "/textures/2k_uranus.jpg",
-          "/textures/2k_neptune.jpg",
+        "/textures/2k_neptune.jpg",
+        "/textures/2k_uranus.jpg",
+        "/textures/4k_venus_atmosphere.jpg",
+        // "/textures/8k_earth_clouds.jpg",
+        // "/textures/8k_earth_daymap.jpg",
+        // "/textures/8k_earth_nightmap.jpg",
+        "/textures/8k_jupiter.jpg",
+        "/textures/8k_mars.jpg",
+        "/textures/8k_mercury.jpg",
+        "/textures/8k_moon.jpg",
+        "/textures/8k_saturn.jpg",
+        // "/textures/8k_sun.jpg",
+        "/textures/8k_venus_surface.jpg",
       ]
     }
   },
@@ -53,7 +60,12 @@ export default {
   mounted () {},
   methods: {
     randomTexture() {
-      return this.textures[Math.floor(Math.random() * this.textures.length)]
+      let curRandom = this.textures[Math.floor(Math.random() * this.textures.length)]
+      while (curRandom === this.currentTexture) {
+        curRandom = this.textures[Math.floor(Math.random() * this.textures.length)]
+      }
+      this.currentTexture = curRandom
+      return curRandom
     },
 
     async createAndApplyTexture (image) {
@@ -69,13 +81,7 @@ export default {
       this.planet = document.querySelector('model-viewer#planet')
       this.loaded = true
 
-      this.planet.addEventListener('keyup', () => {
-        // console.log('click')
-        // console.log(this.planet.model.materials[0])
-        this.applyRandomTexture()
-      })
-
-      this.applyRandomTexture();
+      // this.applyRandomTexture();
     },
     onFileChange (e) {
       const file = e.target.files[0]

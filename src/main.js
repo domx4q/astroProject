@@ -21,8 +21,8 @@ if (module.hot) { // todo: fix webstorm pseudo errors
     });
 }
 
-window.onbeforeunload = function () {
-    window.scrollTo(0, 0);
-    window.location.reload(true);
-    return false;
-}
+// window.onbeforeunload = function () {
+//     window.scrollTo(0, 0);
+//     window.location.reload(true);
+//     return true;
+// }
