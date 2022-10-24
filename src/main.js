@@ -4,7 +4,12 @@ import './registerServiceWorker'
 import router from './router'
 import store from './store'
 
-createApp(App).use(store).use(router).mount('#app')
+import { globals } from "@/default.js";
+
+const app = createApp(App);
+app.use(store);
+app.use(router);
+app.config.globalProperties.$globals = globals;
 
 function prepareHotReload() {
     console.clear();
@@ -21,8 +26,4 @@ if (module.hot) { // todo: fix webstorm pseudo errors
     });
 }
 
-// window.onbeforeunload = function () {
-//     window.scrollTo(0, 0);
-//     window.location.reload(true);
-//     return true;
-// }
+app.mount('#app');
