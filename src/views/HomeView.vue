@@ -23,14 +23,14 @@
       @load="planetLoaded">
     <div class="controls">
       <div id="buttons">
-        <input type="file" @change="onFileChange" id="textureInput" :accept="allowedFileTypes" class="button"/>
+        <input type="file" @change="onFileChange" id="textureInput" :accept="allowedFileTypes" class="button" :disabled="!loaded"/>
         <input type="checkbox" v-model="auto_rotate" id="auto_rotate">
         <label for="auto_rotate">Auto-Rotate</label>
       </div>
       <ul class="planets">
         <template v-for="planet in planets" :key="planet.uuid">
           <li class="planet-selector" v-if="planet.enabled" @click="changePlanet(planet)"
-              :class="{active: planet.uuid === currentPlanet.uuid}">
+              :class="{active: planet.uuid === currentPlanet.uuid, disabled: !loaded}">
             <span>{{ planet.name }}</span>
           </li>
         </template>
@@ -53,7 +53,7 @@ export default {
       planet: null,
       planets: null,
       loaded: false,
-      currentTexture: "/textures/8k_jupiter.jpg",
+      currentTexture: null,
       allowedFileTypes: ["image/png", "image/jpeg", "image/jpg"],
 
       auto_rotate: true,
@@ -91,9 +91,11 @@ export default {
     },
     onFileChange(e) {
       const file = e.target.files[0]
+      this.currentPlanet = this.findPlanet("empty")
       this.createAndApplyTexture(URL.createObjectURL(file))
     },
-    changePlanet(planet) {
+    changePlanet(planet, force = false) {
+      if (!this.loaded && !force) return;
       this.currentPlanet = planet
       this.currentTexture = `/textures/${planet.texture}`
       this.createAndApplyTexture(`/textures/${planet.texture}`)
@@ -112,7 +114,7 @@ export default {
     },
     loaded: function (newVal, oldVal) {
       if (newVal) {
-        this.changePlanet(this.findPlanet("jupiter"))
+        this.changePlanet(this.findPlanet("jupiter"), true)
       }
     }
   }
@@ -120,18 +122,23 @@ export default {
 </script>
 <!--create the style-->
 <style scoped>
+:root {
+  --accent-color: hsl(197, 45%, 49%);
+  --bg-color: #fff;
+}
+
 .button {
   border-radius: 10px;
   padding: 10px;
   margin: 10px;
-  background-color: #fff;
-  color: hsl(197, 45%, 49%);
+  background-color: var(--bg-color);
+  color: var(--accent-color);
   border: none;
   outline: none;
 
   transition: background-color 0.2s linear, color 0.2s linear;
 
-  box-shadow: 0 0 0 5px hsl(197, 45%, 49%);
+  box-shadow: 0 0 0 5px var(--accent-color);
 }
 
 #textureInput::file-selector-button {
@@ -144,8 +151,8 @@ export default {
 }
 
 .button:hover {
-  background-color: hsl(197, 45%, 49%);
-  color: #fff;
+  background-color: var(--accent-color);
+  color: var(--bg-color);
 }
 input[type='file'] {
   font-size: 0;
@@ -172,11 +179,20 @@ input[type='file'] {
   z-index: 100;
 }
 li.planet-selector {
-  background-color: #fff;
-  color: hsl(197, 45%, 49%);
+  background-color: var(--bg-color);
+  color: var(--accent-color);
 }
 li.planet-selector.active {
-  background-color: hsl(197, 45%, 49%);
-  color: #fff;
+  background-color: var(--accent-color);
+  color: var(--bg-color);
+}
+li.planet-selector.disabled {
+  color: grey;
+  background-color: var(--bg-color);
+}
+.disabled, :disabled {
+  cursor: not-allowed !important;
+  touch-action: none;
+  -ms-touch-action: none;
 }
 </style>
