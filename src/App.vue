@@ -22,6 +22,12 @@
   overflow: hidden;
   /*background-color: hsl(226, 48%, 17%);*/
 }
+html {
+  height: 100%; /*normally i would prefer 100vh, but then on mobile when the address bar is visible it will cut off*/
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
 
 
 /*nav {*/

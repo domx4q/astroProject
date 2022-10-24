@@ -18,13 +18,13 @@
       disable-pan
 
       id="planet"
-      style="width: 100%; height: 100vh"
+      style="width: 100%; height: 100%"
 
       @load="planetLoaded">
     <div class="controls">
       <div id="buttons">
         <input type="file" @change="onFileChange" id="textureInput" :accept="allowedFileTypes" class="button" :disabled="!loaded"/>
-        <input type="checkbox" v-model="auto_rotate" id="auto_rotate">
+        <input type="checkbox" v-model="auto_rotate" id="auto_rotate" :disabled="!loaded">
         <label for="auto_rotate">Auto-Rotate</label>
       </div>
       <ul class="planets">
@@ -55,6 +55,9 @@ export default {
       loaded: false,
       currentTexture: null,
       allowedFileTypes: ["image/png", "image/jpeg", "image/jpg"],
+
+      accent_color: "hsl(197, 45%, 49%)",
+      bg_color: "#fff",
 
       auto_rotate: true,
       currentPlanet: planets.empty
@@ -120,25 +123,19 @@ export default {
   }
 }
 </script>
-<!--create the style-->
 <style scoped>
-:root {
-  --accent-color: hsl(197, 45%, 49%);
-  --bg-color: #fff;
-}
-
 .button {
   border-radius: 10px;
   padding: 10px;
   margin: 10px;
-  background-color: var(--bg-color);
-  color: var(--accent-color);
+  background-color: v-bind(bg_color);
+  color: v-bind(accent_color);
   border: none;
   outline: none;
 
   transition: background-color 0.2s linear, color 0.2s linear;
 
-  box-shadow: 0 0 0 5px hsl(197, 45%, 49%);
+  box-shadow: 0 0 0 5px v-bind(accent_color);
 }
 
 #textureInput::file-selector-button {
@@ -151,8 +148,8 @@ export default {
 }
 
 .button:hover {
-  background-color: var(--accent-color);
-  color: var(--bg-color);
+  background-color: v-bind(accent_color);
+  color: v-bind(bg_color);
 }
 input[type='file'] {
   font-size: 0;
@@ -179,16 +176,16 @@ input[type='file'] {
   z-index: 100;
 }
 li.planet-selector {
-  background-color: var(--bg-color);
-  color: var(--accent-color);
+  background-color: v-bind(bg_color);
+  color: v-bind(accent_color);
 }
 li.planet-selector.active {
-  background-color: var(--accent-color);
-  color: var(--bg-color);
+  background-color: v-bind(accent_color);
+  color: v-bind(bg_color);
 }
 li.planet-selector.disabled {
   color: grey;
-  background-color: var(--bg-color);
+  background-color: v-bind(bg_color);
 }
 .disabled, :disabled {
   cursor: not-allowed !important;
