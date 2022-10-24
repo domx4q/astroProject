@@ -138,7 +138,7 @@ export default {
 
   transition: background-color 0.2s linear, color 0.2s linear;
 
-  box-shadow: 0 0 0 5px var(--accent-color);
+  box-shadow: 0 0 0 5px hsl(197, 45%, 49%);
 }
 
 #textureInput::file-selector-button {
