@@ -2,73 +2,85 @@
   "neptune": {
     "name": "Neptun",
     "texture": "2k_neptune.jpg",
+    "resolution": 2,
     "orderPriority": 1,
     "enabled": true
   },
   "uranus": {
     "name": "Uranus",
     "texture": "2k_uranus.jpg",
+    "resolution": 2,
     "orderPriority": 1,
     "enabled": true
   },
   "venus_atm": {
     "name": "Venus Atmosphere",
     "texture": "4k_venus_atmosphere.jpg",
+    "resolution": 4,
     "orderPriority": 3,
     "enabled": true
   },
   "venus_grd": {
     "name": "Venus Oberfläche",
     "texture": "8k_venus_surface.jpg",
+    "resolution": 8,
     "orderPriority": 3,
     "enabled": true
   },
   "earth": {
     "name": "Erde",
     "texture": "8k_earth_daymap.jpg",
+    "resolution": 8,
     "orderPriority": 12,
     "enabled": false
   },
   "jupiter": {
     "name": "Jupiter",
     "texture": "8k_jupiter.jpg",
+    "resolution": 4,
     "orderPriority": 7,
     "enabled": true
   },
   "mars": {
     "name": "Mars",
     "texture": "8k_mars.jpg",
+    "resolution": 8,
     "orderPriority": 6,
     "enabled": true
   },
   "mercury": {
     "name": "Merkur",
     "texture": "8k_mercury.jpg",
+    "resolution": 8,
     "orderPriority": 2,
     "enabled": true
   },
   "moon": {
     "name": "Mond",
     "texture": "8k_moon.jpg",
+    "resolution": 8,
     "orderPriority": 13,
     "enabled": true
   },
   "saturn": {
     "name": "Saturn",
     "texture": "8k_saturn.jpg",
+    "resolution": 4,
     "orderPriority": 5,
     "enabled": true
   },
   "sun": {
     "name": "Sonne",
     "texture": "8k_sun.jpg",
+    "resolution": 4,
     "orderPriority": 1,
     "enabled": false
   },
   "empty": {
     "name": "Leer",
-    "texture": "empty.png",
+    "texture": "dog.png",
+    "resolution": 1,
     "orderPriority": -1,
-    "enabled": false
+    "enabled": true
   }
 }
