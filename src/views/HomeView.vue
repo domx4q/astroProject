@@ -20,7 +20,7 @@
       id="planet"
       style="width: 100%; height: 100%"
 
-      @keyup.space="test"
+      @keyup.enter="test"
       @click.ctrl="addHotspot"
       v-on:camera-change="updateZoom"
       @load="planetLoaded">
@@ -44,7 +44,10 @@
     <template v-for="hotspot in hotspots" :key="hotspot.uuid">
       <button class="hotspot" :slot="'hotspot-' + hotspot.type + '-' + hotspot.uuid"
               :data-position="makeHotspotString(hotspot.position.x, hotspot.position.y, hotspot.position.z)"
-              :data-normal="makeHotspotString(hotspot.normal.x, hotspot.normal.y, hotspot.normal.z)">{{ hotspot.name }}</button>
+              :data-normal="makeHotspotString(hotspot.normal.x, hotspot.normal.y, hotspot.normal.z)"
+              data-visibility-attribute="visible">
+        <span class="hotspot-text">{{ hotspot.name }}</span>
+      </button>
     </template>
     <!-- endregion hotspots-->
   </model-viewer>
@@ -69,7 +72,7 @@ export default {
       lastFieldOfView: 0,
       allowedFileTypes: ["image/png", "image/jpeg", "image/jpg", "image/webp"],
 
-      hotspots: [],
+      hotspots: [{"position":{"x":-0.5048961828394458,"y":-0.3059022371704292,"z":-0.7913548894067033},"normal":{"x":-0.5082978851214086,"y":-0.3117534775964816,"z":-0.8027720904388763},"name":"Hotspot 767","uuid":"a9ba3141-b35c-45fc-b434-8d7e4ba631c0"},{"position":{"x":-0.532006362490459,"y":-0.5519292728896721,"z":-0.6248767382994962},"normal":{"x":-0.5528869067062027,"y":-0.5323925703080227,"z":-0.6409947109560763},"name":"Hotspot 848","uuid":"3ad46b0f-ef35-4e3a-9082-14031a395ab2"},{"position":{"x":-0.8620799833468453,"y":-0.34124131731265805,"z":-0.3401830265936292},"normal":{"x":-0.8712602180422704,"y":-0.35774966360012994,"z":-0.3360369185832555},"name":"Hotspot 361","uuid":"5acae835-f90a-4db9-98bd-bf62b8e6f5c6"},{"position":{"x":-0.25114431407941895,"y":-0.49673001031156017,"z":-0.8168877753274382},"normal":{"x":-0.27335165646221005,"y":-0.49035763059948717,"z":-0.8275435130687828},"name":"Hotspot 264","uuid":"38b9799a-6138-456c-a0d7-862e0c0b54dd"},{"position":{"x":-0.36556099877139814,"y":0.011466709118559404,"z":-0.9165008074299466},"normal":{"x":-0.359747526206349,"y":0.024421363174281827,"z":-0.9327300329726294},"name":"Hotspot 562","uuid":"eb69fd91-0614-4c8f-9690-16ceea0f82c5"},{"position":{"x":0.5579087926361967,"y":0.819177937070048,"z":0.016034766801493128},"normal":{"x":0.5782590059662104,"y":0.815729241813197,"z":0.014224136874942759},"name":"Hotspot 503","uuid":"1382d699-7499-43a4-acbb-12c2b775021b"},{"position":{"x":0.6724351908980171,"y":0.5509489491979003,"z":-0.4715118693870646},"normal":{"x":0.6920605260190628,"y":0.5323931046669481,"z":-0.4874523673440374},"name":"Hotspot 269","uuid":"bb551b4f-13ff-47f4-91d5-8683de0634fe"},{"position":{"x":0.7684649266127768,"y":0.5307060834629622,"z":0.3244165120540841},"normal":{"x":0.7738615714107577,"y":0.5323916052487003,"z":0.34307061511354314},"name":"Hotspot 187","uuid":"43d6dad8-4135-4a19-87d8-4f510fef3c69"},{"position":{"x":-0.00811388222680387,"y":0.8024571847954647,"z":0.5816908615384468},"normal":{"x":-0.0142193117926155,"y":0.8157304227611749,"z":0.5782574587102349},"name":"Hotspot 305","uuid":"97ad8534-1d88-401d-a1a2-7004bb236d56"},{"position":{"x":-0.39493947153266407,"y":0.36772841193893724,"z":0.8273696623910132},"normal":{"x":-0.4198816892523404,"y":0.35775138041716303,"z":0.8340943093201245},"name":"Hotspot 959","uuid":"ba5fa57a-0344-4188-b482-474c569da613"}],
 
       accent_color: "hsl(197, 45%, 49%)",
       bg_color: "#fff",
@@ -141,8 +144,9 @@ export default {
         name: "Hotspot " + Math.floor(Math.random() * 1000),
         uuid: this.$globals.genUUID()
       });
-      this.planet.requestFrame();
-
+    },
+    test() {
+      console.log(JSON.stringify(this.hotspots))
     }
   },
   watch: {
@@ -265,27 +269,25 @@ li.planet-selector.disabled {
 }
 
 .hotspot {
+  --hotspot-color: red;
+
   display: block;
   width: 20px;
   height: 20px;
   border-radius: 10px;
-  border: none;
-  background-color: red;
+  background-color: var(--hotspot-color);
   box-sizing: border-box;
   pointer-events: none;
+  border: none;
+
+  transition: background-color .2s linear, border .1s linear;
+}
+.hotspot:not([data-visible]) { /*todo apsprache mit Louis, wie dke verschiedenen Hotspots dargestellt werden*/
+  background-color: transparent;
+  border: 3px solid var(--hotspot-color);
 }
 /* This keeps child nodes hidden while the element loads */
 :not(:defined) > * {
   display: none;
-}
-.sliders {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 100;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
 }
 </style>
