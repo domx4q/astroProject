@@ -44,9 +44,9 @@
         <h2>Hotspot Einstellungen</h2>
         <form action="#" @submit.prevent="updateLastHotspot" class="flex-column">
           <input type="text" v-model="lastHotspot.name" placeholder="Name" :disabled="!loaded" id="hotspot_name_input" aria-autocomplete="none" autocomplete="off" spellcheck="true"
-                 @focus="$event.target.select()" @change="updateLastHotspot" @keyup="updateLastHotspot">
+                 @focus="$event.target.select();hotspot_settings_focused=true" @change="updateLastHotspot" @keyup="updateLastHotspot" @blur="hotspot_settings_focused=false">
           <input type="text" v-model="lastHotspot.description" placeholder="Beschreibung" :disabled="!loaded" aria-autocomplete="none" autocomplete="off" spellcheck="true"
-                 @change="updateLastHotspot" @keyup="updateLastHotspot">
+                 @focus="hotspot_settings_focused=true" @change="updateLastHotspot" @keyup="updateLastHotspot" @blur="hotspot_settings_focused=false">
           <select v-model="lastHotspot.type" :disabled="!loaded" @change="updateLastHotspot">
 <!--            <option selected value="default">Standart</option>-->
             <option value="location">Ort</option>
@@ -95,7 +95,8 @@ export default {
       defaultOrbitSensi: 0.8,
       currentTexture: null,
       lastFieldOfView: 0,
-      allowedFileTypes: ["image/png", "image/jpeg", "image/jpg", "image/webp"],
+      allowedFileTypes: ["image/png", "image/jpeg", "image/jpg", "image/webp", "application/json", "text/plain"],
+      hotspot_settings_focused: false,
       zoomFactor: 1,
       lastHotspot: {
         name: "",
@@ -147,7 +148,21 @@ export default {
     onFileChange(e) {
       const file = e.target.files[0]
       this.currentPlanet = this.findPlanet("empty")
-      this.createAndApplyTexture(URL.createObjectURL(file))
+      if (file && this.allowedFileTypes.includes(file.type)) {
+        if (file.type === "application/json" || file.type === "text/plain") {
+          const fileReader = new FileReader()
+          let json;
+          fileReader.readAsText(file, "UTF-8")
+          fileReader.onload = e => {
+            json = JSON.parse(fileReader.result)
+            this.hotspots = json.map(hotspot => {
+              return {...hotspot, uuid: this.$globals.genUUID()}
+            })
+          }
+        } else {
+          this.createAndApplyTexture(URL.createObjectURL(file))
+        }
+      }
     },
     changePlanet(planet, force = false) {
       if (!this.loaded && !force) return;
@@ -259,7 +274,14 @@ export default {
 
         }, 1000)
       }
-    }
+    },
+    hotspot_settings_focused: function (newVal, oldVal) {
+      if (newVal) {
+        this.planet.setAttribute("data-settings-active", "true")
+      } else {
+        this.planet.removeAttribute("data-settings-active")
+      }
+    },
   }
 }
 </script>
@@ -423,8 +445,11 @@ li.planet-selector.disabled {
   align-items: center;
   justify-content: center;
 }
-.hotspot.location, .hotspot.location .hotspot-annotation {
+.hotspot.location[data-visible], .hotspot.location[data-visible] .hotspot-annotation {
   opacity: calc(var(--max-hotspot-opacity) * (1 / var(--hotspot-zoom)) * var(--levelOpacityMultiplier)) !important;
+}
+#planet[data-settings-active] .hotspot, #planet[data-settings-active] .hotspot-annotation {
+  transition: none !important; /*fixes the blinking when fast typing and updating the hotspot*/
 }
 .hotspot.location.level-1 {
   --levelOpacityMultiplier: 1;
