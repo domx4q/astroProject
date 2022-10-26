@@ -5,11 +5,11 @@
       ar
       touch-action="pinch-zoom"
       camera-controls
-      camera-orbit="70deg"
+      camera-orbit="90deg"
       auto-rotate
       auto-rotate-delay="2000"
       interaction-prompt="none"
-      orbit-sensitivity=".8"
+      :orbit-sensitivity="defaultOrbitSensi"
       shadow-intensity="1"
       exposure="1"
       environment-image="neutral"
@@ -20,10 +20,15 @@
       id="planet"
       style="width: 100%; height: 100%"
 
+      @click.ctrl="addHotspot"
+      v-on:camera-change="updateZoom"
       @load="planetLoaded">
     <div class="controls">
       <div id="buttons">
-        <input type="file" @change="onFileChange" id="textureInput" :accept="allowedFileTypes" class="button" :disabled="!loaded"/>
+        <div class="flex-column">
+          <input type="file" @change="onFileChange" id="textureInput" :accept="allowedFileTypes" class="button" :disabled="!loaded"/>
+          <button class="button" @click="downloadHotspots" :disabled="!loaded" style="font-size: 1.04em;box-shadow: 0 0 0 5px red; color: red">Hotspots speichern</button>
+        </div>
         <input type="checkbox" v-model="auto_rotate" id="auto_rotate" :disabled="!loaded">
         <label for="auto_rotate">Auto-Rotate</label>
       </div>
@@ -35,13 +40,41 @@
           </li>
         </template>
       </ul>
+      <div class="hotspot-settings">
+        <h2>Hotspot Einstellungen</h2>
+        <form action="#" @submit.prevent="updateLastHotspot" class="flex-column">
+<!--clear input when focused          -->
+          <input type="text" v-model="lastHotspot.name" placeholder="Name" :disabled="!loaded" id="hotspot_name_input" aria-autocomplete="none" autocomplete="off" spellcheck="true"
+                 @focus="$event.target.select()" @change="updateLastHotspot" @keyup="updateLastHotspot">
+          <input type="text" v-model="lastHotspot.description" placeholder="Beschreibung" :disabled="!loaded" aria-autocomplete="none" autocomplete="off" spellcheck="true"
+                 @change="updateLastHotspot" @keyup="updateLastHotspot">
+          <select v-model="lastHotspot.type" :disabled="!loaded" @change="updateLastHotspot">
+            <option selected value="default">Standart</option>
+            <option value="location">Ort</option>
+            <option value="marker">Markierung</option>
+          </select>
+<!--          <button type="submit" :disabled="!loaded" style="background-color: dodgerblue;">Speichern</button>-->
+        </form>
+      </div>
     </div>
+
+    <!-- region hotspots-->
+    <template v-for="hotspot in hotspots" :key="hotspot.uuid">
+      <button class="hotspot" :slot="'hotspot-' + hotspot.type + '-' + hotspot.uuid"
+              :data-position="makeHotspotString(hotspot.position.x, hotspot.position.y, hotspot.position.z)"
+              :data-normal="makeHotspotString(hotspot.normal.x, hotspot.normal.y, hotspot.normal.z)"
+              :class="hotspot.class" data-visibility-attribute="visible">
+        <span class="hotspot-annotation">{{ hotspot.name }}</span>
+      </button>
+    </template>
+    <!-- endregion hotspots-->
   </model-viewer>
 </template>
 
 <script>
 // @ is an alias to /src
 import planets from '@/assets/data/planets.json'
+import annotations from '@/assets/data/annotations.json'
 
 import('@google/model-viewer')
 export default {
@@ -53,13 +86,32 @@ export default {
       planet: null,
       planets: null,
       loaded: false,
+      defaultOrbitSensi: 0.8,
       currentTexture: null,
-      allowedFileTypes: ["image/png", "image/jpeg", "image/jpg"],
+      lastFieldOfView: 0,
+      allowedFileTypes: ["image/png", "image/jpeg", "image/jpg", "image/webp"],
+      lastHotspot: {
+        name: "",
+        description: "",
+        position: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        normal: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        type: "default",
+      },
+
+      hotspots: [],
 
       accent_color: "hsl(197, 45%, 49%)",
       bg_color: "#fff",
 
-      auto_rotate: true,
+      auto_rotate: false,
       currentPlanet: planets.empty
     }
   },
@@ -73,14 +125,6 @@ export default {
     this.planets.sort((a, b) => (a.orderPriority < b.orderPriority) ? 1 : -1)
   },
   methods: {
-    randomTexture() {
-      let curRandom = this.textures[Math.floor(Math.random() * this.textures.length)]
-      while (curRandom === this.currentTexture) {
-        curRandom = this.textures[Math.floor(Math.random() * this.textures.length)]
-      }
-      this.currentTexture = curRandom
-      return curRandom
-    },
     async createAndApplyTexture(image) {
       const material = this.planet.model.materials[0]
 
@@ -102,12 +146,84 @@ export default {
       this.currentPlanet = planet
       this.currentTexture = `/textures/${planet.texture}`
       this.createAndApplyTexture(`/textures/${planet.texture}`)
+
+      // update hotspots
+      this.hotspots = annotations[this.currentPlanet.key]
+      if (this.hotspots === undefined) this.hotspots = []
+        this.hotspots = this.hotspots.map(hotspot => {
+          return {...hotspot, uuid: this.$globals.genUUID()}
+        })
     },
     findPlanet(key) {
       return this.planets.find(planet => planet.key === key)
+    },
+    makeHotspotString(x, y, z) {
+      return `${x}m ${y}m ${z}m`
+    },
+    updateZoom(){
+      let fieldOfView = 0;
+      try {
+        fieldOfView = this.planet.getFieldOfView()
+      } catch (e) {
+        return
+      }
+      if (!this.loaded || this.lastFieldOfView === fieldOfView) return;
+      this.lastFieldOfView = fieldOfView;
+      this.planet.setAttribute("orbit-sensitivity", this.defaultOrbitSensi * Math.pow(this.planet.getFieldOfView() / this.planet.getMaximumFieldOfView(), 2))
+    },
+    addHotspot(event) {
+      const xClick = event.offsetX;
+      const yClick = event.offsetY;
+
+      const positionAndNormal = this.planet.positionAndNormalFromPoint(xClick, yClick);
+      const position = positionAndNormal.position;
+      const normal = positionAndNormal.normal;
+
+      const name = "Hotspot " + Math.floor(Math.random() * 1000)
+      this.hotspots.push({
+        position: position,
+        normal: normal,
+        name: name,
+        uuid: this.$globals.genUUID(),
+        type: "marker",
+        class: "marker",
+      });
+      this.lastHotspot.name = name;
+      this.lastHotspot.position = position;
+      this.lastHotspot.normal = normal;
+      this.lastHotspot.description = "";
+
+      const nameInput = document.querySelector("#hotspot_name_input")
+      nameInput.focus()
+      setTimeout(() => {
+        nameInput.select()
+      }, 100)
+    },
+    downloadHotspots() {
+      let hotspots = JSON.parse(JSON.stringify(this.hotspots));
+      // rmove from every hotspot the uuid and the type
+      hotspots = hotspots.map(hotspot => {
+        delete hotspot.uuid;
+        return hotspot;
+      })
+      this.$globals.download("hotspots-" + this.currentPlanet.annotationsKey + ".txt", JSON.stringify(hotspots))
+    },
+    updateLastHotspot() {
+      // remove last hotspot
+      this.hotspots.pop();
+      // add new hotspot
+      this.hotspots.push({
+        position: this.lastHotspot.position,
+        normal: this.lastHotspot.normal,
+        name: this.lastHotspot.name,
+        uuid: this.$globals.genUUID(),
+        type: this.lastHotspot.type,
+        class: this.lastHotspot.type,
+      });
     }
   },
   watch: {
+    // eslint-disable-next-line no-unused-vars
     auto_rotate: function (newVal, oldVal) {
       if (newVal) {
         this.planet.setAttribute("auto-rotate", "")
@@ -115,9 +231,19 @@ export default {
         this.planet.removeAttribute("auto-rotate")
       }
     },
+    // eslint-disable-next-line no-unused-vars
     loaded: function (newVal, oldVal) {
       if (newVal) {
-        this.changePlanet(this.findPlanet("jupiter"), true)
+        this.changePlanet(this.findPlanet("moon"), true)
+        setTimeout(() => {
+          // do this manually because when set to false in data but not manually changed, then it won't update
+          if (this.auto_rotate) {
+            this.planet.setAttribute("auto-rotate", "")
+          } else {
+            this.planet.removeAttribute("auto-rotate")
+          }
+
+        }, 1000)
       }
     }
   }
@@ -191,5 +317,108 @@ li.planet-selector.disabled {
   cursor: not-allowed !important;
   touch-action: none;
   -ms-touch-action: none;
+}
+
+.hotspot {
+  --hotspot-color: rgba(255, 255, 255, 0.9);
+  /*--min-hotspot-opacity: .2;*/
+  --min-hotspot-opacity: 0;
+  --max-hotspot-opacity: 1;
+  --hotspot-base-scale: 1;
+  --hotspot-scale: var(--hotspot-base-scale);
+
+  position: relative;
+  cursor: pointer;
+  width: calc(20px * var(--hotspot-scale));
+  height: calc(20px * var(--hotspot-scale));
+  border-radius: 10px;
+  border: none;
+  background-color: var(--hotspot-color);
+  box-sizing: border-box;
+  pointer-events: initial;
+  opacity: var(--max-hotspot-opacity);
+
+  transition: height .2s linear, width .2s linear, opacity .2s linear;
+}
+.hotspot:not([data-visible]) { /*todo absprache mit Louis, wie dke verschiedenen Hotspots dargestellt werden*/
+  --hotspot-scale: calc(var(--hotspot-base-scale) * 0.5);
+  opacity: var(--min-hotspot-opacity);
+}
+.hotspot > * {
+  pointer-events: initial;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+.hotspot-annotation {
+  background: var(--hotspot-color);
+  border-radius: 4px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 2px 4px;
+  color: rgba(0, 0, 0, 0.8);
+  display: block;
+  font-family: Futura, Helvetica Neue, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  left: calc(100% + 1em);
+  max-width: 128px;
+  overflow-wrap: break-word;
+  padding: 0.5em 1em;
+  position: absolute;
+  top: 50%;
+  width: max-content;
+  scale: 1;
+
+  transition: all .5s ease; /*transition applied to every object because scale is not available*/
+}
+.hotspot:not([data-visible]) .hotspot-annotation {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(1em);
+}
+.hotspot.normal {
+  --hotspot-base-scale: 1;
+}
+.hotspot.small {
+  --hotspot-base-scale: 0.5;
+}
+.hotspot.large {
+  --hotspot-base-scale: 1.5;
+}
+.hotspot.xxl {
+  --hotspot-base-scale: 2;
+}
+.hotspot.location {
+  --hotspot-color: rgba(255, 255, 255, 0.9);
+}
+.hotspot.rover {
+  --hotspot-color: rgba(201, 99, 99, 0.9);
+}
+.hotspot.marker {
+  --hotspot-color: rgba(255, 213, 0, 0.9);
+
+}
+
+.hotspot-settings{
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+form > * {
+  font-size: 1em;
+  margin: 5px;
+  width: 100%;
+  border: none;
+  outline: none;
+  border-radius: 4px;
+  background-color: #eaeaea;
+}
+/* This keeps child nodes hidden while the element loads */
+:not(:defined) > * {
+  display: none;
 }
 </style>

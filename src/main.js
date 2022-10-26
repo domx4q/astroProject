@@ -18,7 +18,7 @@ function prepareHotReload() {
     window.dispatchEvent(new Event("hotreload"));
 }
 
-if (module.hot) { // todo: fix webstorm pseudo errors
+if (module.hot) {
     module.hot.accept();
 
     module.hot.addStatusHandler((status) => {

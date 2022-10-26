@@ -2,73 +2,97 @@
   "neptune": {
     "name": "Neptun",
     "texture": "2k_neptune.jpg",
+    "resolution": 2,
     "orderPriority": 1,
-    "enabled": true
+    "enabled": true,
+    "annotationsKey": "neptune"
   },
   "uranus": {
     "name": "Uranus",
     "texture": "2k_uranus.jpg",
+    "resolution": 2,
     "orderPriority": 1,
-    "enabled": true
+    "enabled": true,
+    "annotationsKey": "uranus"
   },
   "venus_atm": {
     "name": "Venus Atmosphere",
     "texture": "4k_venus_atmosphere.jpg",
+    "resolution": 4,
     "orderPriority": 3,
-    "enabled": true
+    "enabled": true,
+    "annotationsKey": "venus"
   },
   "venus_grd": {
     "name": "Venus Oberfläche",
     "texture": "8k_venus_surface.jpg",
+    "resolution": 8,
     "orderPriority": 3,
-    "enabled": true
+    "enabled": true,
+    "annotationsKey": "venus"
   },
   "earth": {
     "name": "Erde",
     "texture": "8k_earth_daymap.jpg",
+    "resolution": 8,
     "orderPriority": 12,
-    "enabled": false
+    "enabled": false,
+    "annotationsKey": "earth"
   },
   "jupiter": {
     "name": "Jupiter",
     "texture": "8k_jupiter.jpg",
+    "resolution": 4,
     "orderPriority": 7,
-    "enabled": true
+    "enabled": true,
+    "annotationsKey": "jupiter"
   },
   "mars": {
     "name": "Mars",
     "texture": "8k_mars.jpg",
+    "resolution": 8,
     "orderPriority": 6,
-    "enabled": true
+    "enabled": true,
+    "annotationsKey": "mars"
   },
   "mercury": {
     "name": "Merkur",
     "texture": "8k_mercury.jpg",
+    "resolution": 8,
     "orderPriority": 2,
-    "enabled": true
+    "enabled": true,
+    "annotationsKey": "mercury"
   },
   "moon": {
     "name": "Mond",
     "texture": "8k_moon.jpg",
+    "resolution": 8,
     "orderPriority": 13,
-    "enabled": true
+    "enabled": true,
+    "annotationsKey": "moon"
   },
   "saturn": {
     "name": "Saturn",
     "texture": "8k_saturn.jpg",
+    "resolution": 4,
     "orderPriority": 5,
-    "enabled": true
+    "enabled": true,
+    "annotationsKey": "saturn"
   },
   "sun": {
     "name": "Sonne",
     "texture": "8k_sun.jpg",
+    "resolution": 4,
     "orderPriority": 1,
-    "enabled": false
+    "enabled": false,
+    "annotationsKey": "sun"
   },
   "empty": {
     "name": "Leer",
-    "texture": "empty.png",
+    "texture": "dog.png",
+    "resolution": 1,
     "orderPriority": -1,
-    "enabled": false
+    "enabled": true,
+    "annotationsKey": "empty"
   }
 }

@@ -29,6 +29,10 @@ html {
   padding: 0;
 }
 
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
 
 /*nav {*/
 /*  padding: 30px;*/
