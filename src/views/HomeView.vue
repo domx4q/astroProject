@@ -21,6 +21,7 @@
       style="width: 100%; height: 100%"
 
       @keyup.space="test"
+      @click.ctrl="addHotspot"
       v-on:camera-change="updateZoom"
       @load="planetLoaded">
     <div class="controls">
@@ -28,23 +29,6 @@
         <input type="file" @change="onFileChange" id="textureInput" :accept="allowedFileTypes" class="button" :disabled="!loaded"/>
         <input type="checkbox" v-model="auto_rotate" id="auto_rotate" :disabled="!loaded">
         <label for="auto_rotate">Auto-Rotate</label>
-      </div>
-      <div class="sliders">
-        <input type="range" min="-1" max="1" id="x_slider" v-model="testCoordinates.x" step="any">
-        <input type="range" min="-1" max="1" id="y_slider" v-model="testCoordinates.y" step="any">
-        <input type="range" min="-1" max="1" id="z_slider" v-model="testCoordinates.z" step="any">
-        <input type="number" min="-1" max="1" id="x_text" v-model="testCoordinates.x" step="any">
-        <input type="number" min="-1" max="1" id="y_text" v-model="testCoordinates.y" step="any">
-        <input type="number" min="-1" max="1" id="z_text" v-model="testCoordinates.z" step="any">
-        <label for="x_slider">x</label>
-        <label for="y_slider">y</label>
-        <label for="z_slider">z</label>
-        <input type="range" min="0" :max="currentPlanet.resolution * 1024" v-model="imageCoordinates.x" step="1">
-        <input type="range" min="0" :max="currentPlanet.resolution * 512" v-model="imageCoordinates.y" step="1">
-        <input type="number" min="0" :max="currentPlanet.resolution * 1024" v-model="imageCoordinates.x" step="1">
-        <input type="number" min="0" :max="currentPlanet.resolution * 512" v-model="imageCoordinates.y" step="1">
-        <label for="x_slider">x</label>
-        <label for="y_slider">y</label>
       </div>
       <ul class="planets">
         <template v-for="planet in planets" :key="planet.uuid">
@@ -57,7 +41,11 @@
     </div>
 
     <!-- region hotspots-->
-    <button class="hotspot" slot="hotspot-test" data-position="0m 0m 0m" data-normal="0m 0m 0m"></button>
+    <template v-for="hotspot in hotspots" :key="hotspot.uuid">
+      <button class="hotspot" :slot="'hotspot-' + hotspot.type + '-' + hotspot.uuid"
+              :data-position="makeHotspotString(hotspot.position.x, hotspot.position.y, hotspot.position.z)"
+              :data-normal="makeHotspotString(hotspot.normal.x, hotspot.normal.y, hotspot.normal.z)">{{ hotspot.name }}</button>
+    </template>
     <!-- endregion hotspots-->
   </model-viewer>
 </template>
@@ -81,15 +69,7 @@ export default {
       lastFieldOfView: 0,
       allowedFileTypes: ["image/png", "image/jpeg", "image/jpg", "image/webp"],
 
-      testCoordinates: {
-        x: 0,
-        y: 0,
-        z: 0,
-      },
-      imageCoordinates: {
-        x: 0,
-        y: 0,
-      },
+      hotspots: [],
 
       accent_color: "hsl(197, 45%, 49%)",
       bg_color: "#fff",
@@ -108,14 +88,6 @@ export default {
     this.planets.sort((a, b) => (a.orderPriority < b.orderPriority) ? 1 : -1)
   },
   methods: {
-    randomTexture() {
-      let curRandom = this.textures[Math.floor(Math.random() * this.textures.length)]
-      while (curRandom === this.currentTexture) {
-        curRandom = this.textures[Math.floor(Math.random() * this.textures.length)]
-      }
-      this.currentTexture = curRandom
-      return curRandom
-    },
     async createAndApplyTexture(image) {
       const material = this.planet.model.materials[0]
 
@@ -141,43 +113,8 @@ export default {
     findPlanet(key) {
       return this.planets.find(planet => planet.key === key)
     },
-    getAnnotationPosition(imageX, imageY, resolution = this.currentPlanet.resolution, apply = true){
-      // input values are in pixels of the texture image
-      // the resolution show the texture resolution so 2means full hd
-      // possible values for the resolution are 1, 2, 4, 8, 16, 32
-      // sample: X:2000, Y:1500
-      // one for the data-position and one for the data-normal
-      // the planet / sphere has a radius of 1m
-      // sample: Input: X:1503, Y:1204, resolution: 4 Output: [0.6226778616649562, -0.340360073268179, 0.6872144723808735]
-
-      // the max value for every axis is 1 and the lowest is -1 so the center is 0
-      const y = ((imageY / (resolution * 512 / 2)) -1) * -1
-      const x = (imageX / (resolution * 512 / 2)) -1
-      // the z value is calculated with the pythagorean theorem
-      const z = Math.sqrt(1 - Math.pow(this.testCoordinates.x, 2) - Math.pow(this.testCoordinates.y, 2))
-      if (apply) {
-        this.testCoordinates.x = x
-        this.testCoordinates.y = y
-        this.testCoordinates.z = z
-      }
-      return [x, y, z]
-    },
     makeHotspotString(x, y, z) {
       return `${x}m ${y}m ${z}m`
-    },
-    test(){
-      const coords = [
-        3639,
-        1829,
-      ]
-      // TODO: IMPORTANT: NEXT: improve the calculation of the position
-      // console.log(this.getAnnotationPosition(3639, 1829, 8))
-      this.imageCoordinates.x = coords[0]; // real value 3945
-      this.imageCoordinates.y = coords[1]; // real value 1706
-      let differeceX = 3945 - 3639
-      let differeceY = 1706 - 1829
-      this.imageCoordinates.x += differeceX
-      this.imageCoordinates.y += differeceY
     },
     updateZoom(){
       let fieldOfView = 0;
@@ -189,9 +126,27 @@ export default {
       if (!this.loaded || this.lastFieldOfView === fieldOfView) return;
       this.lastFieldOfView = fieldOfView;
       this.planet.setAttribute("orbit-sensitivity", this.defaultOrbitSensi * Math.pow(this.planet.getFieldOfView() / this.planet.getMaximumFieldOfView(), 2))
+    },
+    addHotspot(event) {
+      const xClick = event.offsetX;
+      const yClick = event.offsetY;
+
+      const positionAndNormal = this.planet.positionAndNormalFromPoint(xClick, yClick);
+      const position = positionAndNormal.position;
+      const normal = positionAndNormal.normal;
+
+      this.hotspots.push({
+        position: position,
+        normal: normal,
+        name: "Hotspot " + Math.floor(Math.random() * 1000),
+        uuid: this.$globals.genUUID()
+      });
+      this.planet.requestFrame();
+
     }
   },
   watch: {
+    // eslint-disable-next-line no-unused-vars
     auto_rotate: function (newVal, oldVal) {
       if (newVal) {
         this.planet.setAttribute("auto-rotate", "")
@@ -199,9 +154,10 @@ export default {
         this.planet.removeAttribute("auto-rotate")
       }
     },
+    // eslint-disable-next-line no-unused-vars
     loaded: function (newVal, oldVal) {
       if (newVal) {
-        this.changePlanet(this.findPlanet("moon"), true) //todo: only temporary when merging change this back to jupiter
+        this.changePlanet(this.findPlanet("jupiter"), true)
         setTimeout(() => {
           // do this manually because when set to false in data but not manually changed, then it won't update
           if (this.auto_rotate) {
