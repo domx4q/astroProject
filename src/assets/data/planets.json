@@ -33,10 +33,10 @@
   },
   "earth": {
     "name": "Erde",
-    "texture": "8k_earth_daymap.jpg",
+    "texture": "8k_earth_realistic.png",
     "resolution": 8,
     "orderPriority": 12,
-    "enabled": false,
+    "enabled": true,
     "annotationsKey": "earth"
   },
   "jupiter": {

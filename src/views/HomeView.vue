@@ -161,6 +161,7 @@ export default {
           }
         } else {
           this.createAndApplyTexture(URL.createObjectURL(file))
+          this.hotspots = []
         }
       }
     },
