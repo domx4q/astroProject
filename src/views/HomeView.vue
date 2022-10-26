@@ -20,13 +20,15 @@
       id="planet"
       style="width: 100%; height: 100%"
 
-      @keyup.enter="test"
       @click.ctrl="addHotspot"
       v-on:camera-change="updateZoom"
       @load="planetLoaded">
     <div class="controls">
       <div id="buttons">
-        <input type="file" @change="onFileChange" id="textureInput" :accept="allowedFileTypes" class="button" :disabled="!loaded"/>
+        <div class="flex-column">
+          <input type="file" @change="onFileChange" id="textureInput" :accept="allowedFileTypes" class="button" :disabled="!loaded"/>
+          <button class="button" @click="downloadHotspots" :disabled="!loaded" style="font-size: 1.04em;box-shadow: 0 0 0 5px red; color: red">Hotspots speichern</button>
+        </div>
         <input type="checkbox" v-model="auto_rotate" id="auto_rotate" :disabled="!loaded">
         <label for="auto_rotate">Auto-Rotate</label>
       </div>
@@ -38,6 +40,22 @@
           </li>
         </template>
       </ul>
+      <div class="hotspot-settings">
+        <h2>Hotspot Einstellungen</h2>
+        <form action="#" @submit.prevent="updateLastHotspot" class="flex-column">
+<!--clear input when focused          -->
+          <input type="text" v-model="lastHotspot.name" placeholder="Name" :disabled="!loaded" id="hotspot_name_input" aria-autocomplete="none" autocomplete="off" spellcheck="true"
+                 @focus="$event.target.select()" @change="updateLastHotspot" @keyup="updateLastHotspot">
+          <input type="text" v-model="lastHotspot.description" placeholder="Beschreibung" :disabled="!loaded" aria-autocomplete="none" autocomplete="off" spellcheck="true"
+                 @change="updateLastHotspot" @keyup="updateLastHotspot">
+          <select v-model="lastHotspot.type" :disabled="!loaded" @change="updateLastHotspot">
+            <option selected value="default">Standart</option>
+            <option value="location">Ort</option>
+            <option value="marker">Markierung</option>
+          </select>
+<!--          <button type="submit" :disabled="!loaded" style="background-color: dodgerblue;">Speichern</button>-->
+        </form>
+      </div>
     </div>
 
     <!-- region hotspots-->
@@ -45,8 +63,8 @@
       <button class="hotspot" :slot="'hotspot-' + hotspot.type + '-' + hotspot.uuid"
               :data-position="makeHotspotString(hotspot.position.x, hotspot.position.y, hotspot.position.z)"
               :data-normal="makeHotspotString(hotspot.normal.x, hotspot.normal.y, hotspot.normal.z)"
-              data-visibility-attribute="visible">
-        <span class="hotspot-text">{{ hotspot.name }}</span>
+              :class="hotspot.class" data-visibility-attribute="visible">
+        <span class="hotspot-annotation">{{ hotspot.name }}</span>
       </button>
     </template>
     <!-- endregion hotspots-->
@@ -56,6 +74,7 @@
 <script>
 // @ is an alias to /src
 import planets from '@/assets/data/planets.json'
+import annotations from '@/assets/data/annotations.json'
 
 import('@google/model-viewer')
 export default {
@@ -71,8 +90,23 @@ export default {
       currentTexture: null,
       lastFieldOfView: 0,
       allowedFileTypes: ["image/png", "image/jpeg", "image/jpg", "image/webp"],
+      lastHotspot: {
+        name: "",
+        description: "",
+        position: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        normal: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        type: "default",
+      },
 
-      hotspots: [{"position":{"x":-0.5048961828394458,"y":-0.3059022371704292,"z":-0.7913548894067033},"normal":{"x":-0.5082978851214086,"y":-0.3117534775964816,"z":-0.8027720904388763},"name":"Hotspot 767","uuid":"a9ba3141-b35c-45fc-b434-8d7e4ba631c0"},{"position":{"x":-0.532006362490459,"y":-0.5519292728896721,"z":-0.6248767382994962},"normal":{"x":-0.5528869067062027,"y":-0.5323925703080227,"z":-0.6409947109560763},"name":"Hotspot 848","uuid":"3ad46b0f-ef35-4e3a-9082-14031a395ab2"},{"position":{"x":-0.8620799833468453,"y":-0.34124131731265805,"z":-0.3401830265936292},"normal":{"x":-0.8712602180422704,"y":-0.35774966360012994,"z":-0.3360369185832555},"name":"Hotspot 361","uuid":"5acae835-f90a-4db9-98bd-bf62b8e6f5c6"},{"position":{"x":-0.25114431407941895,"y":-0.49673001031156017,"z":-0.8168877753274382},"normal":{"x":-0.27335165646221005,"y":-0.49035763059948717,"z":-0.8275435130687828},"name":"Hotspot 264","uuid":"38b9799a-6138-456c-a0d7-862e0c0b54dd"},{"position":{"x":-0.36556099877139814,"y":0.011466709118559404,"z":-0.9165008074299466},"normal":{"x":-0.359747526206349,"y":0.024421363174281827,"z":-0.9327300329726294},"name":"Hotspot 562","uuid":"eb69fd91-0614-4c8f-9690-16ceea0f82c5"},{"position":{"x":0.5579087926361967,"y":0.819177937070048,"z":0.016034766801493128},"normal":{"x":0.5782590059662104,"y":0.815729241813197,"z":0.014224136874942759},"name":"Hotspot 503","uuid":"1382d699-7499-43a4-acbb-12c2b775021b"},{"position":{"x":0.6724351908980171,"y":0.5509489491979003,"z":-0.4715118693870646},"normal":{"x":0.6920605260190628,"y":0.5323931046669481,"z":-0.4874523673440374},"name":"Hotspot 269","uuid":"bb551b4f-13ff-47f4-91d5-8683de0634fe"},{"position":{"x":0.7684649266127768,"y":0.5307060834629622,"z":0.3244165120540841},"normal":{"x":0.7738615714107577,"y":0.5323916052487003,"z":0.34307061511354314},"name":"Hotspot 187","uuid":"43d6dad8-4135-4a19-87d8-4f510fef3c69"},{"position":{"x":-0.00811388222680387,"y":0.8024571847954647,"z":0.5816908615384468},"normal":{"x":-0.0142193117926155,"y":0.8157304227611749,"z":0.5782574587102349},"name":"Hotspot 305","uuid":"97ad8534-1d88-401d-a1a2-7004bb236d56"},{"position":{"x":-0.39493947153266407,"y":0.36772841193893724,"z":0.8273696623910132},"normal":{"x":-0.4198816892523404,"y":0.35775138041716303,"z":0.8340943093201245},"name":"Hotspot 959","uuid":"ba5fa57a-0344-4188-b482-474c569da613"}],
+      hotspots: [],
 
       accent_color: "hsl(197, 45%, 49%)",
       bg_color: "#fff",
@@ -112,6 +146,13 @@ export default {
       this.currentPlanet = planet
       this.currentTexture = `/textures/${planet.texture}`
       this.createAndApplyTexture(`/textures/${planet.texture}`)
+
+      // update hotspots
+      this.hotspots = annotations[this.currentPlanet.key]
+      if (this.hotspots === undefined) this.hotspots = []
+        this.hotspots = this.hotspots.map(hotspot => {
+          return {...hotspot, uuid: this.$globals.genUUID()}
+        })
     },
     findPlanet(key) {
       return this.planets.find(planet => planet.key === key)
@@ -138,15 +179,47 @@ export default {
       const position = positionAndNormal.position;
       const normal = positionAndNormal.normal;
 
+      const name = "Hotspot " + Math.floor(Math.random() * 1000)
       this.hotspots.push({
         position: position,
         normal: normal,
-        name: "Hotspot " + Math.floor(Math.random() * 1000),
-        uuid: this.$globals.genUUID()
+        name: name,
+        uuid: this.$globals.genUUID(),
+        type: "marker",
+        class: "marker",
       });
+      this.lastHotspot.name = name;
+      this.lastHotspot.position = position;
+      this.lastHotspot.normal = normal;
+      this.lastHotspot.description = "";
+
+      const nameInput = document.querySelector("#hotspot_name_input")
+      nameInput.focus()
+      setTimeout(() => {
+        nameInput.select()
+      }, 100)
     },
-    test() {
-      console.log(JSON.stringify(this.hotspots))
+    downloadHotspots() {
+      let hotspots = JSON.parse(JSON.stringify(this.hotspots));
+      // rmove from every hotspot the uuid and the type
+      hotspots = hotspots.map(hotspot => {
+        delete hotspot.uuid;
+        return hotspot;
+      })
+      this.$globals.download("hotspots-" + this.currentPlanet.annotationsKey + ".txt", JSON.stringify(hotspots))
+    },
+    updateLastHotspot() {
+      // remove last hotspot
+      this.hotspots.pop();
+      // add new hotspot
+      this.hotspots.push({
+        position: this.lastHotspot.position,
+        normal: this.lastHotspot.normal,
+        name: this.lastHotspot.name,
+        uuid: this.$globals.genUUID(),
+        type: this.lastHotspot.type,
+        class: this.lastHotspot.type,
+      });
     }
   },
   watch: {
@@ -161,7 +234,7 @@ export default {
     // eslint-disable-next-line no-unused-vars
     loaded: function (newVal, oldVal) {
       if (newVal) {
-        this.changePlanet(this.findPlanet("jupiter"), true)
+        this.changePlanet(this.findPlanet("moon"), true)
         setTimeout(() => {
           // do this manually because when set to false in data but not manually changed, then it won't update
           if (this.auto_rotate) {
@@ -172,29 +245,7 @@ export default {
 
         }, 1000)
       }
-    },
-    // test coordinates (search deep)
-    testCoordinates: {
-      handler: function (newVal, oldVal) {
-        if (this.loaded) {
-          this.planet.updateHotspot({
-            name: "hotspot-test",
-            position: this.makeHotspotString(this.testCoordinates.x, this.testCoordinates.y, this.testCoordinates.z),
-            normal: "0m 0m 0m"
-          })
-        }
-      },
-      deep: true
-    },
-    imageCoordinates: {
-      handler: function (newVal, oldVal) {
-        if (this.loaded) {
-          this.getAnnotationPosition(newVal.x, newVal.y)
-        }
-      },
-      deep: true
     }
-
   }
 }
 </script>
@@ -269,22 +320,102 @@ li.planet-selector.disabled {
 }
 
 .hotspot {
-  --hotspot-color: red;
+  --hotspot-color: rgba(255, 255, 255, 0.9);
+  /*--min-hotspot-opacity: .2;*/
+  --min-hotspot-opacity: 0;
+  --max-hotspot-opacity: 1;
+  --hotspot-base-scale: 1;
+  --hotspot-scale: var(--hotspot-base-scale);
 
-  display: block;
-  width: 20px;
-  height: 20px;
+  position: relative;
+  cursor: pointer;
+  width: calc(20px * var(--hotspot-scale));
+  height: calc(20px * var(--hotspot-scale));
   border-radius: 10px;
+  border: none;
   background-color: var(--hotspot-color);
   box-sizing: border-box;
-  pointer-events: none;
-  border: none;
+  pointer-events: initial;
+  opacity: var(--max-hotspot-opacity);
 
-  transition: background-color .2s linear, border .1s linear;
+  transition: height .2s linear, width .2s linear, opacity .2s linear;
 }
-.hotspot:not([data-visible]) { /*todo apsprache mit Louis, wie dke verschiedenen Hotspots dargestellt werden*/
-  background-color: transparent;
-  border: 3px solid var(--hotspot-color);
+.hotspot:not([data-visible]) { /*todo absprache mit Louis, wie dke verschiedenen Hotspots dargestellt werden*/
+  --hotspot-scale: calc(var(--hotspot-base-scale) * 0.5);
+  opacity: var(--min-hotspot-opacity);
+}
+.hotspot > * {
+  pointer-events: initial;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+.hotspot-annotation {
+  background: var(--hotspot-color);
+  border-radius: 4px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 2px 4px;
+  color: rgba(0, 0, 0, 0.8);
+  display: block;
+  font-family: Futura, Helvetica Neue, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  left: calc(100% + 1em);
+  max-width: 128px;
+  overflow-wrap: break-word;
+  padding: 0.5em 1em;
+  position: absolute;
+  top: 50%;
+  width: max-content;
+  scale: 1;
+
+  transition: all .5s ease; /*transition applied to every object because scale is not available*/
+}
+.hotspot:not([data-visible]) .hotspot-annotation {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(1em);
+}
+.hotspot.normal {
+  --hotspot-base-scale: 1;
+}
+.hotspot.small {
+  --hotspot-base-scale: 0.5;
+}
+.hotspot.large {
+  --hotspot-base-scale: 1.5;
+}
+.hotspot.xxl {
+  --hotspot-base-scale: 2;
+}
+.hotspot.location {
+  --hotspot-color: rgba(255, 255, 255, 0.9);
+}
+.hotspot.rover {
+  --hotspot-color: rgba(201, 99, 99, 0.9);
+}
+.hotspot.marker {
+  --hotspot-color: rgba(255, 213, 0, 0.9);
+
+}
+
+.hotspot-settings{
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+form > * {
+  font-size: 1em;
+  margin: 5px;
+  width: 100%;
+  border: none;
+  outline: none;
+  border-radius: 4px;
+  background-color: #eaeaea;
 }
 /* This keeps child nodes hidden while the element loads */
 :not(:defined) > * {
