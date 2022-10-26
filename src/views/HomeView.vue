@@ -40,18 +40,24 @@
           </li>
         </template>
       </ul>
-      <div class="hotspot-settings">
+      <div class="hotspot-settings" :class="{hidden: hotspots.length === 0}">
         <h2>Hotspot Einstellungen</h2>
         <form action="#" @submit.prevent="updateLastHotspot" class="flex-column">
-<!--clear input when focused          -->
           <input type="text" v-model="lastHotspot.name" placeholder="Name" :disabled="!loaded" id="hotspot_name_input" aria-autocomplete="none" autocomplete="off" spellcheck="true"
                  @focus="$event.target.select()" @change="updateLastHotspot" @keyup="updateLastHotspot">
           <input type="text" v-model="lastHotspot.description" placeholder="Beschreibung" :disabled="!loaded" aria-autocomplete="none" autocomplete="off" spellcheck="true"
                  @change="updateLastHotspot" @keyup="updateLastHotspot">
           <select v-model="lastHotspot.type" :disabled="!loaded" @change="updateLastHotspot">
-            <option selected value="default">Standart</option>
+<!--            <option selected value="default">Standart</option>-->
             <option value="location">Ort</option>
             <option value="marker">Markierung</option>
+          </select>
+          <select v-model="lastHotspot.level" :disabled="!loaded" @change="updateLastHotspot" v-if="lastHotspot.type === 'location'">
+            <option value="1">Level 1</option>
+            <option value="2">Level 2</option>
+            <option value="3">Level 3</option>
+            <option value="4">Level 4</option>
+            <option value="5">Level 5</option>
           </select>
 <!--          <button type="submit" :disabled="!loaded" style="background-color: dodgerblue;">Speichern</button>-->
         </form>
@@ -90,6 +96,7 @@ export default {
       currentTexture: null,
       lastFieldOfView: 0,
       allowedFileTypes: ["image/png", "image/jpeg", "image/jpg", "image/webp"],
+      zoomFactor: 1,
       lastHotspot: {
         name: "",
         description: "",
@@ -103,7 +110,8 @@ export default {
           y: 0,
           z: 0
         },
-        type: "default",
+        type: "marker",
+        level: "1", // desto höher, desto detaillierter / kleiner
       },
 
       hotspots: [],
@@ -169,7 +177,10 @@ export default {
       }
       if (!this.loaded || this.lastFieldOfView === fieldOfView) return;
       this.lastFieldOfView = fieldOfView;
-      this.planet.setAttribute("orbit-sensitivity", this.defaultOrbitSensi * Math.pow(this.planet.getFieldOfView() / this.planet.getMaximumFieldOfView(), 2))
+      const zoom = this.planet.getFieldOfView() / this.planet.getMaximumFieldOfView()
+      this.planet.setAttribute("orbit-sensitivity", this.defaultOrbitSensi * Math.pow(zoom, 2))
+      this.zoomFactor = zoom
+
     },
     addHotspot(event) {
       const xClick = event.offsetX;
@@ -218,7 +229,10 @@ export default {
         name: this.lastHotspot.name,
         uuid: this.$globals.genUUID(),
         type: this.lastHotspot.type,
-        class: this.lastHotspot.type,
+        // add level to class if the type is location
+        class: this.lastHotspot.type === "location" ? "location level-" + this.lastHotspot.level : this.lastHotspot.type,
+        // only add level if the type is location
+        level: this.lastHotspot.type === "location" ? this.lastHotspot.level : undefined,
       });
     }
   },
@@ -319,12 +333,15 @@ li.planet-selector.disabled {
   -ms-touch-action: none;
 }
 
+/*region hotspots*/
 .hotspot {
   --hotspot-color: rgba(255, 255, 255, 0.9);
   /*--min-hotspot-opacity: .2;*/
   --min-hotspot-opacity: 0;
   --max-hotspot-opacity: 1;
   --hotspot-base-scale: 1;
+  --levelOpacityMultiplier: 1;
+  --hotspot-zoom: v-bind(zoomFactor);
   --hotspot-scale: var(--hotspot-base-scale);
 
   position: relative;
@@ -367,7 +384,7 @@ li.planet-selector.disabled {
   width: max-content;
   scale: 1;
 
-  transition: all .5s ease; /*transition applied to every object because scale is not available*/
+  transition: all .5s ease, opacity .2s ease; /*transition applied to every object because scale is not available*/
 }
 .hotspot:not([data-visible]) .hotspot-annotation {
   opacity: 0;
@@ -394,7 +411,6 @@ li.planet-selector.disabled {
 }
 .hotspot.marker {
   --hotspot-color: rgba(255, 213, 0, 0.9);
-
 }
 
 .hotspot-settings{
@@ -407,7 +423,25 @@ li.planet-selector.disabled {
   align-items: center;
   justify-content: center;
 }
-
+.hotspot.location, .hotspot.location .hotspot-annotation {
+  opacity: calc(var(--max-hotspot-opacity) * (1 / var(--hotspot-zoom)) * var(--levelOpacityMultiplier)) !important;
+}
+.hotspot.location.level-1 {
+  --levelOpacityMultiplier: 1;
+}
+.hotspot.location.level-2 {
+  --levelOpacityMultiplier: 0.8;
+}
+.hotspot.location.level-3 {
+  --levelOpacityMultiplier: 0.6;
+}
+.hotspot.location.level-4 {
+  --levelOpacityMultiplier: 0.4;
+}
+.hotspot.location.level-5 {
+  --levelOpacityMultiplier: 0.2;
+}
+/*endregion hotspots*/
 form > * {
   font-size: 1em;
   margin: 5px;
@@ -419,6 +453,9 @@ form > * {
 }
 /* This keeps child nodes hidden while the element loads */
 :not(:defined) > * {
+  display: none;
+}
+.hidden {
   display: none;
 }
 </style>
