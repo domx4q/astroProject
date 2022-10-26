@@ -1,3 +1,5 @@
+[![Node.js CI](https://github.com/domx4q/astroProject/actions/workflows/node.js.yml/badge.svg)](https://github.com/domx4q/astroProject/actions/workflows/node.js.yml)
+
 # astro
 
 ## Project setup
