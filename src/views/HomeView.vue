@@ -20,7 +20,7 @@
       id="planet"
       style="width: 100%; height: 100%"
 
-      @click.ctrl="addHotspot"
+      @click.alt="addHotspot"
       v-on:camera-change="updateZoom"
       @load="planetLoaded">
     <div class="controls">
@@ -58,6 +58,9 @@
             <option value="3">Level 3</option>
             <option value="4">Level 4</option>
             <option value="5">Level 5</option>
+          </select>
+          <select v-model="lastHotspot.classification" :disabled="!loaded" @change="updateLastHotspot" multiple>
+            <option v-for="classification in classifications" :value="classification.value" :key="classification.value">{{ classification.label }}</option>
           </select>
 <!--          <button type="submit" :disabled="!loaded" style="background-color: dodgerblue;">Speichern</button>-->
         </form>
@@ -101,6 +104,7 @@ export default {
       lastHotspot: {
         name: "",
         description: "",
+        classification: ["unknown"],
         position: {
           x: 0,
           y: 0,
@@ -124,7 +128,11 @@ export default {
       currentPlanet: planets.empty
     }
   },
-  computed: {},
+  computed: {
+    classifications() {
+      return annotations.data.classifications
+    }
+  },
   mounted() {
     console.log("HomeView mounted")
     // convert dict to array and add uuid and key as property
@@ -172,7 +180,7 @@ export default {
       this.createAndApplyTexture(`/textures/${planet.texture}`)
 
       // update hotspots
-      this.hotspots = annotations[this.currentPlanet.key]
+      this.hotspots = annotations.planets[this.currentPlanet.key]
       if (this.hotspots === undefined) this.hotspots = []
         this.hotspots = this.hotspots.map(hotspot => {
           return {...hotspot, uuid: this.$globals.genUUID()}
@@ -238,19 +246,12 @@ export default {
     updateLastHotspot() {
       // remove last hotspot
       this.hotspots.pop();
-      // add new hotspot
       this.hotspots.push({
-        position: this.lastHotspot.position,
-        normal: this.lastHotspot.normal,
-        name: this.lastHotspot.name,
-        description: this.lastHotspot.description,
+        ...this.lastHotspot,
         uuid: this.$globals.genUUID(),
-        type: this.lastHotspot.type,
-        // add level to class if the type is location
         class: this.lastHotspot.type === "location" ? "location level-" + this.lastHotspot.level : this.lastHotspot.type,
-        // only add level if the type is location
         level: this.lastHotspot.type === "location" ? this.lastHotspot.level : undefined,
-      });
+      })
     }
   },
   watch: {

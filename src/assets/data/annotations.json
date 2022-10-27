@@ -1,12 +1,34 @@
 {
-  "neptune": [],
-  "uranus": [],
-  "venus": [],
-  "earth": [],
-  "jupiter": [],
-  "mars": [],
-  "moon": [],
-  "mercury": [],
-  "saturn": [],
-  "sun": []
+  "planets": {
+    "neptune": [],
+    "uranus": [],
+    "venus": [],
+    "earth": [],
+    "jupiter": [],
+    "mars": [],
+    "moon": [],
+    "mercury": [],
+    "saturn": [],
+    "sun": []
+  },
+  "data": {
+    "classifications": [
+      {
+        "value": "unknown",
+        "label": "Unbekannt"
+      },
+      {
+        "value": "crater",
+        "label": "Krater"
+      },
+      {
+        "value": "mountain",
+        "label": "Berg"
+      },
+      {
+        "value": "storm",
+        "label": "Sturm"
+      }
+    ]
+  }
 }
