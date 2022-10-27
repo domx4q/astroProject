@@ -243,6 +243,7 @@ export default {
         position: this.lastHotspot.position,
         normal: this.lastHotspot.normal,
         name: this.lastHotspot.name,
+        description: this.lastHotspot.description,
         uuid: this.$globals.genUUID(),
         type: this.lastHotspot.type,
         // add level to class if the type is location
