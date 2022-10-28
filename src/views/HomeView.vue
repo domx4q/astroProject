@@ -21,16 +21,23 @@
       style="width: 100%; height: 100%"
 
       @click.alt="addHotspot"
+      @keyup.space="auto_rotate = !auto_rotate"
       v-on:camera-change="updateZoom"
       @load="planetLoaded">
     <div class="controls">
       <div id="buttons">
         <div class="flex-column">
           <input type="file" @change="onFileChange" id="textureInput" :accept="allowedFileTypes" class="button" :disabled="!loaded"/>
-          <button class="button" @click="downloadHotspots" :disabled="!loaded" style="font-size: 1.04em;box-shadow: 0 0 0 5px red; color: red">Hotspots speichern</button>
+          <button class="button" @click="downloadHotspots" :disabled="!loaded" style="font-size: 1.04em;box-shadow: 0 0 0 5px red; color: red"
+          v-if="!isMobile">Hotspots speichern</button>
         </div>
-        <input type="checkbox" v-model="auto_rotate" id="auto_rotate" :disabled="!loaded">
-        <label for="auto_rotate">Auto-Rotate</label>
+        <div class="flex-column">
+          <div class="inline"><input type="checkbox" v-model="auto_rotate" id="auto_rotate" :disabled="!loaded">
+            <label for="auto_rotate">Automatische Rotation</label></div>
+          <div class="inline"><input type="checkbox" v-model="enable_pan" id="enable_pan" :disabled="!loaded">
+            <label for="enable_pan">Verschieben aktivieren</label></div>
+        </div>
+
       </div>
       <ul class="planets">
         <template v-for="planet in planets" :key="planet.uuid">
@@ -40,7 +47,7 @@
           </li>
         </template>
       </ul>
-      <div class="hotspot-settings" :class="{hidden: hotspots.length === 0}">
+      <div class="hotspot-settings" :class="{hidden: hotspots.length === 0}" v-if="!isMobile">
         <h2>Hotspot Einstellungen</h2>
         <form action="#" @submit.prevent="updateLastHotspot" class="flex-column">
           <input type="text" v-model="lastHotspot.name" placeholder="Name" :disabled="!loaded" id="hotspot_name_input" aria-autocomplete="none" autocomplete="off" spellcheck="true"
@@ -127,13 +134,17 @@ export default {
       accent_color: "hsl(197, 45%, 49%)",
       bg_color: "#fff",
 
-      auto_rotate: false,
+      auto_rotate: true,
+      enable_pan: false,
       currentPlanet: planets.empty
     }
   },
   computed: {
     classifications() {
       return annotations.data.classifications
+    },
+    isMobile() {
+      return this.$store.state.isMobile
     }
   },
   mounted() {
@@ -264,6 +275,13 @@ export default {
         this.planet.setAttribute("auto-rotate", "")
       } else {
         this.planet.removeAttribute("auto-rotate")
+      }
+    },
+    enable_pan: function (newVal, oldVal) {
+      if (!newVal) {
+        this.planet.setAttribute("disable-pan", "")
+      } else {
+        this.planet.removeAttribute("disable-pan")
       }
     },
     // eslint-disable-next-line no-unused-vars

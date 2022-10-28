@@ -5,7 +5,49 @@
 <!--  </nav>-->
   <router-view/>
 </template>
-
+<script>
+import { ClientJS } from 'clientjs';
+export default {
+  name: 'app',
+  data() {
+    return {
+      client: new ClientJS(),
+    };
+  },
+  mounted() {
+    this.getClientInformation();
+  },
+  computed: {},
+  methods: {
+    getClientInformation() {
+      const client = new ClientJS();
+      const out = {
+        os: client.getOS(),
+        "os-version": client.getOSVersion(),
+        // "fingerprint": client.getFingerprint(),
+        "user-agent": client.getUserAgent(),
+        browser: client.getBrowser(),
+        "browser-version": client.getBrowserVersion(),
+        engine: client.getEngine(),
+        "engine-version": client.getEngineVersion(),
+        cpu: client.getCPU(),
+        isMobile: client.isMobile(),
+        isAndroid: client.isMobileAndroid(),
+        isIOS: client.isMobileIOS(),
+        screen: client.getScreenPrint(),
+        // "fonts": client.getFonts(),
+        isLocaleStorage: client.isLocalStorage(),
+        isSessionStorage: client.isSessionStorage(),
+        isCookie: client.isCookie(),
+        "time-zone": client.getTimeZone(),
+        language: client.getLanguage(),
+        "sys-language": client.getSystemLanguage(),
+      };
+      this.$store.state.client = out;
+    },
+  },
+}
+</script>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
