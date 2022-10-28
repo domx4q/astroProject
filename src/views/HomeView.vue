@@ -3,7 +3,7 @@
       :src="modelSrc"
       alt="Es ist ein Fehler aufgetreten beim Laden des 3D-Modells."
       ar
-      touch-action="pinch-zoom"
+      touch-action="none"
       camera-controls
       camera-orbit="90deg"
       auto-rotate
@@ -62,6 +62,8 @@
           <select v-model="lastHotspot.classification" :disabled="!loaded" @change="updateLastHotspot" multiple>
             <option v-for="classification in classifications" :value="classification.value" :key="classification.value">{{ classification.label }}</option>
           </select>
+          <div class="inline"><input type="checkbox" id="hotspot_action_setting" v-model="lastHotspot.action" @change="updateLastHotspot">
+            <label for="hotspot_action_setting">Aktion</label></div>
 <!--          <button type="submit" :disabled="!loaded" style="background-color: dodgerblue;">Speichern</button>-->
         </form>
       </div>
@@ -72,7 +74,7 @@
       <button class="hotspot" :slot="'hotspot-' + hotspot.type + '-' + hotspot.uuid"
               :data-position="makeHotspotString(hotspot.position.x, hotspot.position.y, hotspot.position.z)"
               :data-normal="makeHotspotString(hotspot.normal.x, hotspot.normal.y, hotspot.normal.z)"
-              :class="hotspot.class" data-visibility-attribute="visible">
+              :class="[hotspot.class, {action: hotspot.action}]" data-visibility-attribute="visible">
         <span class="hotspot-annotation">{{ hotspot.name }}</span>
       </button>
     </template>
@@ -105,6 +107,7 @@ export default {
         name: "",
         description: "",
         classification: ["unknown"],
+        action: false,
         position: {
           x: 0,
           y: 0,
@@ -377,7 +380,7 @@ li.planet-selector.disabled {
   border: none;
   background-color: var(--hotspot-color);
   box-sizing: border-box;
-  pointer-events: initial;
+  pointer-events: none;
   opacity: var(--max-hotspot-opacity);
 
   transition: height .2s linear, width .2s linear, opacity .2s linear;
@@ -387,7 +390,7 @@ li.planet-selector.disabled {
   opacity: var(--min-hotspot-opacity);
 }
 .hotspot > * {
-  pointer-events: initial;
+  pointer-events: none;
   cursor: pointer;
   transform: translateY(-50%);
 }
@@ -410,6 +413,10 @@ li.planet-selector.disabled {
   scale: 1;
 
   transition: all .5s ease, opacity .2s ease; /*transition applied to every object because scale is not available*/
+}
+.hotspot.action, .hotspot.action > * {
+  cursor: pointer;
+  pointer-events: initial;
 }
 .hotspot:not([data-visible]) .hotspot-annotation {
   opacity: 0;
