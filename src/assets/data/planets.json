@@ -89,10 +89,10 @@
   },
   "empty": {
     "name": "Leer",
-    "texture": "dog.png",
+    "texture": "empty.png",
     "resolution": 1,
     "orderPriority": -1,
-    "enabled": true,
+    "enabled": false,
     "annotationsKey": "empty"
   }
 }
