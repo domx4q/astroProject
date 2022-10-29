@@ -61,7 +61,7 @@
       <FormKit
           type="form"
           id="hotspot-settings"
-          :form-class="{hidden: hotspots.length === -1}"
+          :form-class="{hidden: hotspots.length === 0}"
           submit-label="Übernehmen"
           @submit="updateLastHotspot"
           :actions="false"
@@ -78,6 +78,7 @@
             aria-autocomplete="none"
             autocomplete="off"
             spellcheck="true"
+            validation="required|length:3,50"
             v-model="lastHotspot.name"
             @focus="$event.target.select();hotspot_settings_focused=true"
             @blur="hotspot_settings_focused=false"
