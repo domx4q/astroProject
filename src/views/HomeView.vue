@@ -21,7 +21,8 @@
       style="width: 100%; height: 100%"
 
       @click.alt="addHotspot"
-      @keyup.space="auto_rotate = !auto_rotate"
+      @keyup.ctrl.space.exact="auto_rotate = !auto_rotate"
+      @keyup.alt.space.exact="enable_pan = !enable_pan"
       v-on:camera-change="updateZoom"
       @load="planetLoaded">
     <div class="controls">
@@ -31,15 +32,25 @@
           <button class="button" @click="downloadHotspots" :disabled="!loaded" style="font-size: 1.04em;box-shadow: 0 0 0 5px red; color: red"
           v-if="!isMobile">Hotspots speichern</button>
         </div>
-        <div class="flex-column">
-          <div class="inline"><input type="checkbox" v-model="auto_rotate" id="auto_rotate" :disabled="!loaded">
-            <label for="auto_rotate">Automatische Rotation</label></div>
-          <div class="inline"><input type="checkbox" v-model="enable_pan" id="enable_pan" :disabled="!loaded">
-            <label for="enable_pan">Verschieben aktivieren</label></div>
+        <div class="flex-column" style="margin-top: 10px">
+          <FormKit
+              type="group"
+              :disabled="!loaded">
+            <FormKit
+                type="checkbox"
+                label="Automatische Rotation"
+                :help="!isMobile ? 'Tastenkombination: Strg + Leertaste' : ''"
+                v-model="auto_rotate"/>
+            <FormKit
+                type="checkbox"
+                label="Verschieben aktivieren"
+                :help="!isMobile ? 'Tastenkombination: Alt + Leertaste' : ''"
+                v-model="enable_pan"/>
+          </FormKit>
         </div>
 
       </div>
-      <ul class="planets">
+      <ul class="planets" v-auto-animate>
         <template v-for="planet in planets" :key="planet.uuid">
           <li class="planet-selector" v-if="planet.enabled" @click="changePlanet(planet)"
               :class="{active: planet.uuid === currentPlanet.uuid, disabled: !loaded}">
@@ -47,33 +58,74 @@
           </li>
         </template>
       </ul>
-      <div class="hotspot-settings" :class="{hidden: hotspots.length === 0}" v-if="!isMobile">
+      <FormKit
+          type="form"
+          id="hotspot-settings"
+          :form-class="{hidden: hotspots.length === -1}"
+          submit-label="Übernehmen"
+          @submit="updateLastHotspot"
+          :actions="false"
+          :disabled="!loaded"
+          v-if="!isMobile"
+          v-auto-animate>
         <h2>Hotspot Einstellungen</h2>
-        <form action="#" @submit.prevent="updateLastHotspot" class="flex-column">
-          <input type="text" v-model="lastHotspot.name" placeholder="Name" :disabled="!loaded" id="hotspot_name_input" aria-autocomplete="none" autocomplete="off" spellcheck="true"
-                 @focus="$event.target.select();hotspot_settings_focused=true" @change="updateLastHotspot" @keyup="updateLastHotspot" @blur="hotspot_settings_focused=false">
-          <input type="text" v-model="lastHotspot.description" placeholder="Beschreibung" :disabled="!loaded" aria-autocomplete="none" autocomplete="off" spellcheck="true"
-                 @focus="hotspot_settings_focused=true" @change="updateLastHotspot" @keyup="updateLastHotspot" @blur="hotspot_settings_focused=false">
-          <select v-model="lastHotspot.type" :disabled="!loaded" @change="updateLastHotspot">
-<!--            <option selected value="default">Standart</option>-->
-            <option value="location">Ort</option>
-            <option value="marker">Markierung</option>
-          </select>
-          <select v-model="lastHotspot.level" :disabled="!loaded" @change="updateLastHotspot" v-if="lastHotspot.type === 'location'">
-            <option value="1">Level 1</option>
-            <option value="2">Level 2</option>
-            <option value="3">Level 3</option>
-            <option value="4">Level 4</option>
-            <option value="5">Level 5</option>
-          </select>
-          <select v-model="lastHotspot.classification" :disabled="!loaded" @change="updateLastHotspot" multiple>
-            <option v-for="classification in classifications" :value="classification.value" :key="classification.value">{{ classification.label }}</option>
-          </select>
-          <div class="inline"><input type="checkbox" id="hotspot_action_setting" v-model="lastHotspot.action" @change="updateLastHotspot">
-            <label for="hotspot_action_setting">Aktion</label></div>
-<!--          <button type="submit" :disabled="!loaded" style="background-color: dodgerblue;">Speichern</button>-->
-        </form>
-      </div>
+        <p style="max-width: 225px">Direkt nach dem hinzufügen (<kbd>Alt + Klick auf den Planeten</kbd>) hier die Einstellungen vornehmen.<br>Andernfalls können die Einstellungen nicht mehr geändert werden.</p>
+        <FormKit
+            type="text"
+            id="hotspot_name_input"
+            name="name"
+            label="Name"
+            aria-autocomplete="none"
+            autocomplete="off"
+            spellcheck="true"
+            v-model="lastHotspot.name"
+            @focus="$event.target.select();hotspot_settings_focused=true"
+            @blur="hotspot_settings_focused=false"
+            @change="updateLastHotspot"
+            @keyup="updateLastHotspot"/>
+        <FormKit
+            type="text"
+            name="description"
+            label="Beschreibung"
+            aria-autocomplete="none"
+            autocomplete="off"
+            spellcheck="true"
+            v-model="lastHotspot.description"
+            @focus="hotspot_settings_focused=true"
+            @blur="hotspot_settings_focused=false"
+            @change="updateLastHotspot"
+            @keyup="updateLastHotspot"/>
+        <FormKit
+          type="select"
+          name="type"
+          label="Typ"
+          :options="{location: 'Ort', marker: 'Markierung'}"
+          v-model="lastHotspot.type"
+          @change="updateLastHotspot"/>
+        <FormKit
+            type="select"
+            name="level"
+            label="Ebene"
+            :options="{1: 'Ebene 1', 2: 'Ebene 2', 3: 'Ebene 3', 4: 'Ebene 4', 5: 'Ebene 5'}"
+            v-if="lastHotspot.type === 'location'"
+            v-model="lastHotspot.level"
+            @change="updateLastHotspot"/>
+      <FormKit
+        type="select"
+        name="classification"
+        label="Klassifizierung"
+        :options="classifications"
+        v-model="lastHotspot.classification"
+        @change="updateLastHotspot"
+        multiple/>
+      <FormKit
+        type="checkbox"
+        name="action"
+        label="Aktion"
+        help="Nur für besondere Hotspots"
+        v-model="lastHotspot.action"
+        @change="updateLastHotspot"/>
+      </FormKit>
     </div>
 
     <!-- region hotspots-->
@@ -144,7 +196,7 @@ export default {
       return annotations.data.classifications
     },
     isMobile() {
-      return this.$store.state.isMobile
+      return this.$store.state.client.isMobile
     }
   },
   mounted() {
@@ -153,9 +205,21 @@ export default {
     this.planets = Object.keys(planets).map(key => {
       return {...planets[key], "key": key, uuid: this.$globals.genUUID()}
     })
-    this.planets.sort((a, b) => (a.orderPriority < b.orderPriority) ? 1 : -1)
+    this.sortPlanets()
   },
   methods: {
+    sortPlanets() {
+      // sort by orderPriority plus the active planet to the top
+      this.planets.sort((a, b) => {
+        if (a.key === this.currentPlanet.key) {
+          return -1
+        } else if (b.key === this.currentPlanet.key) {
+          return 1
+        } else {
+          return b.orderPriority - a.orderPriority
+        }
+      })
+    },
     async createAndApplyTexture(image) {
       const material = this.planet.model.materials[0]
 
@@ -191,6 +255,7 @@ export default {
       if (!this.loaded && !force) return;
       this.currentPlanet = planet
       this.currentTexture = `/textures/${planet.texture}`
+      this.sortPlanets()
       this.createAndApplyTexture(`/textures/${planet.texture}`)
 
       // update hotspots
@@ -463,16 +528,6 @@ li.planet-selector.disabled {
   --hotspot-color: rgba(255, 213, 0, 0.9);
 }
 
-.hotspot-settings{
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 100;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
 .hotspot.location[data-visible], .hotspot.location[data-visible] .hotspot-annotation {
   opacity: calc(var(--max-hotspot-opacity) * (1 / var(--hotspot-zoom)) * var(--levelOpacityMultiplier)) !important;
 }
@@ -495,20 +550,29 @@ li.planet-selector.disabled {
   --levelOpacityMultiplier: 0.2;
 }
 /*endregion hotspots*/
-form > * {
-  font-size: 1em;
-  margin: 5px;
-  width: 100%;
-  border: none;
-  outline: none;
-  border-radius: 4px;
-  background-color: #eaeaea;
-}
 /* This keeps child nodes hidden while the element loads */
 :not(:defined) > * {
   display: none;
 }
+</style>
+<style>
+/*this style will be applied global bacause otherwise it won't work with FormKit*/
+#hotspot-settings{
+  position: absolute;
+  top: 0;
+  right: 5px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(250, 250, 250, 0.4);
+  border-radius: 5px;
+}
 .hidden {
-  display: none;
+  display: none !important;
+}
+.formkit-form#hotspot-settings > .formkit-outer {
+  width: 88%;
 }
 </style>
