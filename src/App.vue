@@ -73,7 +73,8 @@ export default {
   --bg-main-color: #fff;
   --bg-secondary-color: #d97221;
 
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  /*font-family: Avenir, Helvetica, Arial, sans-serif;*/
+  font-family: "Kanit", "Impira", "Montserrat Alternates", "Roboto", "Helvetica", "Arial", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #1b2831;

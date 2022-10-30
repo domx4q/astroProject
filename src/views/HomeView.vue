@@ -451,17 +451,23 @@ export default {
   left: 0;
   z-index: 100;
 }
+
 li.planet-selector {
-  background-color: v-bind(bg_color);
-  color: v-bind(accent_color);
+  list-style: none;
+  padding: 5px;
+  border-radius: 10px;
+  font-size: 17px;
+  font-weight: 440;
+  border: none;
+  outline: none;
+
+  transition: background-color 0.2s linear, color 0.2s linear;
 }
 li.planet-selector.active {
-  background-color: v-bind(accent_color);
-  color: v-bind(bg_color);
+  color: v-bind(accent_color);
 }
 li.planet-selector.disabled {
-  color: grey;
-  background-color: v-bind(bg_color);
+  color: darkgray;
 }
 li.planet-selector:first-of-type {
   margin-bottom: 10px;
