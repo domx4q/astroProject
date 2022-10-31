@@ -25,18 +25,21 @@
       v-on:camera-change="updateZoom"
       @load="planetLoaded">
     <div class="controls">
-      <div id="buttons">
+      <div id="buttons" class="formCollection">
         <div class="flex-column" style="margin-top: 10px; margin-left: 10px">
           <FormKit
               type="group"
               :disabled="!loaded">
-            <FormKit
-              type="file"
-              id="textureInput"
-              label="Datei auswählen"
-              :accept="allowedFileTypes"
-              @change="onFileChange"
-            />
+            <FormKit type="group" v-model="textureInputForm" :disabled="!loaded">
+<!--              needed because otherwise the file input can't be cleared-->
+              <FormKit
+                  type="file"
+                  id="textureInput"
+                  label="Datei auswählen"
+                  :accept="allowedFileTypes"
+                  @change="onFileChange"
+              />
+            </FormKit>
             <FormKit
               type="button"
               label="Hotspots speichern"
@@ -73,6 +76,7 @@
           <FormKit
               type="form"
               id="hotspot-settings"
+              form-class="formCollection"
               submit-label="Übernehmen"
               @submit="updateLastHotspot();blur()"
               :actions="false"
@@ -130,6 +134,7 @@
                 type="select"
                 name="classification"
                 label="Klassifizierung"
+                help="Strg + Klick zur Mehrfachauswahl"
                 :options="classifications"
                 v-model="lastHotspot.classification"
                 @change="updateLastHotspot"
@@ -210,7 +215,9 @@ export default {
 
       auto_rotate: true,
       enable_pan: false,
-      currentPlanet: planets.empty
+      currentPlanet: planets.empty,
+
+      textureInputForm: null,
     }
   },
   computed: {
@@ -279,7 +286,7 @@ export default {
           this.hotspots = []
         }
         // clear the file input
-        e
+        this.textureInputForm = {}
       }
     },
     changePlanet(planet, force = false) {
@@ -413,30 +420,21 @@ export default {
         this.planet.removeAttribute("data-settings-active")
       }
     },
+    "lastHotspot.classification": function (newVal, oldVal) {
+      if (newVal.includes("unknown") && !oldVal.includes("unknown")) {
+        this.lastHotspot.classification = ["unknown"]
+      } else if (newVal.includes("unknown") && oldVal.includes("unknown") && newVal.length > oldVal.length) {
+        this.lastHotspot.classification = newVal.filter(item => item !== "unknown")
+      }
+    },
   }
 }
 </script>
 <style scoped>
-.button {
-  border-radius: 10px;
-  padding: 10px;
-  margin: 10px;
-  background-color: v-bind(bg_color);
-  color: v-bind(accent_color);
-  border: none;
-  outline: none;
-
-  transition: background-color 0.2s linear, color 0.2s linear;
-
-  box-shadow: 0 0 0 5px v-bind(accent_color);
-}
-
-.button:hover {
-  background-color: v-bind(accent_color);
-  color: v-bind(bg_color);
-}
 #buttons {
   position: absolute;
+  margin: 5px;
+  padding: 10px;
   top: 0;
   left: 0;
   z-index: 100;
@@ -588,17 +586,19 @@ li.planet-selector:first-of-type {
 /*this style will be applied global bacause otherwise it won't work with FormKit*/
 #hotspot-settings{
   position: absolute;
-  top: 0;
+  top: 5px;
   right: 5px;
   z-index: 100;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+.formCollection {
   background-color: rgba(250, 250, 250, 0.4);
   border-radius: 5px;
 }
-html[data-theme="dark"] #hotspot-settings {
+html[data-theme="dark"] .formCollection {
   background-color: rgba(0, 0, 0, 0.4);
 }
 html[data-theme="dark"] .formkit-label {
