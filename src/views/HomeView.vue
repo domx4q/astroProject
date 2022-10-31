@@ -37,8 +37,7 @@
                   id="textureInput"
                   label="Datei auswählen"
                   :accept="allowedFileTypes"
-                  @change="onFileChange"
-              />
+                  @change="onFileChange"/>
             </FormKit>
             <FormKit
               type="button"
@@ -162,6 +161,13 @@
     </template>
     <!-- endregion hotspots-->
   </model-viewer>
+  <div class="messages">
+    <div class="wrapper" v-auto-animate>
+      <Message v-for="message in messages" :key="message.uuid" :message="message.text" :title="message.title" :timeout="message.timeout"
+               :class="message.class"
+               @close="removeMessage(message)"/>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -169,21 +175,27 @@
 import { setErrors, clearErrors, reset, useInput } from "@formkit/vue";
 import "animate.css";
 
-import planets from '@/assets/data/planets.json'
-import annotations from '@/assets/data/annotations.json'
+import message from "@/components/message";
 
-import('@google/model-viewer')
+import planets from "@/assets/data/planets.json"
+import annotations from "@/assets/data/annotations.json"
+
+import("@google/model-viewer")
 export default {
-  name: 'HomeView',
-  components: {},
+  name: "HomeView",
+  components: {
+    Message: message
+  },
   data() {
     return {
-      modelSrc: 'models/sphere.glb',
+      defaultPlanet: "venus_grd",
+      modelSrc: "models/sphere.glb",
+
       planet: null,
       planets: null,
       loaded: false,
       defaultOrbitSensi: 0.8,
-      background: '#000',
+      background: "#000",
       currentTexture: null,
       lastFieldOfView: 0,
       allowedFileTypes: ["image/png", "image/jpeg", "image/jpg", "image/webp", "application/json", "text/plain"],
@@ -209,6 +221,7 @@ export default {
       },
 
       hotspots: [],
+      messages: [],
 
       accent_color: "hsl(197, 45%, 49%)",
       bg_color: "#fff",
@@ -238,8 +251,16 @@ export default {
       return {...planets[key], "key": key, uuid: this.$globals.genUUID()}
     })
     this.sortPlanets()
+
+    this.addMessage("Willkommen!", "Willkommen auf der Planeten-App")
   },
   methods: {
+    removeMessage(message) {
+      this.messages = this.messages.filter(m => m.uuid !== message.uuid)
+    },
+    addMessage(title = null, message, timeout = -1, pClass = "info") {
+      this.messages.push({uuid: this.$globals.genUUID(), text: message, title: title, timeout: timeout, class: pClass})
+    },
     blur() {
       console.log("blur")
       document.activeElement.blur()
@@ -260,34 +281,40 @@ export default {
       const material = this.planet.model.materials[0]
 
       const texture = await this.planet.createTexture(image)
-      material.pbrMetallicRoughness['baseColorTexture'].setTexture(texture)
+      material.pbrMetallicRoughness["baseColorTexture"].setTexture(texture)
 
     },
     planetLoaded() {
-      this.planet = document.querySelector('model-viewer#planet')
+      this.planet = document.querySelector("model-viewer#planet")
       this.loaded = true
     },
     onFileChange(e) {
-      const file = e.target.files[0]
-      this.currentPlanet = this.findPlanet("empty")
-      if (file && this.allowedFileTypes.includes(file.type)) {
-        if (file.type === "application/json" || file.type === "text/plain") {
-          const fileReader = new FileReader()
-          let json;
-          fileReader.readAsText(file, "UTF-8")
-          fileReader.onload = e => {
-            json = JSON.parse(fileReader.result)
-            this.hotspots = json.map(hotspot => {
-              return {...hotspot, uuid: this.$globals.genUUID()}
-            })
+      try {
+        const file = e.target.files[0]
+        this.currentPlanet = this.findPlanet("empty")
+        if (file && this.allowedFileTypes.includes(file.type)) {
+          if (file.type === "application/json" || file.type === "text/plain") {
+            const fileReader = new FileReader()
+            let json;
+            fileReader.readAsText(file, "UTF-8")
+            fileReader.onload = e => {
+              json = JSON.parse(fileReader.result)
+              this.hotspots = json.map(hotspot => {
+                return {...hotspot, uuid: this.$globals.genUUID()}
+              })
+            }
+          } else {
+            this.createAndApplyTexture(URL.createObjectURL(file))
+            this.hotspots = []
           }
-        } else {
-          this.createAndApplyTexture(URL.createObjectURL(file))
-          this.hotspots = []
+          // clear the file input
+          this.addMessage("Status", "Datei erfolgreich geladen", 3000, "success")
         }
-        // clear the file input
-        this.textureInputForm = {}
+      } catch (e) {
+        this.addMessage("Fehler", "Datei konnte nicht geladen werden", 3000, "error")
       }
+      this.sortPlanets()
+      this.textureInputForm = {}
     },
     changePlanet(planet, force = false) {
       if (!this.loaded && !force) return;
@@ -401,7 +428,7 @@ export default {
     // eslint-disable-next-line no-unused-vars
     loaded: function (newVal, oldVal) {
       if (newVal) {
-        this.changePlanet(this.findPlanet("moon"), true)
+        this.changePlanet(this.findPlanet(this.defaultPlanet), true)
         setTimeout(() => {
           // do this manually because when set to false in data but not manually changed, then it won't update
           if (this.auto_rotate) {
@@ -412,6 +439,8 @@ export default {
 
         }, 1000)
       }
+
+      this.addMessage("Status", "Modell geladen", 3000, "success")
     },
     hotspot_settings_focused: function (newVal, oldVal) {
       if (newVal) {
@@ -467,7 +496,7 @@ li.planet-selector.active {
 li.planet-selector.disabled {
   color: darkgray;
 }
-li.planet-selector:first-of-type {
+li.planet-selector:first-of-type.active {
   margin-bottom: 10px;
 }
 
@@ -580,6 +609,33 @@ li.planet-selector:first-of-type {
 /* This keeps child nodes hidden while the element loads */
 :not(:defined) > * {
   display: none;
+}
+
+.messages {
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: auto;
+  height: auto;
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.messages > .wrapper > * {
+  margin: 5px 0;
+}
+.messages > .wrapper > .message:first-of-type {
+/*  hide it but dont use display: none, because it must be existent*/
+  opacity: 0;
+  pointer-events: none;
+  height: 50px;
 }
 </style>
 <style>

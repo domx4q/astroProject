@@ -1,13 +1,13 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import './registerServiceWorker'
-import router from './router'
-import store from './store'
+import { createApp } from "vue"
+import App from "./App.vue"
+import "./registerServiceWorker"
+import router from "./router"
+import store from "./store"
 
 import { autoAnimatePlugin } from "@formkit/auto-animate/vue";
 import { plugin, defaultConfig } from "@formkit/vue";
 import { de } from "@formkit/i18n";
-import '@formkit/themes/genesis';
+import "@formkit/themes/genesis";
 
 import { globals } from "@/default.js";
 
@@ -40,4 +40,4 @@ if (module.hot) {
     });
 }
 
-app.mount('#app');
+app.mount("#app");

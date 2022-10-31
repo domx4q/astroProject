@@ -6,9 +6,9 @@
   <router-view/>
 </template>
 <script>
-import { ClientJS } from 'clientjs';
+import { ClientJS } from "clientjs";
 export default {
-  name: 'app',
+  name: "app",
   data() {
     return {
       client: new ClientJS(),
