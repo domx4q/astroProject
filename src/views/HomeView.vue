@@ -1,7 +1,7 @@
 <template>
   <model-viewer
       :src="modelSrc"
-      alt="Es ist ein Fehler aufgetreten beim Laden des 3D-Modells."
+      alt="Es ist ein Fehler beim Laden des 3D-Modells aufgetreten."
       ar
       touch-action="none"
       camera-controls
@@ -251,8 +251,11 @@ export default {
       return {...planets[key], "key": key, uuid: this.$globals.genUUID()}
     })
     this.sortPlanets()
-
     this.addMessage("Willkommen!", "Willkommen auf der Planeten-App")
+
+    if (this.isMobile) {
+      this.allowedFileTypes = ["image/png", "image/jpeg", "image/jpg", "image/webp"]
+    }
   },
   methods: {
     removeMessage(message) {

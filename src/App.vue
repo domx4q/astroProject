@@ -3,6 +3,7 @@
 <!--    <router-link to="/">Home</router-link> |-->
 <!--    <router-link to="/about">About</router-link>-->
 <!--  </nav>-->
+<!--  todo: IMPORTANT: Add Vuetify it makes all a lot easier and then I can revoke the own message component-->
   <router-view/>
 </template>
 <script>
