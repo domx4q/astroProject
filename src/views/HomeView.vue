@@ -67,11 +67,10 @@
           </li>
         </template>
       </ul>
-<!-- use animate__fadeInRight for the transition      -->
       <Transition
           enter-active-class="animate__animated animate__fadeInRight"
           leave-active-class="animate__animated animate__fadeOutRight">
-        <div class="wrapper" v-if="!(hotspots.length === 0 || !loaded || (lastHotspot.position.x === 0 && lastHotspot.position.y === 0 && lastHotspot.position.z === 0))">
+        <div class="wrapper" v-if="!(hotspots.length === 0 || !loaded || (lastHotspot.position.x === 0 && lastHotspot.position.y === 0 && lastHotspot.position.z === 0)) && sidePanelType === 'hotspotSettings'">
           <FormKit
               type="form"
               id="hotspot-settings"
@@ -145,7 +144,25 @@
                 help="Nur für besondere Hotspots"
                 v-model="lastHotspot.action"
                 @change="updateLastHotspot"/>
+            <hr>
+            <FormKit
+                type="button"
+                label="Panel schließen"
+                @click="sidePanelType = 'planetInfo'"
+                :disabled="!loaded"/>
           </FormKit>
+        </div>
+      </Transition>
+      <Transition
+          enter-active-class="animate__animated animate__fadeInRight"
+          leave-active-class="animate__animated animate__fadeOutRight">
+        <div id="planetInfo" class="wrapper" v-if="sidePanelType === 'planetInfo'">
+          <h2 class="name">{{ planetInfo.name }}</h2>
+          <div class="description">
+            <p v-html="planetDescription"/>
+            <p v-if="planetInfo.link">Quelle: <a :href="planetInfo.link" target="_blank">{{ planetInfo.linkText }}</a></p>
+          </div>
+          <span class="close floatRight" @click="sidePanelType = 'empty'">&times;</span>
         </div>
       </Transition>
     </div>
@@ -188,19 +205,25 @@ export default {
   },
   data() {
     return {
-      defaultPlanet: "venus_grd",
+      defaultPlanet: "mars",
       modelSrc: "models/sphere.glb",
+      defaultOrbitSensi: 0.8,
+      allowedFileTypes: ["image/png", "image/jpeg", "image/jpg", "image/webp", "application/json", "text/plain"],
+      zoomFactor: 1,
+      background: "#000",
+      accent_color: "hsl(197, 45%, 49%)",
+      bg_color: "#fff",
+      auto_rotate: true,
+      enable_pan: false,
+      currentPlanet: this.convertPlanet(planets.empty, "empty"),
 
       planet: null,
       planets: null,
       loaded: false,
-      defaultOrbitSensi: 0.8,
-      background: "#000",
       currentTexture: null,
+      sidePanelType: "planetInfo",
       lastFieldOfView: 0,
-      allowedFileTypes: ["image/png", "image/jpeg", "image/jpg", "image/webp", "application/json", "text/plain"],
       hotspot_settings_focused: false,
-      zoomFactor: 1,
       lastHotspot: {
         name: "",
         description: "",
@@ -219,16 +242,8 @@ export default {
         type: "marker",
         level: "1", // desto höher, desto detaillierter / kleiner
       },
-
       hotspots: [],
       messages: [],
-
-      accent_color: "hsl(197, 45%, 49%)",
-      bg_color: "#fff",
-
-      auto_rotate: true,
-      enable_pan: false,
-      currentPlanet: planets.empty,
 
       textureInputForm: null,
     }
@@ -243,12 +258,36 @@ export default {
     theme() {
       return this.$store.state.theme
     },
+    planetInfo() {
+      if (this.currentPlanet === undefined || this.currentPlanet === null || this.currentPlanet === planets.empty || this.currentPlanet.key === "empty") {
+        return {
+          name: "Kein Planet ausgewählt",
+          description: "Wähle einen Planeten aus, um mehr Informationen zu erhalten.",
+
+          newLineDot: false
+        }
+      } else if (this.currentPlanet.info === undefined) {
+        return {
+          name: this.currentPlanet.name,
+          description: "Keine Informationen verfügbar.",
+
+          newLineDot: false
+        }
+      }
+      return this.currentPlanet.info
+    },
+    planetDescription() {
+      if (this.planetInfo.newLineDot) {
+        return this.planetInfo.description.replaceAll(". ", ".<br>").replaceAll("\n", "<br>")
+      }
+      return this.planetInfo.description.replaceAll("\n", "<br>")
+    },
   },
   mounted() {
     console.log("HomeView mounted")
     // convert dict to array and add uuid and key as property
     this.planets = Object.keys(planets).map(key => {
-      return {...planets[key], "key": key, uuid: this.$globals.genUUID()}
+      return this.convertPlanet(planets[key], key)
     })
     this.sortPlanets()
     this.addMessage("Willkommen!", "Willkommen auf der Planeten-App")
@@ -258,6 +297,13 @@ export default {
     }
   },
   methods: {
+    convertPlanet(planet, key) {
+      return {
+        ...planet,
+        key: key,
+        uuid: this.$globals.genUUID()
+      }
+    },
     removeMessage(message) {
       this.messages = this.messages.filter(m => m.uuid !== message.uuid)
     },
@@ -351,12 +397,13 @@ export default {
       const zoom = this.planet.getFieldOfView() / this.planet.getMaximumFieldOfView()
       this.planet.setAttribute("orbit-sensitivity", this.defaultOrbitSensi * Math.pow(zoom, 2))
       this.zoomFactor = zoom
-
     },
     addHotspot(event) {
-      const condition = this.hotspots.length === 0 && (this.lastHotspot.position.x === 0 && this.lastHotspot.position.y === 0 && this.lastHotspot.position.z === 0)
+      const condition = this.hotspots.length === 0 && (this.lastHotspot.position.x === 0 && this.lastHotspot.position.y === 0 && this.lastHotspot.position.z === 0) && this.sidePanelType !== "hotspotSettings"
       const xClick = event.offsetX;
       const yClick = event.offsetY;
+
+      this.sidePanelType = "hotspotSettings";
 
       const positionAndNormal = this.planet.positionAndNormalFromPoint(xClick, yClick);
       const position = positionAndNormal.position;
@@ -377,6 +424,7 @@ export default {
       this.lastHotspot.description = "";
 
       if (condition) {
+        console.log("long")
         setTimeout(() => {
           const nameInput = document.querySelector("#hotspot_name_input")
           nameInput.focus()
@@ -385,6 +433,7 @@ export default {
           }, 100)
         }, 1000)
       } else {
+        console.log("short")
         const nameInput = document.querySelector("#hotspot_name_input")
         nameInput.focus()
         setTimeout(() => {
@@ -463,6 +512,45 @@ export default {
 }
 </script>
 <style scoped>
+#planetInfo {
+  position: absolute;
+  top: 8%;
+  right: 10px;
+  width: 350px;
+  height: auto;
+  z-index: 100;
+  display: flex;
+  border-radius: 5px;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  /*pointer-events: none;*/
+  background-color: white;
+  padding: 20px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+  font-size: 1.1em;
+}
+html[data-theme="dark"] #planetInfo {
+  background-color: rgba(101, 101, 101, 0.6);
+}
+#planetInfo h2.name{
+  margin: 0;
+  padding: 0;
+}
+#planetInfo .description a {
+  --normalColor: #00aaff;
+  --hoverColor: #29607c;
+  --clickColor: #bb1920;
+
+  color: var(--normalColor);
+  transition: color 0.14s ease-in-out;
+}
+#planetInfo .description a:hover {
+  color: var(--hoverColor);
+}
+#planetInfo .description a:active {
+  color: var(--clickColor);
+}
 #buttons {
   position: absolute;
   margin: 5px;
@@ -657,10 +745,17 @@ li.planet-selector:first-of-type.active {
   background-color: rgba(250, 250, 250, 0.4);
   border-radius: 5px;
 }
+.formkit-form hr {
+  width: 100%;
+}
 html[data-theme="dark"] .formCollection {
   background-color: rgba(0, 0, 0, 0.4);
 }
 html[data-theme="dark"] .formkit-label {
+  color: #b0b0b0;
+}
+select.formkit-input:not([multiple]):focus:hover option.formkit-option, select.formkit-input:not([multiple]):focus:hover {
+  background-color: rgb(0, 0, 0);
   color: #b0b0b0;
 }
 option {
@@ -699,4 +794,16 @@ option:checked {
   --animate-delay: 0s;
 }
 /*endregion animations*/
+.close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px;
+  cursor: pointer;
+  border: 0;
+  border-top-right-radius: 5px;
+}
+.close:hover {
+  background-color: #ff0000;
+}
 </style>

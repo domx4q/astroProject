@@ -5,9 +5,7 @@
         <h3>{{ title }}</h3>
       </div>
       <div class="message__header__close">
-        <button @click="closeMessage">
-          &times;
-        </button>
+        <span class="close" @click="closeMessage" style="padding: 3px">&times;</span>
       </div>
     </div>
     <div class="message__body" v-if="message !== ''">
@@ -104,32 +102,32 @@ html[data-theme="dark"] .message {
   margin: 0;
   padding: 0;
 }
-.message__header__close {
-  width: 15px;
-  height: 15px;
-  display: flex;
-  margin-top: -5px;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-}
-.message__header__close button {
-  width: 100%;
-  height: 100%;
-  background-color: transparent;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  font-size: 1.2rem;
-  font-weight: 500;
-  color: #000;
-}
-html[data-theme="dark"] .message__header__close button {
-  color: #fff;
-}
-.message__header__close button:hover {
-  color: #f00 !important;
-}
+/*.message__header__close {*/
+/*  width: 15px;*/
+/*  height: 15px;*/
+/*  display: flex;*/
+/*  margin-top: -5px;*/
+/*  flex-direction: row;*/
+/*  justify-content: center;*/
+/*  align-items: center;*/
+/*}*/
+/*.message__header__close button {*/
+/*  width: 100%;*/
+/*  height: 100%;*/
+/*  background-color: transparent;*/
+/*  border: none;*/
+/*  outline: none;*/
+/*  cursor: pointer;*/
+/*  font-size: 1.2rem;*/
+/*  font-weight: 500;*/
+/*  color: #000;*/
+/*}*/
+/*html[data-theme="dark"] .message__header__close button {*/
+/*  color: #fff;*/
+/*}*/
+/*.message__header__close button:hover {*/
+/*  color: #f00 !important;*/
+/*}*/
 .message__body {
   width: 100%;
   height: auto;
