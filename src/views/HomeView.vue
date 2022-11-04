@@ -277,10 +277,26 @@ export default {
       return this.currentPlanet.info
     },
     planetDescription() {
-      if (this.planetInfo.newLineDot) {
-        return this.planetInfo.description.replaceAll(". ", ".<br>").replaceAll("\n", "<br>")
+      let description = this.planetInfo.description
+      if (this.planetInfo.autoFetch) {
+        const url = this.planetInfo.link
+        const title = url.substring(url.lastIndexOf("/") + 1)
+        const wikiUrl = "https://de.wikipedia.org/api/rest_v1/page/summary/" + title
+        fetch(wikiUrl)
+          .then(response => response.json())
+          .then(data => {
+            description = data.extract
+            if (description.includes("<p>")) {
+              description = description.substring(description.indexOf("<p>") + 3)
+              description = description.substring(0, description.indexOf("</p>"))
+            }
+            this.planetInfo.description = description
+          })
       }
-      return this.planetInfo.description.replaceAll("\n", "<br>")
+      if (this.planetInfo.newLineDot) {
+        return description.replaceAll(". ", ".<br>").replaceAll("\n", "<br>")
+      }
+      return description.replaceAll("\n", "<br>")
     },
   },
   mounted() {
@@ -366,6 +382,8 @@ export default {
       this.textureInputForm = {}
     },
     changePlanet(planet, force = false) {
+      this.sidePanelType = "planetInfo"
+
       if (!this.loaded && !force) return;
       this.currentPlanet = planet
       this.currentTexture = `/textures/${planet.texture}`

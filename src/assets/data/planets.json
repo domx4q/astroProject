@@ -8,10 +8,11 @@
     "annotationsKey": "neptune",
     "info": {
       "name": "Neptun",
-      "description": "Der Neptun ist der achte und äußerste bekannte Planet unseres Sonnensystems. Er wurde 1846 aufgrund von Berechnungen aus Bahnstörungen des Uranus durch den französischen Mathematiker Urbain Le Verrier von dem deutschen Astronomen Johann Gottfried Galle entdeckt. Neptun ist durchschnittlich 4,5 Milliarden Kilometer von der Sonne entfernt. Von der Erde aus hat er einen scheinbaren Durchmesser von ca. 2 Winkelsekunden. Mit einem Durchmesser von knapp 50.000 Kilometern hat Neptun fast den vierfachen Erddurchmesser und das rund 58-fache Erdvolumen. Nach Jupiter, Saturn und Uranus ist Neptun der viertgrößte Planet des Sonnensystems.\n\nZusammen mit Uranus bildet Neptun die Untergruppe der Eisriesen. Neptun dominiert durch seine Größe die Außenzone des Planetensystems, was sich zum Beispiel an der Umlaufzeit einiger „Transneptune“ wie Pluto und der Plutino-Gruppe zeigt, die etwa das 1,5fache der Umlaufzeit von Neptun beträgt (eine 3:2-Bahnresonanz). Von den 14 bekannten Monden Neptuns ist Triton mit 2700 Kilometern Durchmesser der mit Abstand größte.",
+      "description": "",
       "link": "https://de.wikipedia.org/wiki/Neptun_(Planet)",
       "linkText": "Wikipedia",
-      "newLineDot": true
+      "newLineDot": true,
+      "autoFetch": true
     }
   },
   "uranus": {
@@ -23,10 +24,11 @@
     "annotationsKey": "uranus",
     "info": {
       "name": "Uranus",
-      "description": "Der Uranus ist von der Sonne aus mit einer durchschnittlichen Sonnenentfernung von 2,9 Milliarden Kilometern der siebte Planet im Sonnensystem und wird zu den Eisriesen gerechnet. Er wurde am 13. März 1781 von Wilhelm Herschel entdeckt und ist nach dem griechischen Himmelsgott Uranos benannt. Er ist damit als einziger Planet nach einem Gott der griechischen Götterwelt benannt.",
+      "description": "",
       "link": "https://de.wikipedia.org/wiki/Uranus_(Planet)",
       "linkText": "Wikipedia",
-      "newLineDot": true
+      "newLineDot": true,
+      "autoFetch": true
     }
   },
   "venus_atm": {
@@ -38,10 +40,11 @@
     "annotationsKey": "venus",
     "info": {
       "name": "Venus",
-      "description": "Die Venus ist mit einer durchschnittlichen Sonnenentfernung von 108 Millionen Kilometern der zweitinnerste und mit einem Durchmesser von ca. 12.100 Kilometern der drittkleinste Planet des Sonnensystems. Sie zählt zu den vier erdähnlichen Planeten, die auch terrestrische oder Gesteinsplaneten genannt werden.\n\nDie Venus ist der Planet, der auf seiner Umlaufbahn der Erdbahn mit einem minimalen Abstand von 38 Millionen Kilometern am nächsten kommt. Sie hat eine ähnliche Größe wie die Erde, unterscheidet sich aber in Bezug auf die Geologie und vor allem hinsichtlich ihrer Atmosphäre. Diese besteht zu 96 % aus Kohlenstoffdioxid und ihr Oberflächendruck ist 90-mal höher als auf der Erde.",
+      "description": "",
       "link": "https://de.wikipedia.org/wiki/Venus_(Planet)",
       "linkText": "Wikipedia",
-      "newLineDot": true
+      "newLineDot": true,
+      "autoFetch": true
     }
   },
   "venus_grd": {
@@ -53,10 +56,11 @@
     "annotationsKey": "venus",
     "info": {
       "name": "Venus",
-      "description": "Die Venus ist mit einer durchschnittlichen Sonnenentfernung von 108 Millionen Kilometern der zweitinnerste und mit einem Durchmesser von ca. 12.100 Kilometern der drittkleinste Planet des Sonnensystems. Sie zählt zu den vier erdähnlichen Planeten, die auch terrestrische oder Gesteinsplaneten genannt werden.\n\nDie Venus ist der Planet, der auf seiner Umlaufbahn der Erdbahn mit einem minimalen Abstand von 38 Millionen Kilometern am nächsten kommt. Sie hat eine ähnliche Größe wie die Erde, unterscheidet sich aber in Bezug auf die Geologie und vor allem hinsichtlich ihrer Atmosphäre. Diese besteht zu 96 % aus Kohlenstoffdioxid und ihr Oberflächendruck ist 90-mal höher als auf der Erde.",
+      "description": "",
       "link": "https://de.wikipedia.org/wiki/Venus_(Planet)",
       "linkText": "Wikipedia",
-      "newLineDot": true
+      "newLineDot": true,
+      "autoFetch": true
     }
   },
   "earth": {
@@ -68,10 +72,11 @@
     "annotationsKey": "earth",
     "info": {
       "name": "Erde",
-      "description": "Die Erde ist der dichteste, fünftgrößte und der Sonne drittnächste Planet des Sonnensystems. Sie ist Ursprungsort und Heimat aller bekannten Lebewesen. Ihr Durchmesser beträgt mehr als 12.700 Kilometer und ihr Alter etwa 4,6 Milliarden Jahre. Nach ihrer vorherrschenden geochemischen Beschaffenheit wurde der Begriff der „erdähnlichen Planeten“ geprägt. Das astronomische Symbol der Erde ist ♁ oder \uD83D\uDF28.\n\nDa die Erdoberfläche zu etwa zwei Dritteln aus Wasser besteht und daher die Erde vom All betrachtet vorwiegend blau erscheint, wird sie auch Blauer Planet genannt. Sie wird metaphorisch auch als „Raumschiff Erde“ bezeichnet.",
+      "description": "",
       "link": "https://de.wikipedia.org/wiki/Erde",
       "linkText": "Wikipedia",
-      "newLineDot": true
+      "newLineDot": true,
+      "autoFetch": true
     }
   },
   "jupiter": {
@@ -83,10 +88,11 @@
     "annotationsKey": "jupiter",
     "info": {
       "name": "Jupiter",
-      "description": "Jupiter ist mit einem Äquatordurchmesser von rund 143.000 Kilometern der größte Planet des Sonnensystems. Mit einer durchschnittlichen Entfernung von 778 Millionen Kilometern ist er von der Sonne aus gesehen der fünfte Planet. Er ist nach dem römischen Hauptgott Jupiter benannt.\n\nDer Planet hat – wie auch Saturn, Uranus und Neptun – keine feste Oberfläche. Die schon im kleinen Fernrohr sichtbaren, fast parallelen Streifen sind farbige Wolkenbänder. Aufgrund seiner chemischen Zusammensetzung zählt Jupiter zu den Gasplaneten. Diese „Gasriesen“ bilden im Sonnensystem die Gruppe der äußeren Planeten; sie werden auch als jupiterähnliche (jovianische) Planeten bezeichnet. In dieser Gruppe ist Jupiter der innerste Planet; er läuft jenseits des Asteroidengürtels um die Sonne.",
+      "description": "",
       "link": "https://de.wikipedia.org/wiki/Jupiter_(Planet)",
       "linkText": "Wikipedia",
-      "newLineDot": true
+      "newLineDot": true,
+      "autoFetch": true
     }
   },
   "mars": {
@@ -98,10 +104,11 @@
     "annotationsKey": "mars",
     "info": {
       "name": "Mars / der Rote Planet",
-      "description": "Der Mars ist, von der Sonne aus gezählt, der vierte Planet im Sonnensystem und der äußere Nachbar der Erde. Er zählt zu den erdähnlichen (terrestrischen) Planeten.\n\nSein Durchmesser ist mit knapp 6800 Kilometern etwa halb so groß wie der der Erde, sein Volumen beträgt gut ein Siebtel des Erdvolumens. Damit ist der Mars nach dem Merkur der zweitkleinste Planet des Sonnensystems, hat jedoch eine vielfältige Geologie und die höchsten Vulkane des Sonnensystems. Mit einer durchschnittlichen Entfernung von 228 Millionen Kilometern ist er rund 1,5-mal so weit von der Sonne entfernt wie die Erde. ",
+      "description": "",
       "link": "https://de.wikipedia.org/wiki/Mars_(Planet)",
       "linkText": "Wikipedia",
-      "newLineDot": true
+      "newLineDot": true,
+      "autoFetch": true
     }
   },
   "mercury": {
@@ -113,10 +120,11 @@
     "annotationsKey": "mercury",
     "info": {
       "name": "Merkur",
-      "description": "Der Merkur ist mit einem Durchmesser von knapp 4880 Kilometern der kleinste, mit einer durchschnittlichen Sonnenentfernung von etwa 58 Millionen Kilometern der sonnennächste und somit auch schnellste Planet im Sonnensystem. Er hat mit einer maximalen Tagestemperatur von rund +430 °C und einer Nachttemperatur bis −170 °C die größten Oberflächen-Temperaturschwankungen aller Planeten.\n\nAufgrund seiner Größe und seiner chemischen Zusammensetzung zählt er zu den erdähnlichen Planeten.",
+      "description": "",
       "link": "https://de.wikipedia.org/wiki/Merkur_(Planet)",
       "linkText": "Wikipedia",
-      "newLineDot": true
+      "newLineDot": true,
+      "autoFetch": true
     }
   },
   "moon": {
@@ -128,10 +136,11 @@
     "annotationsKey": "moon",
     "info": {
       "name": "Mond",
-      "description": "Der Mond ist der einzige natürliche Satellit der Erde. Sein Name ist etymologisch verwandt mit Monat und bezieht sich auf die Periode seines Phasenwechsels. Weil die Trabanten anderer Planeten des Sonnensystems im übertragenen Sinn meist ebenfalls als Monde bezeichnet werden, spricht man zur Vermeidung von Verwechslungen mitunter vom Erdmond. Er ist mit einem Durchmesser von 3476 km der fünftgrößte bekannte Mond des Sonnensystems und gegenüber seinem Zentralkörper Erde außergewöhnlich groß (über ein Viertel des Erddurchmessers).",
+      "description": "",
       "link": "https://de.wikipedia.org/wiki/Mond",
       "linkText": "Wikipedia",
-      "newLineDot": true
+      "newLineDot": true,
+      "autoFetch": true
     }
   },
   "saturn": {
@@ -143,10 +152,11 @@
     "annotationsKey": "saturn",
     "info": {
       "name": "Saturn",
-      "description": "Der Saturn ist von der Sonne aus gesehen der sechste Planet des Sonnensystems und mit einem Äquatordurchmesser von etwa 120.500 Kilometern (9,5-facher Erddurchmesser) nach Jupiter der zweitgrößte. Mit 95 Erdmassen hat er jedoch nur 30 % der Masse Jupiters. Wegen seines auffallenden und schon im kleinen Fernrohr sichtbaren Ringsystems wird er oft auch der Ringplanet genannt, obwohl auch bei den anderen drei Gasplaneten Ringsysteme gefunden wurden.\n\nDer Saturn hat eine durchschnittliche Entfernung zur Sonne von gut 1,43 Milliarden Kilometern, seine Bahn verläuft zwischen der von Jupiter und der des sonnenferneren Uranus. Er ist der äußerste Planet, der auch mit bloßem Auge gut sichtbar ist, und war daher schon Jahrtausende vor der Erfindung des Fernrohrs bekannt.",
+      "description": "",
       "link": "https://de.wikipedia.org/wiki/Saturn_(Planet)",
       "linkText": "Wikipedia",
-      "newLineDot": true
+      "newLineDot": true,
+      "autoFetch": true
     }
   },
   "sun": {
@@ -158,10 +168,11 @@
     "annotationsKey": "sun",
     "info": {
       "name": "Sonne",
-      "description": "Die Sonne ist der Stern, der der Erde am nächsten ist und das Zentrum des Sonnensystems bildet. Sie ist ein durchschnittlich großer Stern im äußeren Drittel der Milchstraße. Die Sonne ist ein Zwergstern (Gelber Zwerg), der sich im Entwicklungsstadium der Hauptreihe befindet. Sie enthält 99,86 % der Masse, jedoch nur ca. 0,5 % des Drehimpulses des Sonnensystems. Ihr Durchmesser ist mit 1,4 Millionen Kilometern etwa 110-mal so groß wie der der Erde. Die Oberfläche der Sonne zeigt eine wechselnde Zahl von Sonnenflecken, die in Zusammenhang mit starken Magnetfeldern stehen. Sie werden neben weiteren Phänomenen als Sonnenaktivität bezeichnet.",
+      "description": "",
       "link": "https://de.wikipedia.org/wiki/Sonne",
       "linkText": "Wikipedia",
-      "newLineDot": true
+      "newLineDot": true,
+      "autoFetch": true
     }
   },
   "empty": {
