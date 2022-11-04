@@ -82,7 +82,7 @@
               v-if="!isMobile"
               v-auto-animate>
             <h2>Hotspot Einstellungen</h2>
-            <p style="max-width: 225px">Direkt nach dem hinzufügen (<kbd>Alt + Klick auf den Planeten</kbd>) hier die
+            <p style="max-width: 225px" v-if="windowHeight >= 913">Direkt nach dem hinzufügen (<kbd>Alt + Klick auf den Planeten</kbd>) hier die
               Einstellungen vornehmen.<br>Andernfalls können die Einstellungen nicht mehr geändert werden.</p>
             <FormKit
                 type="text"
@@ -153,7 +153,7 @@
           </FormKit>
         </div>
       </Transition>
-      <Transition
+      <Transition v-if="!isMobile"
           enter-active-class="animate__animated animate__fadeInRight"
           leave-active-class="animate__animated animate__fadeOutRight">
         <div id="planetInfo" class="wrapper" v-if="sidePanelType === 'planetInfo'">
@@ -162,7 +162,7 @@
             <p v-html="planetDescription"/>
             <p v-if="planetInfo.link">Quelle: <a :href="planetInfo.link" target="_blank">{{ planetInfo.linkText }}</a></p>
           </div>
-          <span class="close floatRight" @click="sidePanelType = 'empty'">&times;</span>
+          <span class="close" @click="sidePanelType = 'empty'">&times;</span>
         </div>
       </Transition>
     </div>
@@ -189,7 +189,6 @@
 
 <script>
 // @ is an alias to /src
-import { setErrors, clearErrors, reset, useInput } from "@formkit/vue";
 import "animate.css";
 
 import message from "@/components/message";
@@ -283,20 +282,23 @@ export default {
         const title = url.substring(url.lastIndexOf("/") + 1)
         const wikiUrl = "https://de.wikipedia.org/api/rest_v1/page/summary/" + title
         fetch(wikiUrl)
-          .then(response => response.json())
-          .then(data => {
-            description = data.extract
-            if (description.includes("<p>")) {
-              description = description.substring(description.indexOf("<p>") + 3)
-              description = description.substring(0, description.indexOf("</p>"))
-            }
-            this.planetInfo.description = description
-          })
+            .then(response => response.json())
+            .then(data => {
+              description = data.extract
+              if (description.includes("<p>")) {
+                description = description.substring(description.indexOf("<p>") + 3)
+                description = description.substring(0, description.indexOf("</p>"))
+              }
+              this.planetInfo.description = description
+            })
       }
       if (this.planetInfo.newLineDot) {
         return description.replaceAll(". ", ".<br>").replaceAll("\n", "<br>")
       }
       return description.replaceAll("\n", "<br>")
+    },
+    windowHeight() {
+      return window.innerHeight
     },
   },
   mounted() {
@@ -327,7 +329,6 @@ export default {
       this.messages.push({uuid: this.$globals.genUUID(), text: message, title: title, timeout: timeout, class: pClass})
     },
     blur() {
-      console.log("blur")
       document.activeElement.blur()
     },
     sortPlanets() {
@@ -362,7 +363,7 @@ export default {
             const fileReader = new FileReader()
             let json;
             fileReader.readAsText(file, "UTF-8")
-            fileReader.onload = e => {
+            fileReader.onload = () => {
               json = JSON.parse(fileReader.result)
               this.hotspots = json.map(hotspot => {
                 return {...hotspot, uuid: this.$globals.genUUID()}
@@ -417,7 +418,7 @@ export default {
       this.zoomFactor = zoom
     },
     addHotspot(event) {
-      const condition = this.hotspots.length === 0 && (this.lastHotspot.position.x === 0 && this.lastHotspot.position.y === 0 && this.lastHotspot.position.z === 0) && this.sidePanelType !== "hotspotSettings"
+      const condition = this.hotspots.length === 0 && (this.lastHotspot.position.x === 0 && this.lastHotspot.position.y === 0 && this.lastHotspot.position.z === 0) || this.sidePanelType !== "hotspotSettings"
       const xClick = event.offsetX;
       const yClick = event.offsetY;
 
@@ -442,7 +443,6 @@ export default {
       this.lastHotspot.description = "";
 
       if (condition) {
-        console.log("long")
         setTimeout(() => {
           const nameInput = document.querySelector("#hotspot_name_input")
           nameInput.focus()
@@ -451,7 +451,6 @@ export default {
           }, 100)
         }, 1000)
       } else {
-        console.log("short")
         const nameInput = document.querySelector("#hotspot_name_input")
         nameInput.focus()
         setTimeout(() => {
@@ -645,7 +644,7 @@ li.planet-selector:first-of-type.active {
 .hotspot-annotation {
   background: var(--hotspot-color);
   border-radius: 4px;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 2px 4px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0 2px 4px;
   color: rgba(0, 0, 0, 0.8);
   display: block;
   font-family: Futura, Helvetica Neue, sans-serif;
