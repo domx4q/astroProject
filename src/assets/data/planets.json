@@ -140,7 +140,15 @@
       "link": "https://de.wikipedia.org/wiki/Mond",
       "linkText": "Wikipedia",
       "newLineDot": true,
-      "autoFetch": true
+      "autoFetch": true,
+
+      "detailed": {
+        "Zusammensetzung": "Der Mond besteht zu <b>81 % aus Silizium</b>, <b>13 % aus Sauerstoff</b>, <b>3 % aus Eisen</b> und 3 % aus anderen Elementen.",
+        "Durchmesser": "Der Durchmesser des Mondes beträgt <b>3476 km</b>.",
+        "Temperatur": "Die Temperatur auf dem Mond beträgt <b>-173 °C</b> bei Tag und <b>-233 °C</b> bei Nacht.",
+        "Entfernung zur Erde": "Der Mond ist <b>384.400 km</b> von der Erde entfernt.",
+        "test": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl vitae luctus lacinia, nisl nisl aliquam nisl, vitae luctus nisl lorem vel nisl. Sed euismod, nisl vitae luctus lacinia, nisl nisl aliquam nisl, vitae luctus nisl lorem vel nisl. Sed euismod, nisl vitae luctus lacinia, nisl nisl aliquam nisl, vitae luctus nisl lorem vel nisl. Sed euismod, nisl vitae luctus lacinia, nisl nisl aliquam nisl, vitae luctus nisl lorem vel nisl. Sed euismod, nisl vitae luctus lacinia, nisl nisl aliquam nisl, vitae luctus nisl lorem vel nisl. Sed euismod, nisl vitae luctus lacinia, nisl nisl aliquam nisl, vitae luctus nisl lorem vel nisl. Sed euismod, nisl vitae luctus lacinia, nisl nisl aliquam nisl, vitae luctus nisl lorem vel nisl. Sed euismod, nisl vitae luctus lacinia, nisl nisl aliquam nisl, vitae luctus nisl lorem vel nisl. Sed euismod, nisl vitae luctus lacinia, nisl nisl aliquam nisl, vitae luctus nisl lorem vel nisl. Sed euismod, nisl vitae luctus lacinia, nisl nisl aliquam nisl, vitae luctus nisl lorem vel nisl. Sed euismod, nisl vitae luctus lacinia, nisl nisl aliquam nisl, vitae luctus nisl lorem vel nisl. Sed euismod, nisl vitae luctus lacinia, nisl nisl aliquam nisl, vitae luctus nisl lorem vel nisl. Sed euismod, nisl vitae luctus lacinia, nisl nisl aliquam nisl, vitae luctus nisl lorem vel nisl. Sed euismod, nisl vitae luctus lacinia, nisl nisl aliquam nisl, vitae luctus nisl lorem vel nisl. Sed"
+      }
     }
   },
   "saturn": {

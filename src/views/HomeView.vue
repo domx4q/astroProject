@@ -159,10 +159,26 @@
         <div id="planetInfo" class="wrapper" v-if="sidePanelType === 'planetInfo'">
           <h2 class="name">{{ planetInfo.name }}</h2>
           <div class="description">
-            <p v-html="planetDescription"/>
-            <p v-if="planetInfo.link">Quelle: <a :href="planetInfo.link" target="_blank">{{ planetInfo.linkText }}</a></p>
+            <Dropdown
+                title="Beschreibung"
+                :open-override="openPlanetInfoDropdown === 'none'"
+                :onlyShowTitleOnClose="true"
+                @open="openPlanetInfoDropdown = 'none'"
+                @close="openPlanetInfoDropdown = 'none'">
+              <p v-html="planetDescription"/><br>
+              <p v-if="planetInfo.link">Quelle: <a :href="planetInfo.link" target="_blank">{{ planetInfo.linkText }}</a></p>
+            </Dropdown>
           </div>
           <span class="close" @click="sidePanelType = 'empty'">&times;</span>
+          <template v-if="planetInfo.detailed !== undefined && Object.keys(planetInfo.detailed).length > 0">
+<!--            create a Dropdown like on the vue auto animate demo page, use also vue auto animate-->
+            <hr>
+            <div v-for="(value, key) in planetInfo.detailed" :key="key" class="dropdowns">
+              <Dropdown :title="key" :open-override="openPlanetInfoDropdown === key" @open="openPlanetInfoDropdown = key" @close="openPlanetInfoDropdown = 'none'">
+                <p v-html="value"/>
+              </Dropdown>
+            </div>
+          </template>
         </div>
       </Transition>
     </div>
@@ -192,6 +208,7 @@
 import "animate.css";
 
 import message from "@/components/message";
+import dropdown from "@/components/dropdown";
 
 import planets from "@/assets/data/planets.json"
 import annotations from "@/assets/data/annotations.json"
@@ -200,11 +217,12 @@ import("@google/model-viewer")
 export default {
   name: "HomeView",
   components: {
-    Message: message
+    Message: message,
+    Dropdown: dropdown
   },
   data() {
     return {
-      defaultPlanet: "mars",
+      defaultPlanet: "moon",
       modelSrc: "models/sphere.glb",
       defaultOrbitSensi: 0.8,
       allowedFileTypes: ["image/png", "image/jpeg", "image/jpg", "image/webp", "application/json", "text/plain"],
@@ -221,6 +239,7 @@ export default {
       loaded: false,
       currentTexture: null,
       sidePanelType: "planetInfo",
+      openPlanetInfoDropdown: "none",
       lastFieldOfView: 0,
       hotspot_settings_focused: false,
       lastHotspot: {
@@ -384,6 +403,7 @@ export default {
     },
     changePlanet(planet, force = false) {
       this.sidePanelType = "planetInfo"
+      this.openPlanetInfoDropdown = "none"
 
       if (!this.loaded && !force) return;
       this.currentPlanet = planet
@@ -510,6 +530,8 @@ export default {
       }
 
       this.addMessage("Status", "Modell geladen", 3000, "success")
+
+      console.log(this.planetInfo)
     },
     hotspot_settings_focused: function (newVal, oldVal) {
       if (newVal) {
@@ -540,7 +562,7 @@ export default {
   border-radius: 5px;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: center;
+  align-items: normal;
   /*pointer-events: none;*/
   background-color: white;
   padding: 20px;
@@ -551,6 +573,11 @@ html[data-theme="dark"] #planetInfo {
   background-color: rgba(101, 101, 101, 0.6);
 }
 #planetInfo h2.name{
+  align-self: center;
+  margin: 0;
+  padding: 0;
+}
+#planetInfo p {
   margin: 0;
   padding: 0;
 }
@@ -568,6 +595,19 @@ html[data-theme="dark"] #planetInfo {
 #planetInfo .description a:active {
   color: var(--clickColor);
 }
+#planetInfo hr {
+  width: 100%;
+  margin: 5px 0;
+}
+#planetInfo .dropdowns {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: normal;
+  width: 100%;
+  overflow: scroll;
+}
+
 #buttons {
   position: absolute;
   margin: 5px;
