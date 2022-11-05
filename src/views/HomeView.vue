@@ -171,7 +171,6 @@
           </div>
           <span class="close" @click="sidePanelType = 'empty'">&times;</span>
           <template v-if="planetInfo.detailed !== undefined && Object.keys(planetInfo.detailed).length > 0">
-<!--            create a Dropdown like on the vue auto animate demo page, use also vue auto animate-->
             <hr>
             <div v-for="(value, key) in planetInfo.detailed" :key="key" class="dropdowns">
               <Dropdown :title="key" :open-override="openPlanetInfoDropdown === key" @open="openPlanetInfoDropdown = key" @close="openPlanetInfoDropdown = 'none'">
@@ -376,7 +375,6 @@ export default {
     onFileChange(e) {
       try {
         const file = e.target.files[0]
-        this.currentPlanet = this.findPlanet("empty")
         if (file && this.allowedFileTypes.includes(file.type)) {
           if (file.type === "application/json" || file.type === "text/plain") {
             const fileReader = new FileReader()
@@ -389,10 +387,10 @@ export default {
               })
             }
           } else {
+            this.currentPlanet = this.findPlanet("empty")
             this.createAndApplyTexture(URL.createObjectURL(file))
             this.hotspots = []
           }
-          // clear the file input
           this.addMessage("Status", "Datei erfolgreich geladen", 3000, "success")
         }
       } catch (e) {
@@ -499,23 +497,21 @@ export default {
     }
   },
   watch: {
-    // eslint-disable-next-line no-unused-vars
-    auto_rotate: function (newVal, oldVal) {
+    auto_rotate: function (newVal) {
       if (newVal) {
         this.planet.setAttribute("auto-rotate", "")
       } else {
         this.planet.removeAttribute("auto-rotate")
       }
     },
-    enable_pan: function (newVal, oldVal) {
+    enable_pan: function (newVal) {
       if (!newVal) {
         this.planet.setAttribute("disable-pan", "")
       } else {
         this.planet.removeAttribute("disable-pan")
       }
     },
-    // eslint-disable-next-line no-unused-vars
-    loaded: function (newVal, oldVal) {
+    loaded: function (newVal) {
       if (newVal) {
         this.changePlanet(this.findPlanet(this.defaultPlanet), true)
         setTimeout(() => {
@@ -530,10 +526,8 @@ export default {
       }
 
       this.addMessage("Status", "Modell geladen", 3000, "success")
-
-      console.log(this.planetInfo)
     },
-    hotspot_settings_focused: function (newVal, oldVal) {
+    hotspot_settings_focused: function (newVal) {
       if (newVal) {
         this.planet.setAttribute("data-settings-active", "true")
       } else {

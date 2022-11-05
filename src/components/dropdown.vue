@@ -4,7 +4,7 @@
       <h3>{{ title }}</h3>
     </div>
     <div class="content" v-if="open">
-      <slot/>
+      <slot>Platzhalter für den Inhalt des Dropdowns</slot>
     </div>
   </div>
 </template>
