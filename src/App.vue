@@ -62,6 +62,7 @@ export default {
           theme = "light";
         }
       }
+      theme = "dark" // todo change this later, light mode is not beatiful in this time
       // add attribute to html element
       document.documentElement.setAttribute("data-theme", theme);
       this.$store.state.theme = theme;
