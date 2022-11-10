@@ -371,6 +371,7 @@ export default {
 
     },
     planetLoaded() {
+      console.log("planet loaded")
       this.planet = document.querySelector("model-viewer#planet")
       this.loaded = true
     },
@@ -413,8 +414,15 @@ export default {
         this.planetType = "custom"
       } else {
         this.currentTexture = `/textures/${planet.texture}`
-        this.createAndApplyTexture(`/textures/${planet.texture}`)
-        this.planetType = "normal"
+        if (this.planetType === "custom") {
+          this.modelSrc = "models/sphere.glb"
+          this.planetType = "normal"
+          setTimeout(() => {
+            this.createAndApplyTexture(`/textures/${planet.texture}`)
+          }, 100)
+        } else {
+          this.createAndApplyTexture(`/textures/${planet.texture}`)
+        }
       }
       this.sortPlanets()
 
