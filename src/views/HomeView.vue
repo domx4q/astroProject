@@ -23,7 +23,8 @@
       @keyup.ctrl.space.exact="auto_rotate = !auto_rotate"
       @keyup.shift.ctrl.space.exact="enable_pan = !enable_pan"
       v-on:camera-change="updateZoom"
-      @load="planetLoaded">
+      @load="planetLoaded"
+      @progress="progress = $event.detail.totalProgress">
     <div class="controls">
       <div id="buttons" class="formCollection">
         <div class="flex-column" style="margin-top: 10px; margin-left: 10px">
@@ -237,6 +238,7 @@ export default {
       planetType: "normal",
       planets: null,
       loaded: false,
+      progress: 0,
       currentTexture: null,
       sidePanelType: "planetInfo",
       openPlanetInfoDropdown: "none",
@@ -371,7 +373,7 @@ export default {
 
     },
     planetLoaded() {
-      console.log("planet loaded")
+      console.log("planet loaded", new Date().toLocaleTimeString())
       this.planet = document.querySelector("model-viewer#planet")
       this.loaded = true
     },
@@ -873,5 +875,9 @@ option:checked {
 }
 .close:hover {
   background-color: #ff0000;
+}
+
+html[data-theme="dark"] model-viewer::part(default-progress-bar) {
+  background-color: #6c8bda;
 }
 </style>

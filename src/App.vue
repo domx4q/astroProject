@@ -139,6 +139,9 @@ html {
   flex-direction: column;
 }
 
+hr {
+  width: 100%;
+}
 /*nav {*/
 /*  padding: 30px;*/
 /*}*/
