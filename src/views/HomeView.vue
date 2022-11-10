@@ -221,7 +221,7 @@ export default {
   },
   data() {
     return {
-      defaultPlanet: "moon",
+      defaultPlanet: "saturn",
       modelSrc: "models/sphere.glb",
       defaultOrbitSensi: 0.8,
       allowedFileTypes: ["image/png", "image/jpeg", "image/jpg", "image/webp", "application/json", "text/plain"],
@@ -234,6 +234,7 @@ export default {
       currentPlanet: this.convertPlanet(planets.empty, "empty"),
 
       planet: null,
+      planetType: "normal",
       planets: null,
       loaded: false,
       currentTexture: null,
@@ -337,7 +338,8 @@ export default {
       return {
         ...planet,
         key: key,
-        uuid: this.$globals.genUUID()
+        uuid: this.$globals.genUUID(),
+        customModel: planet.customModel || false,
       }
     },
     removeMessage(message) {
@@ -405,9 +407,16 @@ export default {
 
       if (!this.loaded && !force) return;
       this.currentPlanet = planet
-      this.currentTexture = `/textures/${planet.texture}`
+      if (planet.customModel) {
+        this.modelSrc = planet.customModelFile
+        this.currentTexture = null
+        this.planetType = "custom"
+      } else {
+        this.currentTexture = `/textures/${planet.texture}`
+        this.createAndApplyTexture(`/textures/${planet.texture}`)
+        this.planetType = "normal"
+      }
       this.sortPlanets()
-      this.createAndApplyTexture(`/textures/${planet.texture}`)
 
       // update hotspots
       this.hotspots = annotations.planets[this.currentPlanet.key]
