@@ -18,7 +18,7 @@
     "clientjs": "^0.2.1",
     "core-js": "^3.26.0",
     "register-service-worker": "^1.7.2",
-    "vue": "^3.2.42",
+    "vue": "^3.2.44",
     "vue-router": "^4.1.6",
     "vuex": "^4.0.0"
   },
