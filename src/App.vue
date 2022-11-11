@@ -61,8 +61,8 @@ export default {
         } else {
           theme = "light";
         }
+        theme = "dark" // todo change this later, light mode is not beatiful in this time
       }
-      theme = "dark" // todo change this later, light mode is not beatiful in this time
       // add attribute to html element
       document.documentElement.setAttribute("data-theme", theme);
       this.$store.state.theme = theme;
@@ -139,6 +139,9 @@ html {
   flex-direction: column;
 }
 
+hr {
+  width: 100%;
+}
 /*nav {*/
 /*  padding: 30px;*/
 /*}*/

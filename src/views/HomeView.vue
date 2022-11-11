@@ -23,7 +23,8 @@
       @keyup.ctrl.space.exact="auto_rotate = !auto_rotate"
       @keyup.shift.ctrl.space.exact="enable_pan = !enable_pan"
       v-on:camera-change="updateZoom"
-      @load="planetLoaded">
+      @load="planetLoaded"
+      @progress="progress = $event.detail.totalProgress">
     <div class="controls">
       <div id="buttons" class="formCollection">
         <div class="flex-column" style="margin-top: 10px; margin-left: 10px">
@@ -221,7 +222,7 @@ export default {
   },
   data() {
     return {
-      defaultPlanet: "moon",
+      defaultPlanet: "saturn",
       modelSrc: "models/sphere.glb",
       defaultOrbitSensi: 0.8,
       allowedFileTypes: ["image/png", "image/jpeg", "image/jpg", "image/webp", "application/json", "text/plain"],
@@ -234,8 +235,10 @@ export default {
       currentPlanet: this.convertPlanet(planets.empty, "empty"),
 
       planet: null,
+      planetType: "normal",
       planets: null,
       loaded: false,
+      progress: 0,
       currentTexture: null,
       sidePanelType: "planetInfo",
       openPlanetInfoDropdown: "none",
@@ -337,7 +340,8 @@ export default {
       return {
         ...planet,
         key: key,
-        uuid: this.$globals.genUUID()
+        uuid: this.$globals.genUUID(),
+        customModel: planet.customModel || false,
       }
     },
     removeMessage(message) {
@@ -369,6 +373,7 @@ export default {
 
     },
     planetLoaded() {
+      console.log("planet loaded", new Date().toLocaleTimeString())
       this.planet = document.querySelector("model-viewer#planet")
       this.loaded = true
     },
@@ -405,9 +410,23 @@ export default {
 
       if (!this.loaded && !force) return;
       this.currentPlanet = planet
-      this.currentTexture = `/textures/${planet.texture}`
+      if (planet.customModel) {
+        this.modelSrc = planet.customModelFile
+        this.currentTexture = null
+        this.planetType = "custom"
+      } else {
+        this.currentTexture = `/textures/${planet.texture}`
+        if (this.planetType === "custom") {
+          this.modelSrc = "models/sphere.glb"
+          this.planetType = "normal"
+          setTimeout(() => {
+            this.createAndApplyTexture(`/textures/${planet.texture}`)
+          }, 100)
+        } else {
+          this.createAndApplyTexture(`/textures/${planet.texture}`)
+        }
+      }
       this.sortPlanets()
-      this.createAndApplyTexture(`/textures/${planet.texture}`)
 
       // update hotspots
       this.hotspots = annotations.planets[this.currentPlanet.key]
@@ -856,5 +875,9 @@ option:checked {
 }
 .close:hover {
   background-color: #ff0000;
+}
+
+html[data-theme="dark"] model-viewer::part(default-progress-bar) {
+  background-color: #6c8bda;
 }
 </style>

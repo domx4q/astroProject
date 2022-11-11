@@ -164,7 +164,9 @@
       "linkText": "Wikipedia",
       "newLineDot": true,
       "autoFetch": true
-    }
+    },
+    "customModel": true,
+    "customModelFile": "models/saturn.glb"
   },
   "sun": {
     "name": "Sonne",
