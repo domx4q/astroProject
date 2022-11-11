@@ -15,9 +15,19 @@ export default {
       client: new ClientJS(),
     };
   },
+  created() {
+    // Read the data from the session storage to restore the state of the app (because when refreshing the page, the state is lost)
+    if (sessionStorage.getItem("store")) {
+      this.$store.replaceState({ ...this.$store.state, ...JSON.parse(sessionStorage.getItem("store")) });
+    }
+    // Save the state of the app to the session storage before the page is unloaded
+    window.addEventListener("beforeunload", () => {
+      sessionStorage.setItem("store", JSON.stringify(this.$store.state));
+    });
+  },
   mounted() {
     this.getClientInformation();
-    this.getTheme();
+    // this.getTheme();
   },
   computed: {},
   methods: {

@@ -57,6 +57,8 @@
                 :help="!isMobile ? 'Tastenkombination: Strg + Shift + Leertaste' : ''"
                 v-model="enable_pan"/>
           </FormKit>
+          <hr>
+          <ThemeSwitch/>
         </div>
 
       </div>
@@ -209,6 +211,7 @@ import "animate.css";
 
 import message from "@/components/message";
 import dropdown from "@/components/dropdown";
+import themeSwitch from "@/components/themeSwitch";
 
 import planets from "@/assets/data/planets.json"
 import annotations from "@/assets/data/annotations.json"
@@ -218,22 +221,21 @@ export default {
   name: "HomeView",
   components: {
     Message: message,
-    Dropdown: dropdown
+    Dropdown: dropdown,
+    ThemeSwitch: themeSwitch
   },
   data() {
     return {
-      defaultPlanet: "saturn",
+      defaultPlanet: "moon",
       modelSrc: "models/sphere.glb",
       defaultOrbitSensi: 0.8,
       allowedFileTypes: ["image/png", "image/jpeg", "image/jpg", "image/webp", "application/json", "text/plain"],
       zoomFactor: 1,
-      background: "#000",
-      accent_color: "hsl(197, 45%, 49%)",
-      bg_color: "#fff",
+      accent_color: "hsl(197,85%,55%)",
       auto_rotate: true,
       enable_pan: false,
-      currentPlanet: this.convertPlanet(planets.empty, "empty"),
 
+      currentPlanet: this.convertPlanet(planets.empty, "empty"),
       planet: null,
       planetType: "normal",
       planets: null,
@@ -264,7 +266,6 @@ export default {
       },
       hotspots: [],
       messages: [],
-
       textureInputForm: null,
     }
   },
@@ -577,9 +578,9 @@ export default {
   justify-content: flex-start;
   align-items: normal;
   /*pointer-events: none;*/
-  background-color: white;
+  background-color: rgba(250, 250, 250, 0.6);
   padding: 20px;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
   font-size: 1.1em;
 }
 html[data-theme="dark"] #planetInfo {
@@ -595,15 +596,14 @@ html[data-theme="dark"] #planetInfo {
   padding: 0;
 }
 #planetInfo .description a {
-  --normalColor: #00aaff;
-  --hoverColor: #29607c;
+  --normalColor: v-bind(accent_color);
   --clickColor: #bb1920;
 
   color: var(--normalColor);
-  transition: color 0.14s ease-in-out;
+  transition: color 0.14s ease-in-out, filter 0.14s ease-in-out;
 }
 #planetInfo .description a:hover {
-  color: var(--hoverColor);
+  filter: brightness(.7);
 }
 #planetInfo .description a:active {
   color: var(--clickColor);
@@ -877,7 +877,7 @@ option:checked {
   background-color: #ff0000;
 }
 
-html[data-theme="dark"] model-viewer::part(default-progress-bar) {
+model-viewer::part(default-progress-bar) {
   background-color: #6c8bda;
 }
 </style>

@@ -63,7 +63,7 @@ export default {
 
 <style scoped>
 .dropdown {
-  --bg-color: rgba(255, 255, 255, 0.8);
+  --bg-color: rgba(147, 147, 147, 0.1);
 
   position: relative;
   width: 100%;
