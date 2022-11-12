@@ -332,8 +332,6 @@ export default {
     },
   },
   mounted() {
-    console.log("HomeView mounted")
-    // convert dict to array and add uuid and key as property
     this.planets = Object.keys(planets).map(key => {
       return this.convertPlanet(planets[key], key)
     })

@@ -44,7 +44,6 @@ export default {
     };
   },
   mounted() {
-    console.log(this.storedTheme)
     this.setTheme();
   },
   computed: {
