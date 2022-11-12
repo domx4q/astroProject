@@ -1,15 +1,19 @@
-<template v-if="!onlyLogic">
-  <div class="switcher" @click="switchTheme">
-    <Icon
-      class="switcher__icon"
-      :icon="themeIcon"/>
-    <span class="switcher__text">
+<template>
+  <div class="switcher" :class="theme" v-if="!onlyLogic">
+    <span class="title">Theme:</span>
+    <div class="hittable" @click="switchTheme">
+      <Icon
+          class="switcher__icon"
+          :icon="themeIcon"/>
+      <span class="switcher__text">
       {{ themeText }}
     </span>
+    </div>
   </div>
 </template>
 
 <script>
+// todo until 03.12.2022: FormKit PRO will be available, so then change the switcher to FormKit
 export default {
   name: "themeSwitch",
   components: {},
@@ -87,13 +91,33 @@ export default {
   },
 }
 </script>
-
 <style scoped>
 .switcher {
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  position: relative;
 }
-
+.switcher.light {
+  --accent-color: #e08016;
+}
+.switcher.dark {
+  --accent-color: #4216b4;
+}
+.switcher__icon {
+  margin-right: 5px;
+  color: var(--accent-color);
+}
+.switcher__text {
+  font-size: 1.2rem;
+}
+.title {
+  font-size: 1.2rem;
+  margin-right: 10px;
+  text-decoration: underline var(--accent-color) 2px;
+  /*position on start of the line*/
+  left: 0;
+  position: absolute;
+}
 </style>

@@ -580,7 +580,7 @@ export default {
   /*pointer-events: none;*/
   background-color: rgba(250, 250, 250, 0.6);
   padding: 20px;
-  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+  /*box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);*/
   font-size: 1.1em;
 }
 html[data-theme="dark"] #planetInfo {
