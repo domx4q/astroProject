@@ -160,27 +160,34 @@
           enter-active-class="animate__animated animate__fadeInRight"
           leave-active-class="animate__animated animate__fadeOutRight">
         <div id="planetInfo" class="wrapper" v-if="sidePanelType === 'planetInfo'">
-          <h2 class="name">{{ planetInfo.name }}</h2>
-          <div class="description">
-            <Dropdown
-                title="Beschreibung"
-                :open-override="openPlanetInfoDropdown === 'none'"
-                :onlyShowTitleOnClose="true"
-                @open="openPlanetInfoDropdown = 'none'"
-                @close="openPlanetInfoDropdown = 'none'">
-              <p v-html="planetDescription"/><br>
-              <p v-if="planetInfo.link">Quelle: <a :href="planetInfo.link" target="_blank">{{ planetInfo.linkText }}</a></p>
-            </Dropdown>
+          <div class="iconHolder" @click="planetInfoCollapsed = !planetInfoCollapsed">
+            <Icon
+              icon="ph:caret-double-right-bold"
+              class="collapseIcon"
+            />
           </div>
-          <span class="close" @click="sidePanelType = 'empty'">&times;</span>
-          <template v-if="planetInfo.detailed !== undefined && Object.keys(planetInfo.detailed).length > 0">
-            <hr>
-            <div v-for="(value, key) in planetInfo.detailed" :key="key" class="dropdowns">
-              <Dropdown :title="key" :open-override="openPlanetInfoDropdown === key" @open="openPlanetInfoDropdown = key" @close="openPlanetInfoDropdown = 'none'">
-                <p v-html="value"/>
+          <div class="content">
+            <h2 class="name">{{ planetInfo.name }}</h2>
+            <div class="description">
+              <Dropdown
+                  title="Beschreibung"
+                  :open-override="openPlanetInfoDropdown === 'none'"
+                  :onlyShowTitleOnClose="true"
+                  @open="openPlanetInfoDropdown = 'none'"
+                  @close="openPlanetInfoDropdown = 'none'">
+                <p v-html="planetDescription"/><br>
+                <p v-if="planetInfo.link">Quelle: <a :href="planetInfo.link" target="_blank">{{ planetInfo.linkText }}</a></p>
               </Dropdown>
             </div>
-          </template>
+            <template v-if="planetInfo.detailed !== undefined && Object.keys(planetInfo.detailed).length > 0">
+              <hr>
+              <div v-for="(value, key) in planetInfo.detailed" :key="key" class="dropdowns">
+                <Dropdown :title="key" :open-override="openPlanetInfoDropdown === key" @open="openPlanetInfoDropdown = key" @close="openPlanetInfoDropdown = 'none'">
+                  <p v-html="value"/>
+                </Dropdown>
+              </div>
+            </template>
+          </div>
         </div>
       </Transition>
     </div>
@@ -243,6 +250,7 @@ export default {
       progress: 0,
       currentTexture: null,
       sidePanelType: "planetInfo",
+      planetInfoCollapsed: false,
       openPlanetInfoDropdown: "none",
       lastFieldOfView: 0,
       hotspot_settings_focused: false,
@@ -561,6 +569,25 @@ export default {
         this.lastHotspot.classification = newVal.filter(item => item !== "unknown")
       }
     },
+    planetInfoCollapsed: function (newVal) {
+      const planetInfo = document.querySelector("#planetInfo")
+      const initialHeight = planetInfo.clientHeight
+      if (newVal) {
+        planetInfo.classList.add("collapsed") // need to be all done here because if using :class, it will be overwritten by vue
+        planetInfo.style.height = `${initialHeight}px`
+        setTimeout(() => {
+          planetInfo.classList.add("fullyCollapsed")
+        }, 400)
+      } else {
+        planetInfo.style.height = "auto"
+        planetInfo.classList.remove("collapsed")
+        planetInfo.classList.remove("fullyCollapsed")
+        planetInfo.classList.add("expanding")
+        setTimeout(() => {
+          planetInfo.classList.remove("expanding")
+        }, 400)
+      }
+    },
   }
 }
 </script>
@@ -569,19 +596,64 @@ export default {
   position: absolute;
   top: 8%;
   right: 10px;
-  width: 350px;
+  max-width: 350px;
+  width: auto;
   height: auto;
   z-index: 100;
-  display: flex;
   border-radius: 5px;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: normal;
   /*pointer-events: none;*/
   background-color: rgba(250, 250, 250, 0.6);
   padding: 20px;
   /*box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);*/
   font-size: 1.1em;
+
+  transition: max-width 0.4s ease-in-out;
+}
+#planetInfo .iconHolder {
+  position: absolute;
+  top: 10px;
+  right: 2px;
+  cursor: pointer;
+  margin: 4px;
+  width: 20px;
+  height: 20px;
+  z-index: 1000;
+
+  transition: transform 0.4s ease-in-out, filter 0.2s ease-in-out;
+}
+#planetInfo .iconHolder:hover {
+  filter: brightness(5);
+}
+html[data-theme="dark"] #planetInfo .iconHolder:hover {
+  filter: brightness(.4);
+}
+#planetInfo.collapsed .iconHolder {
+  transform: rotate(180deg);
+}
+#planetInfo.collapsed {
+  max-width: 0;
+  padding: 15px;
+}
+#planetInfo .content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: normal;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+
+  transition: opacity 0.4s ease-in-out;
+}
+#planetInfo.collapsed .content {
+  opacity: 0;
+}
+#planetInfo.collapsed .content *, #planetInfo.expanding .content * {
+  overflow: hidden !important;
+}
+#planetInfo.fullyCollapsed .content {
+  display: none;
 }
 html[data-theme="dark"] #planetInfo {
   background-color: rgba(101, 101, 101, 0.6);
@@ -618,7 +690,7 @@ html[data-theme="dark"] #planetInfo {
   justify-content: space-between;
   align-items: normal;
   width: 100%;
-  overflow: scroll;
+  overflow: auto;
 }
 
 #buttons {
