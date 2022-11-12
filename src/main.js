@@ -9,6 +9,8 @@ import { plugin, defaultConfig } from "@formkit/vue";
 import { de } from "@formkit/i18n";
 import "@formkit/themes/genesis";
 
+import { Icon } from "@iconify/vue";
+
 import { globals } from "@/default.js";
 
 const formkitConfig = defaultConfig({
@@ -23,6 +25,7 @@ app.use(store);
 app.use(router);
 app.use(autoAnimatePlugin);
 app.use(plugin, formkitConfig);
+app.component("Icon", Icon);
 app.config.globalProperties.$globals = globals;
 
 function prepareHotReload() {

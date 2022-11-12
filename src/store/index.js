@@ -3,14 +3,10 @@ import { createStore } from "vuex"
 export default createStore({
   state: {
     client: null,
-    theme: "dark",
+    theme: "auto",
   },
-  getters: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
-  modules: {
-  }
+  getters: {},
+  mutations: {},
+  actions: {},
+  modules: {}
 })
