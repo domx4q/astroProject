@@ -1,9 +1,4 @@
 <template>
-<!--  <nav>-->
-<!--    <router-link to="/">Home</router-link> |-->
-<!--    <router-link to="/about">About</router-link>-->
-<!--  </nav>-->
-<!--  todo: IMPORTANT: Add Vuetify it makes all a lot easier and then I can revoke the own message component-->
   <router-view/>
 </template>
 <script>
@@ -27,7 +22,6 @@ export default {
   },
   mounted() {
     this.getClientInformation();
-    // this.getTheme();
   },
   computed: {},
   methods: {
@@ -56,26 +50,6 @@ export default {
         "sys-language": client.getSystemLanguage(),
       };
       this.$store.state.client = out;
-    },
-    getTheme() {
-      let theme;
-      const url_Params = new URLSearchParams(window.location.search);
-      if (url_Params.has("theme")) {
-        theme = url_Params.get("theme");
-      } else {
-        theme = "auto";
-      }
-      if (theme === "auto") {
-        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-          theme = "dark";
-        } else {
-          theme = "light";
-        }
-        theme = "dark" // todo change this later, light mode is not beatiful in this time
-      }
-      // add attribute to html element
-      document.documentElement.setAttribute("data-theme", theme);
-      this.$store.state.theme = theme;
     },
   },
 }
@@ -113,10 +87,8 @@ html[data-theme="dark"] #app {
 
   color: #f8f8f8;
 
-  /*region FormKit*/
   --fk-color-help: #dedede;
   --fk-color-input: #e7e7e7;
-  /*endregion*/
 }
 
 @-webkit-keyframes backgroundAnimation {
@@ -152,16 +124,22 @@ html {
 hr {
   width: 100%;
 }
-/*nav {*/
-/*  padding: 30px;*/
-/*}*/
-
-/*nav a {*/
-/*  font-weight: bold;*/
-/*  color: #2c3e50;*/
-/*}*/
-
-/*nav a.router-link-exact-active {*/
-/*  color: #42b983;*/
-/*}*/
+/*make the scroll bars in chrome nicer*/
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track, ::-webkit-scrollbar-corner {
+  background: rgba(0, 0, 0, 0.2);
+}
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+::-webkit-scrollbar-button {
+  display: none;
+}
 </style>
