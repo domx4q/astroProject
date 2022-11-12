@@ -1,15 +1,34 @@
 <template>
   <router-view/>
+  <ImportantPrompt v-if="updateExists">
+    <template v-slot:title>
+      <h2>Update verfügbar</h2>
+    </template>
+    <template v-slot:text>
+      <p>Es ist eine neue Version von <b><u>{{appName}}</u></b> verfügbar. Bitte laden Sie die Seite neu, um die neue Version zu installieren.</p>
+    </template>
+    <template v-slot:buttons>
+      <button @click="refreshApp">Neu laden</button>
+    </template>
+  </ImportantPrompt>
 </template>
 <script>
+import update from "@/mixins/update";
+import ImportantPrompt from "@/components/importantPrompt";
+
 import { ClientJS } from "clientjs";
 export default {
   name: "app",
+  components: {
+    ImportantPrompt
+  },
   data() {
     return {
       client: new ClientJS(),
+      appName: "Astro"
     };
   },
+  mixins: [update],
   created() {
     // Read the data from the session storage to restore the state of the app (because when refreshing the page, the state is lost)
     if (sessionStorage.getItem("store")) {
@@ -58,12 +77,13 @@ export default {
 #app {
   --bg-main-color: #fff;
   --bg-secondary-color: #d97221;
+  --text-color: #1b2831;
 
   /*font-family: Avenir, Helvetica, Arial, sans-serif;*/
   font-family: "Kanit", "Impira", "Montserrat Alternates", "Roboto", "Helvetica", "Arial", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #1b2831;
+  color: var(--text-color);
   top: 0;
   left: 0;
   position: absolute;
@@ -84,8 +104,7 @@ export default {
 html[data-theme="dark"] #app {
   --bg-main-color: #000000;
   --bg-secondary-color: #0036bd;
-
-  color: #f8f8f8;
+  --text-color: #f8f8f8;
 
   --fk-color-help: #dedede;
   --fk-color-input: #e7e7e7;
