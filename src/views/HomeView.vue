@@ -233,7 +233,7 @@ export default {
   },
   data() {
     return {
-      defaultPlanet: "moon",
+      devDefaultPlanet: "moon",
       modelSrc: "models/sphere.glb",
       defaultOrbitSensi: 0.8,
       allowedFileTypes: ["image/png", "image/jpeg", "image/jpg", "image/webp", "application/json", "text/plain"],
@@ -243,6 +243,7 @@ export default {
       enable_pan: false,
 
       currentPlanet: this.convertPlanet(planets.empty, "empty"),
+      defaultPlanet: null,
       planet: null,
       planetType: "normal",
       planets: null,
@@ -330,6 +331,14 @@ export default {
     windowHeight() {
       return window.innerHeight
     },
+  },
+  created() {
+    // set defaultPlanet to jupiter when in production mode
+    if (process.env.NODE_ENV === "production") {
+      this.defaultPlanet = "jupiter"
+    } else {
+      this.defaultPlanet = this.devDefaultPlanet
+    }
   },
   mounted() {
     this.planets = Object.keys(planets).map(key => {
