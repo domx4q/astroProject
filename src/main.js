@@ -11,8 +11,6 @@ import "@formkit/themes/genesis";
 
 import { Icon } from "@iconify/vue";
 
-import { globals } from "@/default.js";
-
 const formkitConfig = defaultConfig({
     theme: "genesis",
     locales: { de },
@@ -26,7 +24,6 @@ app.use(router);
 app.use(autoAnimatePlugin);
 app.use(plugin, formkitConfig);
 app.component("Icon", Icon);
-app.config.globalProperties.$globals = globals;
 
 function prepareHotReload() {
     console.clear();

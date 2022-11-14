@@ -216,6 +216,7 @@
 // @ is an alias to /src
 import "animate.css";
 
+import defaults from "@/mixins/defaults";
 import message from "@/components/message";
 import dropdown from "@/components/dropdown";
 import themeSwitch from "@/components/themeSwitch";
@@ -231,6 +232,7 @@ export default {
     Dropdown: dropdown,
     ThemeSwitch: themeSwitch
   },
+  mixins: [defaults],
   data() {
     return {
       devDefaultPlanet: "moon",
@@ -282,12 +284,6 @@ export default {
     classifications() {
       return annotations.data.classifications
     },
-    isMobile() {
-      return this.$store.state.client.isMobile
-    },
-    theme() {
-      return this.$store.state.theme
-    },
     planetInfo() {
       if (this.currentPlanet === undefined || this.currentPlanet === null || this.currentPlanet === planets.empty || this.currentPlanet.key === "empty") {
         return {
@@ -333,8 +329,7 @@ export default {
     },
   },
   created() {
-    // set defaultPlanet to jupiter when in production mode
-    if (process.env.NODE_ENV === "production") {
+    if (this.isProduction) {
       this.defaultPlanet = "jupiter"
     } else {
       this.defaultPlanet = this.devDefaultPlanet
@@ -356,7 +351,7 @@ export default {
       return {
         ...planet,
         key: key,
-        uuid: this.$globals.genUUID(),
+        uuid: this.genUUID(),
         customModel: planet.customModel || false,
       }
     },
@@ -364,7 +359,7 @@ export default {
       this.messages = this.messages.filter(m => m.uuid !== message.uuid)
     },
     addMessage(title = null, message, timeout = -1, pClass = "info") {
-      this.messages.push({uuid: this.$globals.genUUID(), text: message, title: title, timeout: timeout, class: pClass})
+      this.messages.push({uuid: this.genUUID(), text: message, title: title, timeout: timeout, class: pClass})
     },
     blur() {
       document.activeElement.blur()
@@ -404,7 +399,7 @@ export default {
             fileReader.onload = () => {
               json = JSON.parse(fileReader.result)
               this.hotspots = json.map(hotspot => {
-                return {...hotspot, uuid: this.$globals.genUUID()}
+                return {...hotspot, uuid: this.genUUID()}
               })
             }
           } else {
@@ -448,7 +443,7 @@ export default {
       this.hotspots = annotations.planets[this.currentPlanet.key]
       if (this.hotspots === undefined) this.hotspots = []
         this.hotspots = this.hotspots.map(hotspot => {
-          return {...hotspot, uuid: this.$globals.genUUID()}
+          return {...hotspot, uuid: this.genUUID()}
         })
     },
     findPlanet(key) {
@@ -486,7 +481,7 @@ export default {
         position: position,
         normal: normal,
         name: name,
-        uuid: this.$globals.genUUID(),
+        uuid: this.genUUID(),
         type: "marker",
         class: "marker",
       });
@@ -518,14 +513,14 @@ export default {
         delete hotspot.uuid;
         return hotspot;
       })
-      this.$globals.download("hotspots-" + this.currentPlanet.annotationsKey + ".txt", JSON.stringify(hotspots))
+      this.download("hotspots-" + this.currentPlanet.annotationsKey + ".txt", JSON.stringify(hotspots))
     },
     updateLastHotspot() {
       // remove last hotspot
       this.hotspots.pop();
       this.hotspots.push({
         ...this.lastHotspot,
-        uuid: this.$globals.genUUID(),
+        uuid: this.genUUID(),
         class: this.lastHotspot.type === "location" ? "location level-" + this.lastHotspot.level : this.lastHotspot.type,
         level: this.lastHotspot.type === "location" ? this.lastHotspot.level : undefined,
       })
