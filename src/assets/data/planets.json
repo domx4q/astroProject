@@ -92,7 +92,14 @@
       "link": "https://de.wikipedia.org/wiki/Jupiter_(Planet)",
       "linkText": "Wikipedia",
       "newLineDot": true,
-      "autoFetch": true
+      "autoFetch": true,
+
+      "detailed": {
+        "Oberfläche": "Radius: 69.911 km\nÄquatordurchmesser: 142.984km\nmittlere Dichte: 1,33 g/cm³\nGravitation: 24,79 m/s²\nTemperatur: −108°C",
+        "Allgemeines": "Entfernung: 778.500.000 km\nUmlaufzeit: 12 Jahre"
+
+
+      }
     }
   },
   "mars": {
