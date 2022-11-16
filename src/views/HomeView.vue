@@ -183,7 +183,7 @@
               <hr>
               <div v-for="(value, key) in planetInfo.detailed" :key="key" class="dropdowns">
                 <Dropdown :title="key" :open-override="openPlanetInfoDropdown === key" @open="openPlanetInfoDropdown = key" @close="openPlanetInfoDropdown = 'none'">
-                  <p v-html="value"/>
+                  <p v-html="formatJSON(value, planetInfo.newLineDot)"/>
                 </Dropdown>
               </div>
             </template>
@@ -319,10 +319,7 @@ export default {
               this.planetInfo.description = description
             })
       }
-      if (this.planetInfo.newLineDot) {
-        return description.replaceAll(". ", ".<br>").replaceAll("\n", "<br>")
-      }
-      return description.replaceAll("\n", "<br>")
+      return this.formatJSON(description, this.planetInfo.newLineDot)
     },
     windowHeight() {
       return window.innerHeight
