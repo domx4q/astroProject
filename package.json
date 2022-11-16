@@ -12,7 +12,7 @@
     "@formkit/auto-animate": "^1.0.0-beta.3",
     "@formkit/i18n": "^1.0.0-beta.11",
     "@formkit/themes": "^1.0.0-beta.11",
-    "@formkit/vue": "^1.0.0-beta.11",
+    "@formkit/vue": "^1.0.0-beta.12",
     "@google/model-viewer": "^2.1.0",
     "animate.css": "^4.1.1",
     "clientjs": "^0.2.1",
