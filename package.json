@@ -9,7 +9,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@formkit/auto-animate": "^1.0.0-beta.3",
+    "@formkit/auto-animate": "^1.0.0-beta.5",
     "@formkit/i18n": "^1.0.0-beta.11",
     "@formkit/themes": "^1.0.0-beta.11",
     "@formkit/vue": "^1.0.0-beta.12",
