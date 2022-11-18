@@ -23,6 +23,8 @@ Venus (Surface) ![Venus (Surface)](public/textures/8k_venus_surface.jpg)
 ### [Nasa - 3d resources](https://github.com/nasa/NASA-3D-Resources)
 Io ![Io](public/textures/2k_io.jpg)
 Europa ![Europa](public/textures/2k_europa.jpg)
+Ganymede ![Ganymede](public/textures/2k_ganymede.jpg)
+Callisto ![Callisto](public/textures/2k_callisto.jpg)
 # Usage Rights / License
 - [Solarsystemscope](https://www.solarsystemscope.com/textures/): CC BY-NC-SA 4.0
 - [Nasa - visible earth](https://visibleearth.nasa.gov/): Public Domain
