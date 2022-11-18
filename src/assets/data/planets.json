@@ -170,7 +170,7 @@
       },
       "Ganymed": {
         "name": "Ganymed",
-        "texture": "2k_ganymede.jpg",
+        "texture": "2k_ganymed.jpg",
         "resolution": 2,
         "orderPriority": 1,
         "enabled": true,
