@@ -20,7 +20,10 @@ Saturn ![Saturn](public/textures/8k_saturn.jpg)
 Venus (Surface) ![Venus (Surface)](public/textures/8k_venus_surface.jpg)
 ### Nasa - visible earth
 [Earth (Realistic)](https://visibleearth.nasa.gov/images/57730/the-blue-marble-land-surface-ocean-color-and-sea-ice/82680l) ![](public/textures/8k_earth_realistic.png)
-
+### [Nasa - 3d resources](https://github.com/nasa/NASA-3D-Resources)
+Io ![Io](public/textures/2k_io.jpg)
+Europa ![Europa](public/textures/2k_europa.jpg)
 # Usage Rights / License
 - [Solarsystemscope](https://www.solarsystemscope.com/textures/): CC BY-NC-SA 4.0
 - [Nasa - visible earth](https://visibleearth.nasa.gov/): Public Domain
+- [Nasa - 3d resources](https://github.com/nasa/NASA-3D-Resources): Public Domain
