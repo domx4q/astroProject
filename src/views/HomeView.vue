@@ -64,10 +64,17 @@
       </div>
       <ul class="planets" v-auto-animate>
         <template v-for="planet in planets" :key="planet.uuid">
-          <li class="planet-selector" v-if="planet.enabled" @click="changePlanet(planet)"
-              :class="{active: planet.uuid === currentPlanet.uuid, disabled: !loaded}">
-            <span>{{ planet.name }}</span>
+          <li class="planet-selector" v-if="planet.enabled"
+              :class="{active: planet.uuid === currentPlanet.uuid, disabled: !loaded, parent: planet.children.length > 0}">
+            <span @click="changePlanet(planet)">{{ planet.name }}</span>
           </li>
+          <template v-for="(child, index) in planet.children" :key="child.uuid">
+            <li class="planet-selector child" v-if="child.enabled && child.uuid !== currentPlanet.uuid"
+                :class="{active: child.uuid === currentPlanet.uuid, disabled: !loaded,
+                parentActive: planet.uuid === currentPlanet.uuid, last: index === planet.children.length - 1}">
+              <span @click="changePlanet(child)">{{ child.name }}</span>
+            </li>
+          </template>
         </template>
       </ul>
       <Transition
@@ -183,7 +190,7 @@
               <hr>
               <div v-for="(value, key) in planetInfo.detailed" :key="key" class="dropdowns">
                 <Dropdown :title="key" :open-override="openPlanetInfoDropdown === key" @open="openPlanetInfoDropdown = key" @close="openPlanetInfoDropdown = 'none'">
-                  <p v-html="value"/>
+                  <p v-html="formatJSON(value, planetInfo.newLineDot)"/>
                 </Dropdown>
               </div>
             </template>
@@ -223,6 +230,7 @@ import themeSwitch from "@/components/themeSwitch";
 
 import planets from "@/assets/data/planets.json"
 import annotations from "@/assets/data/annotations.json"
+import update from "@/mixins/update";
 
 import("@google/model-viewer")
 export default {
@@ -245,6 +253,7 @@ export default {
       enable_pan: false,
 
       currentPlanet: this.convertPlanet(planets.empty, "empty"),
+      lastPlanetChild: false,
       defaultPlanet: null,
       planet: null,
       planetType: "normal",
@@ -319,10 +328,7 @@ export default {
               this.planetInfo.description = description
             })
       }
-      if (this.planetInfo.newLineDot) {
-        return description.replaceAll(". ", ".<br>").replaceAll("\n", "<br>")
-      }
-      return description.replaceAll("\n", "<br>")
+      return this.formatJSON(description, this.planetInfo.newLineDot)
     },
     windowHeight() {
       return window.innerHeight
@@ -337,20 +343,29 @@ export default {
   },
   mounted() {
     this.planets = Object.keys(planets).map(key => {
-      return this.convertPlanet(planets[key], key)
+      let children = []
+      if (planets[key].children !== undefined && planets[key].children !== null) {
+        children = Object.keys(planets[key].children).map(childKey => {
+          return this.convertPlanet(planets[key].children[childKey], childKey, [], true)
+        })
+      }
+      return this.convertPlanet(planets[key], key, children, false)
     })
     this.sortPlanets()
     this.addMessage("Willkommen!", "Willkommen auf der Planeten-App")
 
     if (this.isMobile) {
+      // only allow images on mobile so camera can be used in app
       this.allowedFileTypes = ["image/png", "image/jpeg", "image/jpg", "image/webp"]
     }
   },
   methods: {
-    convertPlanet(planet, key) {
+    convertPlanet(planet, key, children = [], isChild = false) {
       return {
         ...planet,
         key: key,
+        children: children,
+        isChild: isChild,
         uuid: this.genUUID(),
         customModel: planet.customModel || false,
       }
@@ -420,7 +435,6 @@ export default {
       this.openPlanetInfoDropdown = "none"
 
       if (!this.loaded && !force) return;
-      this.currentPlanet = planet
       if (planet.customModel) {
         this.modelSrc = planet.customModelFile
         this.currentTexture = null
@@ -437,7 +451,20 @@ export default {
           this.createAndApplyTexture(`/textures/${planet.texture}`)
         }
       }
+      if (this.lastPlanetChild) {
+        this.planets = this.planets.filter(p => p.uuid !== this.currentPlanet.uuid)
+      }
+      if (planet.isChild) {
+        this.planets.push(planet)
+
+        this.lastPlanetChild = true
+      } else {
+        this.lastPlanetChild = false
+      }
+      this.currentPlanet = planet
       this.sortPlanets()
+      console.log(Array.from(this.planets))
+      console.log(planet)
 
       // update hotspots
       this.hotspots = annotations.planets[this.currentPlanet.key]
@@ -536,7 +563,10 @@ export default {
     },
     enable_pan: function (newVal) {
       if (!newVal) {
+        this.planet.setAttribute("camera-target", "0 0 0")
         this.planet.setAttribute("disable-pan", "")
+
+        this.updateZoom()
       } else {
         this.planet.removeAttribute("disable-pan")
       }
@@ -725,13 +755,16 @@ li.planet-selector {
 
   transition: background-color 0.2s linear, color 0.2s linear;
 }
+li.planet-selector.child {
+  padding-left: 20px;
+}
 li.planet-selector.active {
   color: v-bind(accent_color);
 }
 li.planet-selector.disabled {
   color: darkgray;
 }
-li.planet-selector:first-of-type.active {
+li.planet-selector:first-of-type.active:not(.parent), li.planet-selector.child.parentActive.last {
   margin-bottom: 10px;
 }
 

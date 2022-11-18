@@ -96,7 +96,7 @@
     "texture": "8k_earth_realistic.png",
     "resolution": 8,
     "orderPriority": 12,
-    "enabled": true,
+    "enabled": false,
     "annotationsKey": "earth",
     "info": {
       "name": "Erde",
@@ -133,7 +133,72 @@
         "Oberfläche": "Radius: 69.911 km\nÄquatordurchmesser: 142.984 km\nmittlere Dichte: 1,33 g/cm³\nGravitation: 24,79 m/s²\nTemperatur: −108 °C",
         "Allgemeines": "Entfernung: 778.500.000 km\nUmlaufzeit: 12 Jahre"
 
-
+      }
+    },
+    "children": {
+      "Io": {
+        "name": "Io",
+        "texture": "2k_io.jpg",
+        "resolution": 2,
+        "orderPriority": 1,
+        "enabled": true,
+        "annotationsKey": "io",
+        "info": {
+          "name": "Io (Jupitermond)",
+          "description": "",
+          "link": "https://de.wikipedia.org/wiki/Io_(Mond)",
+          "linkText": "Wikipedia",
+          "newLineDot": true,
+          "autoFetch": true
+        }
+      },
+      "Europa": {
+        "name": "Europa",
+        "texture": "2k_europa.jpg",
+        "resolution": 2,
+        "orderPriority": 1,
+        "enabled": true,
+        "annotationsKey": "europa",
+        "info": {
+          "name": "Europa (Jupitermond)",
+          "description": "",
+          "link": "https://de.wikipedia.org/wiki/Europa_(Mond)",
+          "linkText": "Wikipedia",
+          "newLineDot": true,
+          "autoFetch": true
+        }
+      },
+      "Ganymed": {
+        "name": "Ganymed",
+        "texture": "2k_ganymede.jpg",
+        "resolution": 2,
+        "orderPriority": 1,
+        "enabled": true,
+        "annotationsKey": "ganymede",
+        "info": {
+          "name": "Ganymed (Jupitermond)",
+          "description": "",
+          "link": "https://de.wikipedia.org/wiki/Ganymed_(Mond)",
+          "linkText": "Wikipedia",
+          "newLineDot": true,
+          "autoFetch": true
+        }
+      },
+"Kallisto": {
+        "name": "Kallisto",
+        "texture": "2k_callisto.jpg",
+        "resolution": 2,
+        "orderPriority": 1,
+        "enabled": true,
+        "annotationsKey": "callisto",
+        "info": {
+          "name": "Kallisto (Jupitermond)",
+          "description": "",
+          "link": "https://de.wikipedia.org/wiki/Kallisto_(Mond)",
+          "linkText": "Wikipedia",
+          "newLineDot": true,
+          "autoFetch": true
+        }
       }
     }
   },
@@ -262,4 +327,3 @@
     "annotationsKey": "empty"
   }
 }
-

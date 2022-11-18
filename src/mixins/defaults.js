@@ -35,5 +35,12 @@ export default {
 
             document.body.removeChild(element);
         },
+        formatJSON(json, newLineDot = false) {
+            if (newLineDot) {
+                return json.replaceAll(". ", ".<br>").replaceAll("\n", "<br>")
+            } else {
+                return json.replaceAll("\n", "<br>")
+            }
+        }
     }
 };
