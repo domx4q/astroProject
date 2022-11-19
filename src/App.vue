@@ -11,9 +11,11 @@
       <button @click="refreshApp">Neu laden</button>
     </template>
   </ImportantPrompt>
+  <div id="previewBadge" class="badge" v-if="beta">Preview</div>
 </template>
 <script>
 import update from "@/mixins/update";
+import defaults from "@/mixins/defaults";
 import ImportantPrompt from "@/components/importantPrompt";
 
 import { ClientJS } from "clientjs";
@@ -28,7 +30,7 @@ export default {
       appName: "Astro"
     };
   },
-  mixins: [update],
+  mixins: [update, defaults],
   created() {
     // Read the data from the session storage to restore the state of the app (because when refreshing the page, the state is lost)
     if (sessionStorage.getItem("store")) {
@@ -74,6 +76,26 @@ export default {
 }
 </script>
 <style>
+/*specific*/
+#previewBadge {
+  font-size: calc(0.8em * 3);
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  background: rgba(255, 77, 77, 0.4);
+  padding: 0.2em;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.8);
+  pointer-events: none;
+  border-radius: 0.6em;
+  transform: translate(1.4em, 0.2em) rotate(-45deg);
+  transform-origin: bottom left;
+}
+.badge, .overlay {
+  z-index: 1000;
+}
+
+/*general*/
 #app {
   --bg-main-color: #fff;
   --bg-secondary-color: #d97221;

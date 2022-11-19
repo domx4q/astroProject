@@ -1,4 +1,14 @@
 export default {
+    data() {
+        return {
+            version: "x.x.x"
+        }
+    },
+    mounted() {
+        import("../../package.json").then(pkg => {
+            this.version = pkg.version;
+        })
+    },
     computed: {
         isProduction() {
             return process.env.NODE_ENV === "production";
@@ -9,6 +19,9 @@ export default {
         theme() {
             return this.$store.state.theme
         },
+        beta() {
+            return this.version[0] < 1;
+        }
     },
     methods: {
         genUUID: () => {
