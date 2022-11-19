@@ -6,6 +6,7 @@
     "orderPriority": 1,
     "enabled": true,
     "annotationsKey": "neptune",
+    "copyright": "Solar System Scope",
     "info": {
       "name": "Neptun",
       "description": "",
@@ -29,6 +30,7 @@
     "orderPriority": 1,
     "enabled": true,
     "annotationsKey": "uranus",
+    "copyright": "Solar System Scope",
     "info": {
       "name": "Uranus",
       "description": "",
@@ -52,6 +54,7 @@
     "orderPriority": 3,
     "enabled": true,
     "annotationsKey": "venus",
+    "copyright": "Solar System Scope",
     "info": {
       "name": "Venus",
       "description": "",
@@ -75,6 +78,7 @@
     "orderPriority": 3,
     "enabled": true,
     "annotationsKey": "venus",
+    "copyright": "Solar System Scope",
     "info": {
       "name": "Venus",
       "description": "",
@@ -98,6 +102,7 @@
     "orderPriority": 12,
     "enabled": false,
     "annotationsKey": "earth",
+    "copyright": "Solar System Scope",
     "info": {
       "name": "Erde",
       "description": "",
@@ -121,6 +126,7 @@
     "orderPriority": 7,
     "enabled": true,
     "annotationsKey": "jupiter",
+    "copyright": "Solar System Scope",
     "info": {
       "name": "Jupiter",
       "description": "",
@@ -143,6 +149,7 @@
         "orderPriority": 1,
         "enabled": true,
         "annotationsKey": "io",
+        "copyright": "NASA 3D Resources",
         "info": {
           "name": "Io (Jupitermond)",
           "description": "",
@@ -159,6 +166,7 @@
         "orderPriority": 1,
         "enabled": true,
         "annotationsKey": "europa",
+        "copyright": "NASA 3D Resources",
         "info": {
           "name": "Europa (Jupitermond)",
           "description": "",
@@ -175,6 +183,7 @@
         "orderPriority": 1,
         "enabled": true,
         "annotationsKey": "ganymede",
+        "copyright": "NASA 3D Resources",
         "info": {
           "name": "Ganymed (Jupitermond)",
           "description": "",
@@ -184,13 +193,14 @@
           "autoFetch": true
         }
       },
-"Kallisto": {
+      "Kallisto": {
         "name": "Kallisto",
         "texture": "2k_callisto.jpg",
         "resolution": 2,
         "orderPriority": 1,
         "enabled": true,
         "annotationsKey": "callisto",
+        "copyright": "NASA 3D Resources",
         "info": {
           "name": "Kallisto (Jupitermond)",
           "description": "",
@@ -209,6 +219,7 @@
     "orderPriority": 6,
     "enabled": true,
     "annotationsKey": "mars",
+    "copyright": "Solar System Scope",
     "info": {
       "name": "Mars / der Rote Planet",
       "description": "",
@@ -232,6 +243,7 @@
     "orderPriority": 2,
     "enabled": true,
     "annotationsKey": "mercury",
+    "copyright": "Solar System Scope",
     "info": {
       "name": "Merkur",
       "description": "",
@@ -255,6 +267,7 @@
     "orderPriority": 13,
     "enabled": true,
     "annotationsKey": "moon",
+    "copyright": "Solar System Scope",
     "info": {
       "name": "Mond",
       "description": "",
@@ -278,6 +291,7 @@
     "orderPriority": 5,
     "enabled": true,
     "annotationsKey": "saturn",
+    "copyright": "Solar System Scope",
     "info": {
       "name": "Saturn",
       "description": "",
@@ -303,6 +317,7 @@
     "orderPriority": 1,
     "enabled": false,
     "annotationsKey": "sun",
+    "copyright": "Solar System Scope",
     "info": {
       "name": "Sonne",
       "description": "",

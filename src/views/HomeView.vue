@@ -217,6 +217,9 @@
                @close="removeMessage(message)"/>
     </div>
   </div>
+
+  <div id="textureCopyright" class="badge"> Copyright: {{currentPlanet.copyright}}
+  </div>
 </template>
 
 <script>
@@ -230,7 +233,6 @@ import themeSwitch from "@/components/themeSwitch";
 
 import planets from "@/assets/data/planets.json"
 import annotations from "@/assets/data/annotations.json"
-import update from "@/mixins/update";
 
 import("@google/model-viewer")
 export default {
@@ -366,6 +368,7 @@ export default {
         key: key,
         children: children,
         isChild: isChild,
+        copyright: planet.copyright !== undefined ? planet.copyright : "© NASA",
         uuid: this.genUUID(),
         customModel: planet.customModel || false,
       }
@@ -723,6 +726,15 @@ html[data-theme="dark"] #planetInfo {
   align-items: normal;
   width: 100%;
   overflow: auto;
+}
+
+#textureCopyright {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  margin: 5px;
+  font: 0.8em sans-serif monospace;
+  color: #bebebe;
 }
 
 #buttons {
