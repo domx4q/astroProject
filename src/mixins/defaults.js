@@ -49,11 +49,17 @@ export default {
             document.body.removeChild(element);
         },
         formatJSON(json, newLineDot = false) {
+            let jsonA = json
             if (newLineDot) {
-                return json.replaceAll(". ", ".<br>").replaceAll("\n", "<br>")
-            } else {
-                return json.replaceAll("\n", "<br>")
+                jsonA = jsonA.replaceAll(". ", ".<br>")
             }
+            jsonA = jsonA
+                .replaceAll("\n", "<br>")
+                .replaceAll("<accent>", "<span class='accent'>")
+                .replaceAll("</accent>", "</span>")
+                .replaceAll("<highlight>", "<span class='highlight'>")
+                .replaceAll("</highlight>", "</span>")
+            return jsonA
         }
     }
 };

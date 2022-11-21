@@ -999,4 +999,16 @@ option:checked {
 model-viewer::part(default-progress-bar) {
   background-color: #6c8bda;
 }
+
+#planetInfo .accent {
+  color: #1353d7;
+}
+#planetInfo .highlight {
+  font-size: 115%;
+  font-family: 'Roboto Mono', monospace;
+  border: 1px dashed #1353d7;
+  border-radius: 5px;
+  background: rgba(19, 83, 215, 0.2);
+  color: #4d84fc;
+}
 </style>
