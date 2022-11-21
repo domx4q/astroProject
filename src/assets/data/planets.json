@@ -149,7 +149,14 @@
           "link": "https://de.wikipedia.org/wiki/Io_(Mond)",
           "linkText": "Wikipedia",
           "newLineDot": true,
-          "autoFetch": true
+          "autoFetch": true,
+
+          "detailed": {
+            "Oberfläche": "Radius: 1.821,6 km\nÄquatordurchmesser: 3.643,2 km\nmittlere Dichte: 3,528 g/cm³\nGravitation: 1,796 m/s²\nTemperatur: Min. ? °C  Mittel -143,15 °C  Max. -73,15 °C",
+            "Allgemeines": "Entfernung zur Erde: 628.300.000 km\nUmlaufzeit: 42 Stunden"
+
+
+          }
         }
       },
       "Europa": {
@@ -165,7 +172,14 @@
           "link": "https://de.wikipedia.org/wiki/Europa_(Mond)",
           "linkText": "Wikipedia",
           "newLineDot": true,
-          "autoFetch": true
+          "autoFetch": true,
+
+          "detailed": {
+            "Oberfläche": "Radius: 1.560,8 km\nÄquatordurchmesser: 3.121,6 km\nmittlere Dichte: 3,010 g/cm³\nGravitation: 1,314 m/s²\nTemperatur: Min. -223,15 °C  Mittel -171,15 °C  Max. -133,15 °C",
+            "Allgemeines": "Entfernung zur Erde: 628.300.000 km\nUmlaufzeit: 3,551 Tage"
+
+
+          }
         }
       },
       "Ganymed": {
