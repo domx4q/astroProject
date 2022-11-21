@@ -19,21 +19,21 @@ class Update:
 
     def checkForUpdates(self):
         # use git to check for changes
-        status = os.system("git fetch")
-        if status == 0:
-            # no changes
-            return False
-        else:
-            # changes found
-            return True
-
+        subprocess.call(["git", "fetch"])
+        subprocess.call(["git", "checkout", "test_update"])
+        subprocess.call(["git", "reset", "--hard", "origin/master"])
+        return subprocess.call(["git", "diff", "--quiet", "HEAD", "origin/master"]) != 0
     def main(self):
         while True:
             if self.checkForUpdates():
+                print("Update found")
                 if self.lastSubprocess is not None:
                     # kill the last subprocess if it is still running
                     self.lastSubprocess.kill()
                 self.update()
+            else:
+                print("No update found")
+                print("Sleeping for 5 minutes")
             time.sleep(300)
 
 
