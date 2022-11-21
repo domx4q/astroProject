@@ -11,6 +11,7 @@ import subprocess
 class Update:
     def __init__(self):
         self.lastSubprocess = None
+        self.BRANCH = "test_update"
 
     def update(self):
         # use subprocess to update the repo because the serve server would prevent the update
@@ -20,9 +21,9 @@ class Update:
     def checkForUpdates(self):
         # use git to check for changes
         subprocess.call(["git", "fetch"])
-        subprocess.call(["git", "checkout", "test_update"])
-        subprocess.call(["git", "reset", "--hard", "origin/master"])
-        return subprocess.call(["git", "diff", "--quiet", "HEAD", "origin/master"]) != 0
+        subprocess.call(["git", "checkout", self.BRANCH])
+        subprocess.call(["git", "reset", "--hard", "origin/" + self.BRANCH])
+        return subprocess.call(["git", "diff", "--quiet", "HEAD", "origin/" + self.BRANCH]) != 0
     def main(self):
         while True:
             if self.checkForUpdates():
