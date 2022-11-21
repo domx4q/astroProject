@@ -8,27 +8,35 @@ import time
 import subprocess
 
 
-def update():
-    print("Updating...")
-    os.system("bash updateServer.sh")
-    print("Done.")
+class Update:
+    def __init__(self):
+        self.lastSubprocess = None
 
+    def update(self):
+        # use subprocess to update the repo because the serve server would prevent the update
+        # call the updateServer.sh script
+        self.lastSubprocess = subprocess.Popen(["./updateServer.sh"], shell=True)
 
-def main():
-    while True:
-        print("Checking for updates...")
-        try:
-            subprocess.check_output("git fetch", shell=True)
-            output = subprocess.check_output("git status", shell=True)
-            output = output.decode("utf-8")
-            if "Your branch is up to date" in output:
-                print("No updates found.")
-            else:
-                update()
-        except subprocess.CalledProcessError as e:
-            print("Error: {}".format(e))
-        print("Sleeping for 5 minutes...")
-        time.sleep(300)
+    def checkForUpdates(self):
+        # use git to check for changes
+        status = os.system("git fetch")
+        if status == 0:
+            # no changes
+            return False
+        else:
+            # changes found
+            return True
+
+    def main(self):
+        while True:
+            if self.checkForUpdates():
+                if self.lastSubprocess is not None:
+                    # kill the last subprocess if it is still running
+                    self.lastSubprocess.kill()
+                self.update()
+            time.sleep(300)
+
 
 if __name__ == '__main__':
-    main()
+    update = Update()
+    update.main()
