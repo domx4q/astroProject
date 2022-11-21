@@ -1,5 +1,4 @@
 <template>
-  <router-view/>
   <ImportantPrompt v-if="updateExists">
     <template v-slot:title>
       <h2>Update verfügbar</h2>
