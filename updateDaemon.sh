@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # while infinite loop
-while true:; do
+while true; do
   if git diff-index --quiet HEAD --; then
     ./startServer.sh
   else
