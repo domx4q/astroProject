@@ -245,7 +245,7 @@ export default {
   mixins: [defaults],
   data() {
     return {
-      devDefaultPlanet: "moon",
+      devDefaultPlanet: "jupiter",
       modelSrc: "models/sphere.glb",
       defaultOrbitSensi: 0.8,
       allowedFileTypes: ["image/png", "image/jpeg", "image/jpg", "image/webp", "application/json", "text/plain"],
@@ -631,8 +631,7 @@ export default {
   position: absolute;
   top: 8%;
   right: 10px;
-  max-width: 350px;
-  width: auto;
+  width: 350px;
   height: auto;
   z-index: 100;
   border-radius: 5px;
@@ -642,7 +641,7 @@ export default {
   /*box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);*/
   font-size: 1.1em;
 
-  transition: max-width 0.4s ease-in-out;
+  transition: width 0.4s ease-in-out;
 }
 #planetInfo .iconHolder {
   position: absolute;
@@ -666,7 +665,7 @@ html[data-theme="dark"] #planetInfo .iconHolder:hover {
   transform: rotate(180deg);
 }
 #planetInfo.collapsed {
-  max-width: 0;
+  width: 0;
   padding: 15px;
 }
 #planetInfo .content {
@@ -686,6 +685,7 @@ html[data-theme="dark"] #planetInfo .iconHolder:hover {
 }
 #planetInfo.collapsed .content *, #planetInfo.expanding .content * {
   overflow: hidden !important;
+  white-space: nowrap !important;
 }
 #planetInfo.fullyCollapsed .content {
   display: none;
