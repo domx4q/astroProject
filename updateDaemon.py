@@ -1,5 +1,5 @@
 """
-This script should chec git every 5 minutes for changes and update the repo if changes are found.
+This script should check git every 5 minutes for changes and update the repo if changes are found.
 (use python 3.6)
 """
 
