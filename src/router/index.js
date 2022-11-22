@@ -6,6 +6,22 @@ const routes = [
     path: "/",
     name: "home",
     component: HomeView
+  },
+  {
+    // create a sub route folder so
+    // /easter/clock
+    // /easter/snake
+
+    path: "/easter",
+    name: "easter",
+    redirect: { name: "home" },
+    children: [
+      {
+        path: "clock",
+        name: "clock",
+        component: () => import("../views/easter/ClockView.vue")
+      }
+    ]
   }
 ]
 
