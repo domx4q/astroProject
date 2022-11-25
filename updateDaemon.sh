@@ -8,7 +8,8 @@ if screen -list | grep -q "AUTO-astro"; then
 else
   echo "Screen does not exist"
   # create screen "AUTO-astro" and send /home/extra_server/private/astroProject/updateServer.sh to it
-  screen -dmS AUTO-astro cd /home/extra_server/private/astroProject/ && ./updateServer.sh
+  screen -dmS AUTO-astro
+  screen -S AUTO-astro -X stuff $'cd /home/extra_server/private/astroProject\n./updateServer.sh\n'
 fi
 
 
@@ -19,12 +20,9 @@ while true; do
     # check if screen "AUTO-astro" exists
   else
     echo "Changes"
-    screen -S AUTO-astro -X stuff "^C"
-    screen -S AUTO-astro -X stuff "cd /home/extra_server/private/astroProject"
-    screen -S AUTO-astro -X stuff '\n'
-    screen -S AUTO-astro -X stuff "updateServer.sh"
-    screen -S AUTO-astro -X stuff '\n'
+    screen -S AUTO-astro -X stuff $'^C\ncd /home/extra_server/private/astroProject\n./updateServer.sh\n'
   fi
 #  sleep 5 minutes
+  echo "Sleeping for 5 minutes"
   sleep 5m
 done
