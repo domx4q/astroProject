@@ -335,7 +335,6 @@ export default {
         const title = url.substring(url.lastIndexOf("/") + 1)
         const wikiUrl = "https://de.wikipedia.org/api/rest_v1/page/summary/" + title
         axios.get(wikiUrl, {onDownloadProgress: (progressEvent) => {
-            console.log(progressEvent)
             this.wikiLoadingProgress = progressEvent.loaded / progressEvent.total
           }})
           .then(response => {
@@ -432,7 +431,6 @@ export default {
       const material = this.planet.model.materials[0]
       this.textureLoadingProgress = Math.random() * 0.2 + 0.1
       const increaser = () => {
-        console.log(a)
         this.textureLoadingProgress += 0.006
       }
       const a = setInterval(increaser, 200)
@@ -675,9 +673,6 @@ export default {
       if (newVal >= 100) {
         this.ourProgress = 100
       }
-    },
-    wikiProgress: function (newVal) {
-      console.log({"wikiProgress": newVal})
     },
   }
 }
