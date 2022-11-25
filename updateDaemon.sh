@@ -11,12 +11,26 @@ fi
 
 # this will run forever
 while true; do
-  if git diff-index --quiet HEAD --; then
-    echo "No changes - "$(date)
-  else
-    echo "Changes - "$(date)
+  git remote update > /dev/null 2>&1
+
+  UPSTREAM=${1:-'@{u}'}
+  LOCAL=$(git rev-parse @)
+  REMOTE=$(git rev-parse "$UPSTREAM")
+  BASE=$(git merge-base @ "$UPSTREAM")
+
+  if [ $LOCAL = $REMOTE ]; then
+    echo "Up-to-date - "$(date)
+  elif [ $LOCAL = $BASE ]; then
+    echo "Need to pull - "$(date)
     screen -S AUTO-astro -X stuff $'^C\ncd /home/extra_server/private/astroProject\n./updateServer.sh\n'
+  elif [ $REMOTE = $BASE ]; then
+    echo "Need to push - "$(date)
+    git reset --hard HEAD
+  else
+    echo "Diverged - "$(date)
+    git reset --hard HEAD
   fi
+
   echo "Sleeping for 5 minutes"
   sleep 5m
 done
