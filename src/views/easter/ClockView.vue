@@ -57,7 +57,7 @@ export default {
       const canvas = document.querySelector('canvas');
       WebGLFluid(canvas, {
         IMMEDIATE: true, // Whether to trigger multiple random splats when initialized
-        TRIGGER: 'hover', // Can be change to 'click'
+        TRIGGER: 'click', // Can be change to 'click'
         SIM_RESOLUTION: 128,
         DYE_RESOLUTION: 1024,
         CAPTURE_RESOLUTION: 512,
