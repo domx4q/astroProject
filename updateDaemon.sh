@@ -16,10 +16,10 @@ fi
 # while infinite loop
 while true; do
   if git diff-index --quiet HEAD --; then
-    echo "No changes"
+    echo "No changes - " + $(date)
     # check if screen "AUTO-astro" exists
   else
-    echo "Changes"
+    echo "Changes" -  + $(date)
     screen -S AUTO-astro -X stuff $'^C\ncd /home/extra_server/private/astroProject\n./updateServer.sh\n'
   fi
 #  sleep 5 minutes
