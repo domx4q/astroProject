@@ -29,7 +29,6 @@ export default {
     const query = this.$route.query;
     // check if f is in query
     if ("f" in query) {
-      console.log("fancy mode");
       this.mode = "fancy";
     } else {
       this.mode = "normal";

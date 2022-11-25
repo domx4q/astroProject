@@ -3,6 +3,7 @@
       :src="modelSrc"
       alt="Es ist ein Fehler beim Laden des 3D-Modells aufgetreten."
       ar
+      :poster="isProduction ? 'img/jupiter_poster.png' : ''"
       touch-action="none"
       camera-controls
       camera-orbit="90deg"
@@ -251,7 +252,7 @@ export default {
       allowedFileTypes: ["image/png", "image/jpeg", "image/jpg", "image/webp", "application/json", "text/plain"],
       zoomFactor: 1,
       accent_color: "hsl(197,85%,55%)",
-      auto_rotate: true,
+      auto_rotate: false,
       enable_pan: false,
 
       currentPlanet: this.convertPlanet(planets.empty, "empty"),
@@ -466,8 +467,6 @@ export default {
       }
       this.currentPlanet = planet
       this.sortPlanets()
-      console.log(Array.from(this.planets))
-      console.log(planet)
 
       // update hotspots
       this.hotspots = annotations.planets[this.currentPlanet.key]
