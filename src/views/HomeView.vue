@@ -25,7 +25,8 @@
       @keyup.shift.ctrl.space.exact="enable_pan = !enable_pan"
       v-on:camera-change="updateZoom"
       @load="planetLoaded"
-      @progress="progress = $event.detail.totalProgress">
+      @progress="progress = $event.detail.totalProgress"
+      @error="errorHandler">
     <div class="controls">
       <div id="buttons" class="formCollection">
         <div class="flex-column" style="margin-top: 10px; margin-left: 10px">
@@ -246,7 +247,7 @@ export default {
   mixins: [defaults],
   data() {
     return {
-      devDefaultPlanet: "jupiter",
+      devDefaultPlanet: "moon",
       modelSrc: "models/sphere.glb",
       defaultOrbitSensi: 0.8,
       allowedFileTypes: ["image/png", "image/jpeg", "image/jpg", "image/webp", "application/json", "text/plain"],
@@ -363,6 +364,22 @@ export default {
     }
   },
   methods: {
+    errorHandler(error) {
+      console.error(error)
+      let messageContent = "Ein Fehler ist aufgetreten."
+
+      switch (error.detail.type){
+        case "loadfailure":
+        case "parseerror":
+          messageContent = "Das Modell konnte nicht geladen werden."
+          break
+        case "networkerror":
+          messageContent = "Das Modell konnte nicht geladen werden. Bitte überprüfe deine Internetverbindung."
+          break
+      }
+      const defaultAppend = "Das neu laden der Seite könnte helfen. Andernfalls versuche es später noch einmal."
+      this.addMessage("Fehler", `${messageContent} ${defaultAppend}`, 10000, "error")
+    },
     convertPlanet(planet, key, children = [], isChild = false) {
       return {
         ...planet,
