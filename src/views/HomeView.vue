@@ -27,6 +27,7 @@
       @load="planetLoaded"
       @progress="progress = $event.detail.totalProgress"
       @error="errorHandler">
+    <div id="progress-bar" slot="progress-bar" :style="{width: ourProgress + '%'}" :class="{hide: hideProgressBar}"></div>
     <div class="controls">
       <div id="buttons" class="formCollection">
         <div class="flex-column" style="margin-top: 10px; margin-left: 10px">
@@ -237,6 +238,7 @@ import planets from "@/assets/data/planets.json"
 import annotations from "@/assets/data/annotations.json"
 
 import("@google/model-viewer")
+import axios from "axios";
 export default {
   name: "HomeView",
   components: {
@@ -253,7 +255,7 @@ export default {
       allowedFileTypes: ["image/png", "image/jpeg", "image/jpg", "image/webp", "application/json", "text/plain"],
       zoomFactor: 1,
       accent_color: "hsl(197,85%,55%)",
-      auto_rotate: false,
+      auto_rotate: true,
       enable_pan: false,
 
       currentPlanet: this.convertPlanet(planets.empty, "empty"),
@@ -263,7 +265,10 @@ export default {
       planetType: "normal",
       planets: null,
       loaded: false,
-      progress: 0,
+      progress: 1,
+      hideProgressBar: true,
+      textureLoadingProgress: 1, // every progress has to be 1 on init, because always the smallest progress is used
+      wikiLoadingProgress: 1,
       currentTexture: null,
       sidePanelType: "planetInfo",
       planetInfoCollapsed: false,
@@ -297,6 +302,14 @@ export default {
     classifications() {
       return annotations.data.classifications
     },
+    ourProgress() {
+      const valueList = [this.progress,
+        this.textureLoadingProgress,
+        this.wikiLoadingProgress,
+        1
+      ]
+      return Math.min(...valueList) * 100
+    },
     planetInfo() {
       if (this.currentPlanet === undefined || this.currentPlanet === null || this.currentPlanet === planets.empty || this.currentPlanet.key === "empty") {
         return {
@@ -321,16 +334,18 @@ export default {
         const url = this.planetInfo.link
         const title = url.substring(url.lastIndexOf("/") + 1)
         const wikiUrl = "https://de.wikipedia.org/api/rest_v1/page/summary/" + title
-        fetch(wikiUrl)
-            .then(response => response.json())
-            .then(data => {
-              description = data.extract
-              if (description.includes("<p>")) {
-                description = description.substring(description.indexOf("<p>") + 3)
-                description = description.substring(0, description.indexOf("</p>"))
-              }
-              this.planetInfo.description = description
-            })
+        axios.get(wikiUrl, {onDownloadProgress: (progressEvent) => {
+            console.log(progressEvent)
+            this.wikiLoadingProgress = progressEvent.loaded / progressEvent.total
+          }})
+          .then(response => {
+            description = response.data.extract_html
+            if (description.includes("<p>")) {
+              description = description.substring(description.indexOf("<p>") + 3)
+              description = description.substring(0, description.indexOf("</p>"))
+            }
+            this.planetInfo.description = description
+          })
       }
       return this.formatJSON(description, this.planetInfo.newLineDot)
     },
@@ -413,11 +428,22 @@ export default {
       })
     },
     async createAndApplyTexture(image) {
+      this.textureLoadingProgress = 0
       const material = this.planet.model.materials[0]
+      this.textureLoadingProgress = Math.random() * 0.2 + 0.1
+      const increaser = () => {
+        console.log(a)
+        this.textureLoadingProgress += 0.006
+      }
+      const a = setInterval(increaser, 200)
 
       const texture = await this.planet.createTexture(image)
+      this.textureLoadingProgress = Math.max(Math.random() * 0.25 + 0.4, this.textureLoadingProgress)
+      clearInterval(a)
+      const b = setInterval(increaser, 200)
       material.pbrMetallicRoughness["baseColorTexture"].setTexture(texture)
-
+      this.textureLoadingProgress = 1
+      clearInterval(b)
     },
     planetLoaded() {
       console.log("planet loaded", new Date().toLocaleTimeString())
@@ -639,6 +665,20 @@ export default {
         }, 400)
       }
     },
+    ourProgress: function (newVal) {
+      this.hideProgressBar = false
+      if (newVal === 100) {
+        setTimeout(() => {
+          this.hideProgressBar = true
+        }, 1000)
+      }
+      if (newVal >= 100) {
+        this.ourProgress = 100
+      }
+    },
+    wikiProgress: function (newVal) {
+      console.log({"wikiProgress": newVal})
+    },
   }
 }
 </script>
@@ -689,7 +729,7 @@ html[data-theme="dark"] #planetInfo .iconHolder:hover {
   flex-direction: column;
   justify-content: flex-start;
   align-items: normal;
-  width: 100%;
+  width: 350px;
   height: 100%;
   padding: 0;
   margin: 0;
@@ -698,10 +738,6 @@ html[data-theme="dark"] #planetInfo .iconHolder:hover {
 }
 #planetInfo.collapsed .content {
   opacity: 0;
-}
-#planetInfo.collapsed .content *, #planetInfo.expanding .content * {
-  overflow: hidden !important;
-  white-space: nowrap !important;
 }
 #planetInfo.fullyCollapsed .content {
   display: none;
@@ -1012,8 +1048,25 @@ option:checked {
   background-color: #ff0000;
 }
 
-model-viewer::part(default-progress-bar) {
+#progress-bar, model-viewer::part(default-progress-bar) {
   background-color: #6c8bda;
+  border-radius: 10px; /*might be look smoother*/
+}
+#progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  z-index: 5000;
+  /*surprisingly a longer duration on the width is looking really good*/
+  transition: opacity 0.5s ease, width 0.7s ease;
+}
+#progress-bar.hide {
+  opacity: 0;
+  width: 0;
+
+  transition: opacity 0.3s ease, width 0.7s ease;
 }
 
 #planetInfo .accent {
