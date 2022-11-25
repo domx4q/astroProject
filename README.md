@@ -4,7 +4,7 @@
 [![CodeScene Code Health](https://codescene.io/projects/31104/status-badges/code-health)](https://codescene.io/projects/31104)
 
 # astro
-hallo welt
+
 ## Project setup
 ```
 npm install

@@ -82,7 +82,7 @@ export default {
   position: fixed;
   bottom: 0;
   right: 0;
-  background: rgba(120, 77, 77, 0.4);
+  background: rgba(255, 77, 77, 0.4);
   padding: 0.2em;
   font-weight: bold;
   color: rgba(255, 255, 255, 0.8);

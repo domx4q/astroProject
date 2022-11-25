@@ -1,5 +1,5 @@
 git fetch --all
-git reset --hard origin/test_update
+git reset --hard origin/master
 npm i
 npm run build
 ./startServer.sh
