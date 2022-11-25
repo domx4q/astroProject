@@ -3,19 +3,20 @@
 # check if screen "AUTO-astro" exists
 # else create it and send /home/extra_server/private/astroProject/updateServer.sh to it
 
+if screen -list | grep -q "AUTO-astro"; then
+  echo "Screen exists"
+else
+  echo "Screen does not exist"
+  # create screen "AUTO-astro" and send /home/extra_server/private/astroProject/updateServer.sh to it
+  screen -dmS AUTO-astro cd /home/extra_server/private/astroProject/ && ./updateServer.sh
+fi
+
 
 # while infinite loop
 while true; do
   if git diff-index --quiet HEAD --; then
     echo "No changes"
     # check if screen "AUTO-astro" exists
-    if screen -list | grep -q "AUTO-astro"; then
-      echo "Screen exists"
-    else
-      echo "Screen does not exist"
-      # create screen "AUTO-astro" and send /home/extra_server/private/astroProject/updateServer.sh to it
-      screen -dmS AUTO-astro /home/extra_server/private/astroProject/updateServer.sh
-    fi
   else
     echo "Changes"
     screen -S AUTO-astro -X stuff "^C"
