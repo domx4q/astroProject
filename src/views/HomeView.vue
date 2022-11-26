@@ -263,6 +263,7 @@ export default {
       defaultPlanet: null,
       planet: null,
       planetType: "normal",
+      modelDefaultTexture: "jupiter",
       planets: null,
       loaded: false,
       progress: 1,
@@ -354,7 +355,7 @@ export default {
   },
   created() {
     if (this.isProduction) {
-      this.defaultPlanet = "jupiter"
+      this.defaultPlanet = this.modelDefaultTexture
     } else {
       this.defaultPlanet = this.devDefaultPlanet
     }
@@ -475,7 +476,7 @@ export default {
       this.sortPlanets()
       this.textureInputForm = {}
     },
-    changePlanet(planet, force = false) {
+    changePlanet(planet, force = false, firstLoad = false) {
       this.sidePanelType = "planetInfo"
       this.openPlanetInfoDropdown = "none"
 
@@ -489,11 +490,15 @@ export default {
         if (this.planetType === "custom") {
           this.modelSrc = "models/sphere.glb"
           this.planetType = "normal"
-          setTimeout(() => {
-            this.createAndApplyTexture(`/textures/${planet.texture}`)
-          }, 100)
+          if (!(planet.key === this.modelDefaultTexture && firstLoad)) {
+            setTimeout(() => {
+              this.createAndApplyTexture(`/textures/${planet.texture}`)
+            }, 100)
+          }
         } else {
-          this.createAndApplyTexture(`/textures/${planet.texture}`)
+          if (!(planet.key === this.modelDefaultTexture && firstLoad)) {
+            this.createAndApplyTexture(`/textures/${planet.texture}`)
+          }
         }
       }
       if (this.lastPlanetChild) {
@@ -616,7 +621,7 @@ export default {
     },
     loaded: function (newVal) {
       if (newVal) {
-        this.changePlanet(this.findPlanet(this.defaultPlanet), true)
+        this.changePlanet(this.findPlanet(this.defaultPlanet), true, true)
         setTimeout(() => {
           // do this manually because when set to false in data but not manually changed, then it won't update
           if (this.auto_rotate) {
