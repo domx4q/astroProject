@@ -36,29 +36,11 @@
               :disabled="!loaded">
             <FormKit type="group" v-model="textureInputForm" :disabled="!loaded">
 <!--              needed because otherwise the file input can't be cleared-->
-              <FormKit
-                  type="file"
-                  id="textureInput"
-                  label="Datei auswählen"
-                  :accept="allowedFileTypes"
-                  @change="onFileChange"/>
+              <FormKit type="file" id="textureInput" label="Datei auswählen" :accept="allowedFileTypes" @change="onFileChange"/>
             </FormKit>
-            <FormKit
-              type="button"
-              label="Hotspots speichern"
-              v-if="!isMobile"
-              :disabled="lastHotspot.name === ''"
-              @click="downloadHotspots"/>
-            <FormKit
-                type="checkbox"
-                label="Automatische Rotation"
-                :help="!isMobile ? 'Tastenkombination: Strg + Leertaste' : ''"
-                v-model="auto_rotate"/>
-            <FormKit
-                type="checkbox"
-                label="Verschieben aktivieren"
-                :help="!isMobile ? 'Tastenkombination: Strg + Shift + Leertaste' : ''"
-                v-model="enable_pan"/>
+            <FormKit type="button" label="Hotspots speichern" v-if="!isMobile" :disabled="lastHotspot.name === ''" @click="downloadHotspots"/>
+            <FormKit type="checkbox" label="Automatische Rotation" :help="!isMobile ? 'Tastenkombination: Strg + Leertaste' : ''" v-model="auto_rotate"/>
+            <FormKit type="checkbox" label="Verschieben aktivieren" :help="!isMobile ? 'Tastenkombination: Strg + Shift + Leertaste' : ''" v-model="enable_pan"/>
           </FormKit>
           <hr>
           <ThemeSwitch/>
@@ -84,107 +66,40 @@
           enter-active-class="animate__animated animate__fadeInRight"
           leave-active-class="animate__animated animate__fadeOutRight">
         <div class="wrapper" v-if="!(hotspots.length === 0 || !loaded || (lastHotspot.position.x === 0 && lastHotspot.position.y === 0 && lastHotspot.position.z === 0)) && sidePanelType === 'hotspotSettings'">
-          <FormKit
-              type="form"
-              id="hotspot-settings"
-              form-class="formCollection"
-              submit-label="Übernehmen"
-              @submit="updateLastHotspot();blur()"
-              :actions="false"
-              :disabled="!loaded"
-              v-if="!isMobile"
-              v-auto-animate>
+          <FormKit type="form" id="hotspot-settings" form-class="formCollection" submit-label="Übernehmen"
+                   @submit="updateLastHotspot();blur()" :actions="false" :disabled="!loaded" v-if="!isMobile" v-auto-animate>
             <h2>Hotspot Einstellungen</h2>
             <p style="max-width: 225px" v-if="windowHeight >= 913">Direkt nach dem hinzufügen (<kbd>Alt + Klick auf den Planeten</kbd>) hier die
               Einstellungen vornehmen.<br>Andernfalls können die Einstellungen nicht mehr geändert werden.</p>
-            <FormKit
-                type="text"
-                id="hotspot_name_input"
-                name="name"
-                label="Name"
-                aria-autocomplete="none"
-                autocomplete="off"
-                spellcheck="true"
-                validation="required|length:3,50"
-                v-model="lastHotspot.name"
-                @focus="$event.target.select();hotspot_settings_focused=true"
-                @blur="hotspot_settings_focused=false"
-                @change="updateLastHotspot"
-                @keyup="updateLastHotspot()"
-                @keyup.enter="updateLastHotspot();blur()"
-            />
-            <FormKit
-                type="text"
-                name="description"
-                label="Beschreibung"
-                aria-autocomplete="none"
-                autocomplete="off"
-                spellcheck="true"
-                v-model="lastHotspot.description"
-                @focus="hotspot_settings_focused=true"
-                @blur="hotspot_settings_focused=false"
-                @change="updateLastHotspot"
-                @keyup="updateLastHotspot"
-                @keyup.enter="updateLastHotspot();blur()"/>
-            <FormKit
-                type="select"
-                name="type"
-                label="Typ"
-                :options="{location: 'Ort', marker: 'Markierung'}"
-                v-model="lastHotspot.type"
-                @change="updateLastHotspot"/>
-            <FormKit
-                type="select"
-                name="level"
-                label="Ebene"
-                :options="{1: 'Ebene 1', 2: 'Ebene 2', 3: 'Ebene 3', 4: 'Ebene 4', 5: 'Ebene 5'}"
-                v-if="lastHotspot.type === 'location'"
-                v-model="lastHotspot.level"
-                @change="updateLastHotspot"/>
-            <FormKit
-                type="select"
-                name="classification"
-                label="Klassifizierung"
-                help="Strg + Klick zur Mehrfachauswahl"
-                :options="classifications"
-                v-model="lastHotspot.classification"
-                @change="updateLastHotspot"
-                multiple/>
-            <FormKit
-                type="checkbox"
-                name="action"
-                label="Aktion"
-                help="Nur für besondere Hotspots"
-                v-model="lastHotspot.action"
-                @change="updateLastHotspot"/>
+            <FormKit type="text" id="hotspot_name_input" name="name" label="Name" aria-autocomplete="none"
+                     autocomplete="off" spellcheck="true" validation="required|length:3,50" v-model="lastHotspot.name"
+                     @focus="$event.target.select();hotspot_settings_focused=true" @blur="hotspot_settings_focused=false"
+                     @change="updateLastHotspot" @keyup="updateLastHotspot()" @keyup.enter="updateLastHotspot();blur()"/>
+            <FormKit type="text" name="description" label="Beschreibung" aria-autocomplete="none"
+                     autocomplete="off" spellcheck="true" v-model="lastHotspot.description"
+                     @focus="hotspot_settings_focused=true" @blur="hotspot_settings_focused=false"
+                     @change="updateLastHotspot" @keyup="updateLastHotspot" @keyup.enter="updateLastHotspot();blur()"/>
+            <FormKit type="select" name="type" label="Typ" :options="{location: 'Ort', marker: 'Markierung'}" v-model="lastHotspot.type" @change="updateLastHotspot"/>
+            <FormKit type="select" name="level" label="Ebene" :options="{1: 'Ebene 1', 2: 'Ebene 2', 3: 'Ebene 3', 4: 'Ebene 4', 5: 'Ebene 5'}"
+                     v-if="lastHotspot.type === 'location'" v-model="lastHotspot.level" @change="updateLastHotspot"/>
+            <FormKit type="select" name="classification" label="Klassifizierung" help="Strg + Klick zur Mehrfachauswahl"
+                     :options="classifications" v-model="lastHotspot.classification" @change="updateLastHotspot" multiple/>
+            <FormKit type="checkbox" name="action" label="Aktion" help="Nur für besondere Hotspots" v-model="lastHotspot.action" @change="updateLastHotspot"/>
             <hr>
-            <FormKit
-                type="button"
-                label="Panel schließen"
-                @click="sidePanelType = 'planetInfo'"
-                :disabled="!loaded"/>
+            <FormKit type="button" label="Panel schließen" @click="sidePanelType = 'planetInfo'" :disabled="!loaded"/>
           </FormKit>
         </div>
       </Transition>
-      <Transition v-if="!isMobile"
-          enter-active-class="animate__animated animate__fadeInRight"
-          leave-active-class="animate__animated animate__fadeOutRight">
+      <Transition v-if="!isMobile" enter-active-class="animate__animated animate__fadeInRight" leave-active-class="animate__animated animate__fadeOutRight">
         <div id="planetInfo" class="wrapper" v-if="sidePanelType === 'planetInfo'">
           <div class="iconHolder" @click="planetInfoCollapsed = !planetInfoCollapsed">
-            <Icon
-              icon="ph:caret-double-right-bold"
-              class="collapseIcon"
-            />
+            <Icon icon="ph:caret-double-right-bold" class="collapseIcon"/>
           </div>
           <div class="content">
             <h2 class="name">{{ planetInfo.name }}</h2>
             <div class="description">
-              <Dropdown
-                  title="Beschreibung"
-                  :open-override="openPlanetInfoDropdown === 'none'"
-                  :onlyShowTitleOnClose="true"
-                  @open="openPlanetInfoDropdown = 'none'"
-                  @close="openPlanetInfoDropdown = 'none'">
+              <Dropdown title="Beschreibung" :open-override="openPlanetInfoDropdown === 'none'" :onlyShowTitleOnClose="true"
+                        @open="openPlanetInfoDropdown = 'none'" @close="openPlanetInfoDropdown = 'none'">
                 <p v-html="planetDescription"/><br>
                 <p v-if="planetInfo.link">Quelle: <a :href="planetInfo.link" target="_blank">{{ planetInfo.linkText }}</a></p>
               </Dropdown>
@@ -281,16 +196,8 @@ export default {
         description: "",
         classification: ["unknown"],
         action: false,
-        position: {
-          x: 0,
-          y: 0,
-          z: 0
-        },
-        normal: {
-          x: 0,
-          y: 0,
-          z: 0
-        },
+        position: {x: 0, y: 0, z: 0},
+        normal: {x: 0, y: 0, z: 0},
         type: "marker",
         level: "1", // desto höher, desto detaillierter / kleiner
       },
