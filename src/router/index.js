@@ -14,12 +14,17 @@ const routes = [
 
     path: "/easter",
     name: "easter",
-    redirect: { name: "home" },
+    redirect: {name: "home"},
     children: [
       {
         path: "clock",
         name: "clock",
         component: () => import("../views/easter/ClockView.vue")
+      },
+      {
+        path: "snake",
+        name: "snake",
+        component: () => import("../views/easter/SnakeView.vue")
       }
     ]
   }
