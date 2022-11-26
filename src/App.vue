@@ -11,7 +11,9 @@
       <button @click="refreshApp">Neu laden</button>
     </template>
   </ImportantPrompt>
-  <div id="previewBadge" class="badge" v-if="beta">Preview</div>
+  <Transition enter-active-class="animate__animated animate__zoomInUp" leave-active-class="animate__animated animate__zoomOutDown" mode="in-out">
+    <div id="previewBadge" class="badge" v-if="beta">Preview</div>
+  </Transition>
 </template>
 <script>
 import update from "@/mixins/update";

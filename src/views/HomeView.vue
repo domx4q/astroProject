@@ -30,38 +30,46 @@
     <div id="progress-bar" slot="progress-bar" :style="{width: ourProgress + '%'}" :class="{hide: hideProgressBar}"></div>
     <div class="controls">
       <div id="buttons" class="formCollection">
-        <div class="flex-column" style="margin-top: 10px; margin-left: 10px">
-          <FormKit
-              type="group"
-              :disabled="!loaded">
-            <FormKit type="group" v-model="textureInputForm" :disabled="!loaded">
-<!--              needed because otherwise the file input can't be cleared-->
-              <FormKit type="file" id="textureInput" label="Datei auswählen" :accept="allowedFileTypes" @change="onFileChange"/>
+        <Transition enter-active-class="animate__animated animate__fadeInLeftBig" mode="in-out">
+          <div class="flex-column" style="margin-top: 10px; margin-left: 10px" v-if="showOverlays">
+            <FormKit
+                type="group"
+                :disabled="!loaded">
+              <FormKit type="group" v-model="textureInputForm" :disabled="!loaded">
+                <!--              needed because otherwise the file input can't be cleared-->
+                <FormKit type="file" id="textureInput" label="Datei auswählen" :accept="allowedFileTypes"
+                         @change="onFileChange"/>
+              </FormKit>
+              <FormKit type="button" label="Hotspots speichern" v-if="!isMobile" :disabled="lastHotspot.name === ''"
+                       @click="downloadHotspots"/>
+              <FormKit type="checkbox" label="Automatische Rotation"
+                       :help="!isMobile ? 'Tastenkombination: Strg + Leertaste' : ''" v-model="auto_rotate"/>
+              <FormKit type="checkbox" label="Verschieben aktivieren"
+                       :help="!isMobile ? 'Tastenkombination: Strg + Shift + Leertaste' : ''" v-model="enable_pan"/>
             </FormKit>
-            <FormKit type="button" label="Hotspots speichern" v-if="!isMobile" :disabled="lastHotspot.name === ''" @click="downloadHotspots"/>
-            <FormKit type="checkbox" label="Automatische Rotation" :help="!isMobile ? 'Tastenkombination: Strg + Leertaste' : ''" v-model="auto_rotate"/>
-            <FormKit type="checkbox" label="Verschieben aktivieren" :help="!isMobile ? 'Tastenkombination: Strg + Shift + Leertaste' : ''" v-model="enable_pan"/>
-          </FormKit>
-          <hr>
-          <ThemeSwitch/>
-        </div>
+            <hr>
+            <ThemeSwitch/>
+          </div>
+        </Transition>
 
       </div>
-      <ul class="planets" v-auto-animate>
-        <template v-for="planet in planets" :key="planet.uuid">
-          <li class="planet-selector" v-if="planet.enabled"
-              :class="{active: planet.uuid === currentPlanet.uuid, disabled: !loaded, parent: planet.children.length > 0}">
-            <span @click="changePlanet(planet)">{{ planet.name }}</span>
-          </li>
-          <template v-for="(child, index) in planet.children" :key="child.uuid">
-            <li class="planet-selector child" v-if="child.enabled && child.uuid !== currentPlanet.uuid"
-                :class="{active: child.uuid === currentPlanet.uuid, disabled: !loaded,
-                parentActive: planet.uuid === currentPlanet.uuid, last: index === planet.children.length - 1}">
-              <span @click="changePlanet(child)">{{ child.name }}</span>
+      <Transition enter-active-class="animate__animated animate__fadeInLeftBig" mode="in-out">
+        <ul class="planets" v-auto-animate v-if="showOverlays">
+          <template v-for="planet in planets" :key="planet.uuid">
+            <li class="planet-selector" v-if="planet.enabled"
+                :class="{active: planet.uuid === currentPlanet.uuid, disabled: !loaded, parent: planet.children.length > 0}">
+              <span @click="changePlanet(planet)">{{ planet.name }}</span>
             </li>
+            <template v-for="(child, index) in planet.children" :key="child.uuid">
+              <li class="planet-selector child" v-if="child.enabled && child.uuid !== currentPlanet.uuid"
+                  :class="{active: child.uuid === currentPlanet.uuid, disabled: !loaded,
+                      parentActive: planet.uuid === currentPlanet.uuid, last: index === planet.children.length - 1}">
+                <span @click="changePlanet(child)">{{ child.name }}</span>
+              </li>
+            </template>
           </template>
-        </template>
-      </ul>
+        </ul>
+      </Transition>
       <Transition
           enter-active-class="animate__animated animate__fadeInRight"
           leave-active-class="animate__animated animate__fadeOutRight">
@@ -90,8 +98,8 @@
           </FormKit>
         </div>
       </Transition>
-      <Transition v-if="!isMobile" enter-active-class="animate__animated animate__fadeInRight" leave-active-class="animate__animated animate__fadeOutRight">
-        <div id="planetInfo" class="wrapper" v-if="sidePanelType === 'planetInfo'">
+      <Transition v-if="!isMobile" enter-active-class="animate__animated animate__fadeInRightBig" leave-active-class="animate__animated animate__fadeOutRightBig">
+        <div id="planetInfo" class="wrapper" v-if="sidePanelType === 'planetInfo' && showOverlays">
           <div class="iconHolder" @click="planetInfoCollapsed = !planetInfoCollapsed">
             <Icon icon="ph:caret-double-right-bold" class="collapseIcon"/>
           </div>
@@ -136,8 +144,9 @@
     </div>
   </div>
 
-  <div id="textureCopyright" class="badge"> Copyright: {{currentPlanet.copyright}}
-  </div>
+  <Transition appear enter-active-class="animate__animated animate__fadeInRightBig" leave-active-class="animate__animated animate__fadeOutRightBig">
+    <div id="textureCopyright" class="badge"> Copyright: {{ currentPlanet.copyright }}</div>
+  </Transition>
 </template>
 
 <script>
@@ -181,6 +190,7 @@ export default {
       modelDefaultTexture: "jupiter",
       planets: null,
       loaded: false,
+      showOverlays: false,
       progress: 1,
       hideProgressBar: true,
       textureLoadingProgress: 1, // every progress has to be 1 on init, because always the smallest progress is used
@@ -284,6 +294,10 @@ export default {
       // only allow images on mobile so camera can be used in app
       this.allowedFileTypes = ["image/png", "image/jpeg", "image/jpg", "image/webp"]
     }
+
+    setTimeout(() => {
+      this.showOverlays = true
+    }, 220)
   },
   methods: {
     errorHandler(error) {
@@ -528,6 +542,7 @@ export default {
     },
     loaded: function (newVal) {
       if (newVal) {
+        this.firstLoad = true
         this.changePlanet(this.findPlanet(this.defaultPlanet), true, true)
         setTimeout(() => {
           // do this manually because when set to false in data but not manually changed, then it won't update
