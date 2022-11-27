@@ -264,12 +264,6 @@ export default {
       };
     },
 
-    screenSize() {
-      return {
-        width: window.innerWidth,
-        height: window.innerHeight,
-      };
-    },
     tileSize() {
       let borderSize = this.bordersEnabled ? 2 : 0;
       return ((Math.min(this.screenSize.width, this.screenSize.height) / this.count) -borderSize) + "px";
