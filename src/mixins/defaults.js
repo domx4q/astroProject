@@ -1,13 +1,17 @@
 export default {
     data() {
         return {
-            version: "x.x.x"
+            version: "x.x.x",
+
+            __resizeUUID: this.genUUID(),
         }
     },
     mounted() {
         import("../../package.json").then(pkg => {
             this.version = pkg.version;
         })
+
+        window.addEventListener("resize", this.__onResize);
     },
     computed: {
         isProduction() {
@@ -21,6 +25,17 @@ export default {
         },
         beta() {
             return this.version[0] < 1;
+        },
+
+        screenSize() {
+            const uuid = this.__resizeUUID; // through this dependency, the computed property will be re-evaluated on resize
+            return {
+                x: window.innerWidth,
+                y: window.innerHeight,
+
+                width: window.innerWidth,
+                height: window.innerHeight,
+            }
         }
     },
     methods: {
@@ -60,6 +75,10 @@ export default {
                 .replaceAll("<highlight>", "<span class='highlight'>")
                 .replaceAll("</highlight>", "</span>")
             return jsonA
+        },
+
+        __onResize() {
+            this.__resizeUUID = this.genUUID();
         }
     }
 };

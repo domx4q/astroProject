@@ -49,12 +49,13 @@
             </FormKit>
             <hr>
             <ThemeSwitch/>
+
           </div>
         </Transition>
 
       </div>
-      <Transition enter-active-class="animate__animated animate__fadeInLeftBig" mode="in-out">
-        <ul class="planets" v-auto-animate v-if="showOverlays">
+      <Transition enter-active-class="animate__animated animate__fadeInLeftBig" mode="in-out" v-if="screenSize.height > (((totalPlanetCount*30)+10)+250)">
+        <ul id="planets" v-auto-animate v-if="showOverlays">
           <template v-for="planet in planets" :key="planet.uuid">
             <li class="planet-selector" v-if="planet.enabled"
                 :class="{active: planet.uuid === currentPlanet.uuid, disabled: !loaded, parent: planet.children.length > 0}">
@@ -70,6 +71,16 @@
           </template>
         </ul>
       </Transition>
+      <teleport v-else-if="showOverlaysSlow" to="#buttons .flex-column">
+      <hr>
+      <FormKit
+          type="select"
+          label="Planet auswählen"
+          :options="convertPlanetsFormKit(planets)"
+          @change="changePlanet(findPlanet($event.target.value))"
+      />
+      </teleport>
+
       <Transition
           enter-active-class="animate__animated animate__fadeInRight"
           leave-active-class="animate__animated animate__fadeOutRight">
@@ -185,12 +196,14 @@ export default {
       currentPlanet: this.convertPlanet(planets.empty, "empty"),
       lastPlanetChild: false,
       defaultPlanet: null,
+      totalPlanetCount: 0,
       planet: null,
       planetType: "normal",
       modelDefaultTexture: "jupiter",
       planets: null,
       loaded: false,
       showOverlays: false,
+      showOverlaysSlow: false,
       progress: 1,
       hideProgressBar: true,
       textureLoadingProgress: 1, // every progress has to be 1 on init, because always the smallest progress is used
@@ -198,6 +211,7 @@ export default {
       currentTexture: null,
       sidePanelType: "planetInfo",
       planetInfoCollapsed: false,
+      settingsCollapsed: false,
       openPlanetInfoDropdown: "none",
       lastFieldOfView: 0,
       hotspot_settings_focused: false,
@@ -298,6 +312,11 @@ export default {
     setTimeout(() => {
       this.showOverlays = true
     }, 220)
+    setTimeout(() => {
+      this.showOverlaysSlow = true
+    }, 340)
+
+    this.totalPlanetCount = this.getTotalPlanetCount()
   },
   methods: {
     errorHandler(error) {
@@ -443,7 +462,18 @@ export default {
         })
     },
     findPlanet(key) {
-      return this.planets.find(planet => planet.key === key)
+      for (let planet of this.planets) {
+        if (planet.key === key) {
+          return planet
+        }
+        if (planet.children.length > 0) {
+          for (let child of planet.children) {
+            if (child.key === key) {
+              return child
+            }
+          }
+        }
+      }
     },
     makeHotspotString(x, y, z) {
       return `${x}m ${y}m ${z}m`
@@ -512,7 +542,6 @@ export default {
       this.download("hotspots-" + this.currentPlanet.annotationsKey + ".txt", JSON.stringify(hotspots))
     },
     updateLastHotspot() {
-      // remove last hotspot
       this.hotspots.pop();
       this.hotspots.push({
         ...this.lastHotspot,
@@ -520,6 +549,38 @@ export default {
         class: this.lastHotspot.type === "location" ? "location level-" + this.lastHotspot.level : this.lastHotspot.type,
         level: this.lastHotspot.type === "location" ? this.lastHotspot.level : undefined,
       })
+    },
+    convertPlanetsFormKit(planets) {
+      const planetDict = {}
+      planets.forEach(planet => {
+        if (planet.enabled) {
+          planetDict[planet.key] = planet.name
+        }
+        if (planet.children.length > 0) {
+          planet.children.forEach(child => {
+            if (child.enabled) {
+              planetDict[child.key] = `${planet.name} - ${child.name}`
+            }
+          })
+        }
+      })
+      return planetDict
+    },
+    getTotalPlanetCount() {
+      let count = 0;
+      for (let planet of Object.values(this.planets)) {
+        if (planet.enabled) {
+          count++;
+        }
+        if (planet.children.length > 0) {
+          for (let child of planet.children) {
+            if (child.enabled) {
+              count++;
+            }
+          }
+        }
+      }
+      return count;
     }
   },
   watch: {
@@ -723,7 +784,7 @@ html[data-theme="dark"] #planetInfo {
   align-items: center;
   justify-content: center;
 }
-.planets {
+#planets {
   position: absolute;
   bottom: 0;
   left: 0;
