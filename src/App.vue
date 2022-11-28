@@ -11,7 +11,8 @@
       <button @click="refreshApp">Neu laden</button>
     </template>
   </ImportantPrompt>
-  <Transition enter-active-class="animate__animated animate__zoomInUp" leave-active-class="animate__animated animate__zoomOutDown" mode="in-out">
+  <Transition enter-active-class="animate__animated animate__zoomInUp" leave-active-class="animate__animated animate__zoomOutDown" mode="in-out"
+              v-if="false"> <!--hide (grund: stört und fällt auf)-->
     <div id="previewBadge" class="badge" v-if="beta">Preview</div>
   </Transition>
 </template>
