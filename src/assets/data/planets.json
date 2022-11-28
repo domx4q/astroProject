@@ -195,7 +195,14 @@
           "link": "https://de.wikipedia.org/wiki/Ganymed_(Mond)",
           "linkText": "Wikipedia",
           "newLineDot": true,
-          "autoFetch": true
+          "autoFetch": true,
+
+          "detailed": {
+            "Oberfläche": "Radius: 2.634,1 km\nÄquatordurchmesser: 5.268,2 km\nmittlere Dichte: 1,940 g/cm³\nGravitation: 1,428 m/s²\nTemperatur: Min. -183,15 °C  Mittel -163,15 °C  Max. -113,15 °C",
+            "Allgemeines": "Entfernung zur Erde: 628.300.000 km\nUmlaufzeit: 172 Stunden"
+
+
+          }
         }
       },
 "Kallisto": {
@@ -211,7 +218,14 @@
           "link": "https://de.wikipedia.org/wiki/Kallisto_(Mond)",
           "linkText": "Wikipedia",
           "newLineDot": true,
-          "autoFetch": true
+          "autoFetch": true,
+
+          "detailed": {
+            "Oberfläche": "Radius: 2.410,3 km\nÄquatordurchmesser: 4.820,6 km\nmittlere Dichte: 1,830 g/cm³\nGravitation: 1,236 m/s²\nTemperatur: -139,15 °C",
+            "Allgemeines": "Entfernung zur Erde: 628.300.000 km\nUmlaufzeit: 17 Tage"
+
+
+          }
         }
       }
     }
