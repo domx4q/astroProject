@@ -74,6 +74,8 @@ export default {
                 .replaceAll("</accent>", "</span>")
                 .replaceAll("<highlight>", "<span class='highlight'>")
                 .replaceAll("</highlight>", "</span>")
+
+                .replaceAll("<space>", " ")
             return jsonA
         },
 

@@ -112,7 +112,7 @@
       "autoFetch": true,
 
       "detailed": {
-        "Oberfläche": "Radius: 6.371 km\nÄquatordurchmesser: 12.742 km\nmittlere Dichte: 5,514 g/cm³\nGravitation: 9,807 m/s²\nTemperatur: Min. −89 °C  Mittel +15 °C  Max. +57°C",
+        "Oberfläche": "Radius: 6.371 km\nÄquatordurchmesser: 12.742 km\nmittlere Dichte: 5,514 g/cm³\nGravitation: 9,807 m/s²\nTemperatur: Min.<space>−89 °C  Mittel +15 °C  Max.<space>+57°C",
         "Allgemeines": "Entfernung: 149.600.000 km\nUmlaufzeit: 1 Jahr"
 
 
@@ -159,7 +159,7 @@
           "autoFetch": true,
 
           "detailed": {
-            "Oberfläche": "Radius: 1.821,6 km\nÄquatordurchmesser: 3.643,2 km\nmittlere Dichte: 3,528 g/cm³\nGravitation: 1,796 m/s²\nTemperatur: Min. ? °C  Mittel -143,15 °C  Max. -73,15 °C",
+            "Oberfläche": "Radius: 1.821,6 km\nÄquatordurchmesser: 3.643,2 km\nmittlere Dichte: 3,528 g/cm³\nGravitation: 1,796 m/s²\nTemperatur: Min.<space>? °C  Mittel -143,15 °C  Max.<space>-73,15 °C",
             "Allgemeines": "Entfernung zur Erde: 628.300.000 km\nUmlaufzeit: 42 Stunden"
 
 
@@ -183,7 +183,7 @@
           "autoFetch": true,
 
           "detailed": {
-            "Oberfläche": "Radius: 1.560,8 km\nÄquatordurchmesser: 3.121,6 km\nmittlere Dichte: 3,010 g/cm³\nGravitation: 1,314 m/s²\nTemperatur: Min. -223,15 °C  Mittel -171,15 °C  Max. -133,15 °C",
+            "Oberfläche": "Radius: 1.560,8 km\nÄquatordurchmesser: 3.121,6 km\nmittlere Dichte: 3,010 g/cm³\nGravitation: 1,314 m/s²\nTemperatur: Min.<space>-223,15 °C  Mittel -171,15 °C  Max.<space>-133,15 °C",
             "Allgemeines": "Entfernung zur Erde: 628.300.000 km\nUmlaufzeit: 3,551 Tage"
 
 
@@ -207,7 +207,7 @@
           "autoFetch": true,
 
           "detailed": {
-            "Oberfläche": "Radius: 2.634,1 km\nÄquatordurchmesser: 5.268,2 km\nmittlere Dichte: 1,940 g/cm³\nGravitation: 1,428 m/s²\nTemperatur: Min. -183,15 °C  Mittel -163,15 °C  Max. -113,15 °C",
+            "Oberfläche": "Radius: 2.634,1 km\nÄquatordurchmesser: 5.268,2 km\nmittlere Dichte: 1,940 g/cm³\nGravitation: 1,428 m/s²\nTemperatur: Min.<space>-183,15 °C  Mittel -163,15 °C  Max.<space>-113,15 °C",
             "Allgemeines": "Entfernung zur Erde: 628.300.000 km\nUmlaufzeit: 172 Stunden"
 
 
@@ -257,7 +257,7 @@
       "autoFetch": true,
 
       "detailed": {
-        "Oberfläche": "Radius: 3.389,5 km\nÄquatordurchmesser: 6.792,4 km\nmittlere Dichte: 3,933 g/cm³\nGravitation: 3,721 m/s²\nTemperatur: Min. –153 °C  Mittel −63 °C  Max. +20 °C",
+        "Oberfläche": "Radius: 3.389,5 km\nÄquatordurchmesser: 6.792,4 km\nmittlere Dichte: 3,933 g/cm³\nGravitation: 3,721 m/s²\nTemperatur: Min.<space>–153 °C  Mittel −63 °C  Max.<space>+20 °C",
         "Allgemeines": "Entfernung: 227.900.000 km\nUmlaufzeit: 687 Tage"
 
 
@@ -281,7 +281,7 @@
       "autoFetch": true,
 
       "detailed": {
-        "Oberfläche": "Radius: 2.439,7 km\nÄquatordurchmesser: 4.879,4 km\nmittlere Dichte: 5,427 g/cm³\nGravitation: 24,79 m/s²\nTemperatur: Min. −173 °C  Mittel +167 °C  Max. +427 °C",
+        "Oberfläche": "Radius: 2.439,7 km\nÄquatordurchmesser: 4.879,4 km\nmittlere Dichte: 5,427 g/cm³\nGravitation: 24,79 m/s²\nTemperatur: Min.<space>−173 °C  Mittel +167 °C  Max.<space>+427 °C",
         "Allgemeines": "Entfernung: 58.000.000 km\nUmlaufzeit: 88 Tage"
 
 
