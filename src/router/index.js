@@ -27,6 +27,24 @@ const routes = [
         component: () => import("../views/easter/SnakeView.vue")
       }
     ]
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "not-found",
+    component: () => import("../views/NotFoundView.vue"),
+    meta: { status: 404 }
+  },
+  {
+    path: "/extra",
+    name: "extra",
+    redirect: {name: "home"},
+    children: [
+        {
+          path: "stars",
+          name: "stars",
+          component: () => import("../views/extra/StarsView.vue")
+        }
+    ]
   }
 ]
 
