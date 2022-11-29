@@ -1,0 +1,23 @@
+/*.formkit-form hr {*/
+/*    width: 100%;*/
+/*}*/
+/*html[data-theme="dark"] .formkit-label {*/
+/*    color: #b0b0b0;*/
+/*}*/
+/*select.formkit-input:not([multiple]):focus:hover option.formkit-option, select.formkit-input:not([multiple]):focus:hover {*/
+/*    background-color: rgb(0, 0, 0);*/
+/*    color: #b0b0b0;*/
+/*}*/
+
+html[data-theme="dark"] :root {
+    /*--formkit-background: #000000;*/
+    /*--formkit-border: #e3e3e3;*/
+    /*--formkit-border-focus: #b0b0b0;*/
+    /*--formkit-border-error: #ff6969;*/
+    /*--formkit-color: #b0b0b0;*/
+    /*--formkit-color-focus: #b0b0b0;*/
+    /*--formkit-color-error: #ff6969;*/
+
+    --fk-bg-color: red;
+    --fk-border-color: #e3e3e3;
+}
