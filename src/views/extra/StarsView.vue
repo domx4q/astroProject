@@ -96,10 +96,13 @@ export default {
       time: "00:00",
       orientation: "none",
       orientationLocked: false,
-      enableTransition: true
+      enableTransitionDefault: true,
+      enableTransition: true,
     }
   },
   mounted() {
+    this.enableTransition = this.enableTransitionDefault ? true : false; // to suppress reactivity
+
     document.addEventListener("wheel", this.handleWheel);
     // add an handler function to move the circle by mouse drag
     document.addEventListener("mousedown", this.handleMouseDown);
