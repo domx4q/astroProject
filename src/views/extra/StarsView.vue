@@ -96,7 +96,7 @@ export default {
       time: "00:00",
       orientation: "none",
       orientationLocked: false,
-      enableTransition: false
+      enableTransition: true
     }
   },
   mounted() {
