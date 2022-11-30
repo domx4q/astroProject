@@ -22,6 +22,12 @@ export default {
     onlyLogic: {
       type: Boolean,
       default: false,
+      required: false
+    },
+    overrideTheme: {
+      type: String,
+      default: "",
+      required: false,
     },
   },
   data() {
@@ -44,7 +50,12 @@ export default {
     };
   },
   mounted() {
-    this.setTheme();
+    if (this.overrideTheme !== "") {
+      this.theme = this.overrideTheme;
+      this.update();
+    } else {
+      this.setTheme();
+    }
   },
   computed: {
     storedTheme() {
@@ -80,12 +91,16 @@ export default {
         this.theme = "light";
       }
     },
-  },
-  watch: {
-    theme() {
+
+    update() {
       this.$store.state.theme = this.theme;
       this.$emit("theme", this.theme);
       document.documentElement.setAttribute("data-theme", this.theme);
+    }
+  },
+  watch: {
+    theme() {
+      this.update();
     },
   },
 }

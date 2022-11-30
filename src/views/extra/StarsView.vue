@@ -1,5 +1,6 @@
 <template>
-  <div id="stars">
+  <ThemeSwitch only-logic override-theme="light"/>
+  <div id="stars" :class="{transition:enableTransition}">
     <div id="controls">
       <FormKit type="group">
         <FormKit
@@ -28,6 +29,7 @@
             min="0"
             max="360"
             step="1"
+            @change="orientation = 'none';orientationLocked = false"
         />
       </FormKit>
       <FormKit
@@ -70,40 +72,47 @@
 </template>
 
 <script>
+import ThemeSwitch from "@/components/themeSwitch.vue";
 import defaults from "@/mixins/defaults";
 
 export default {
   name: "StarsView",
   mixins: [defaults],
+  components: {
+    ThemeSwitch
+  },
   data() {
     return {
       innerRotation: 0,
       outerRotation: 0,
       entireRotation: 0,
+      finalRotation: {
+        inner: 0,
+        outer: 0,
+        entire: 0
+      },
 
       date: "2020-01-01",
       time: "00:00",
       orientation: "none",
       orientationLocked: false,
+      enableTransition: false
     }
   },
-  mounted() {},
+  mounted() {
+    document.addEventListener("wheel", this.handleWheel);
+    // add an handler function to move the circle by mouse drag
+    document.addEventListener("mousedown", this.handleMouseDown);
+    document.addEventListener("mousemove", this.handleMouseMove);
+    document.addEventListener("mouseup", this.handleMouseUp);
+    document.addEventListener("mouseleave", this.handleMouseUp);
+  },
   methods: {
     setCurrent() {
       // get the 01.01.2000 00:00:00
       this.date = this.convertDate(new Date());
 
-      const tempDate = new Date();
-      tempDate.setFullYear(2000);
-      tempDate.setMonth(0);
-      tempDate.setDate(1);
-      tempDate.setHours(0);
-      tempDate.setMinutes(0);
-      tempDate.setSeconds(0);
-      tempDate.setMilliseconds(0);
-      // this.date = this.convertDate(tempDate);
-
-      this.time = this.convertedDate.toLocaleTimeString("de-DE", {hour: "2-digit", minute: "2-digit"});
+      this.time = new Date().toLocaleTimeString("de-DE", {hour: "2-digit", minute: "2-digit"});
 
       this.innerRotation = this.dateRotation
       this.outerRotation = this.timeRotation
@@ -136,6 +145,63 @@ export default {
     convertDate(date) {
       return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
     },
+
+    getNearestDegree(current, target) {
+      current = Number(current)
+      target = Number(target)
+
+      const diff = Math.abs(target - current)
+      if (diff > 180) {
+        if (current > target) {
+          return current + (target + (360 - current))
+        } else {
+          return -(360 - target)
+        }
+      }
+      return target
+    },
+
+    printValues(oldValue, newValue) {
+      const result = this.getNearestDegree(oldValue, newValue)
+      if (result > 360) {
+        console.log(`${oldValue}, ${newValue} ==> ${result} ==> ${result - 360}`)
+      } else if (result < 0) {
+        console.log(`${oldValue}, ${newValue} ==> ${result} ==> ${result + 360}`)
+      } else {
+        console.log(`${oldValue}, ${newValue} ==> ${result}`)
+      }
+    },
+
+    // region handlers
+    handleWheel(event) {
+      const size = 3
+      if (event.deltaY > 0) {
+        this.innerRotation += size
+      } else {
+        this.innerRotation -= size
+      }
+    },
+    handleMouseDown(event) {
+      this.mouseDown = true;
+      this.lastMouseX = event.clientX;
+      this.lastMouseY = event.clientY;
+    },
+    handleMouseMove(event) {
+      if (!this.mouseDown) return;
+      const deltaX = event.clientX - this.lastMouseX;
+      const deltaY = event.clientY - this.lastMouseY;
+      this.lastMouseX = event.clientX;
+      this.lastMouseY = event.clientY;
+      this.innerRotation += deltaX / 4;
+      this.outerRotation += deltaY / 4;
+    },
+    handleMouseUp() {
+      this.mouseDown = false;
+
+      // deselect the text
+      window.getSelection().removeAllRanges();
+    },
+    // endregion
   },
   computed: {
     convertedTime() {
@@ -155,17 +221,17 @@ export default {
 
     innerDiscStyle() {
       return {
-        transform: `rotate(${this.innerRotation}deg)`
+        transform: `rotate(${this.finalRotation.inner}deg)`
       }
     },
     outerDiscStyle() {
       return {
-        transform: `rotate(${this.outerRotation}deg)`
+        transform: `rotate(${this.finalRotation.outer}deg)`
       }
     },
     entireDiscStyle() {
       return {
-        transform: `rotate(${this.entireRotation}deg)`
+        transform: `rotate(${this.finalRotation.entire}deg)`
       }
     },
 
@@ -185,10 +251,17 @@ export default {
       this.orientationLocked = value !== "none";
     },
 
-    outerRotation() {
+    innerRotation(newValue, oldValue) {
+      this.finalRotation.inner = this.getNearestDegree(oldValue, newValue)
+    },
+    outerRotation(newValue, oldValue) {
       if (this.orientationLocked) {
         this.setOrientation()
       }
+      this.finalRotation.outer = this.getNearestDegree(oldValue, newValue)
+    },
+    entireRotation(newValue, oldValue) {
+      this.finalRotation.entire = this.getNearestDegree(oldValue, newValue)
     },
 
   },
@@ -196,13 +269,18 @@ export default {
 </script>
 
 <style scoped>
+* {
+  /*hides selection*/
+  user-select: none;
+}
+
 #stars {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: #ea7f2e;
+  background: white;
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -228,11 +306,12 @@ export default {
   background-position: center;
   background-size: auto;
   position: absolute;
-
+}
+#stars.transition #outerDisc, #stars.transition #innerDisc, #stars.transition #entireDisc {
   transition: transform 1s;
 }
 #marker {
-  /*cratee a marker on the edge of the circle*/
+  /*creates a marker on the edge of the circle*/
   position: absolute;
   top: 50%;
   left: calc(50% + (940px / 2));
@@ -252,8 +331,6 @@ export default {
   width: auto;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   z-index: 5;
 }
 </style>

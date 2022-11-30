@@ -972,27 +972,28 @@ li.planet-selector:first-of-type.active:not(.parent), li.planet-selector.child.p
 .formkit-form hr {
   width: 100%;
 }
-html[data-theme="dark"] .formCollection {
-  background-color: rgba(0, 0, 0, 0.4);
-}
-html[data-theme="dark"] .formkit-label {
-  color: #b0b0b0;
-}
-select.formkit-input:not([multiple]):focus:hover option.formkit-option, select.formkit-input:not([multiple]):focus:hover {
-  background-color: rgb(0, 0, 0);
-  color: #b0b0b0;
-}
-option {
-  background-color: rgba(0, 0, 0, 0.1);
-  color: #b0b0b0;
-}
-option:hover {
-  background-color: rgba(250, 250, 250, 0.2) !important;
-}
-/*apply next style to options which are checked but not focused*/
-option:checked {
-  background-color: #224081;
-}
+/*html[data-theme="dark"] .formCollection {*/ /*todo extract to formkit custom style and adapt*/
+/*  background-color: rgba(0, 0, 0, 0.4);*/
+/*}*/
+/*html[data-theme="dark"] .formkit-label {*/
+/*  color: #b0b0b0;*/
+/*}*/
+/*html[data-theme="dark"] select.formkit-input:not([multiple]):focus:hover option.formkit-option,*/
+/*html[data-theme="dark"] select.formkit-input:not([multiple]):focus:hover {*/
+/*  background-color: rgb(0, 0, 0);*/
+/*  color: #b0b0b0;*/
+/*}*/
+/*option {*/
+/*  background-color: rgba(0, 0, 0, 0.1);*/
+/*  color: #b0b0b0;*/
+/*}*/
+/*option:hover {*/
+/*  background-color: rgba(250, 250, 250, 0.2) !important;*/
+/*}*/
+/*!*apply next style to options which are checked but not focused*!*/
+/*option:checked {*/
+/*  background-color: #224081;*/
+/*}*/
 .hidden {
   display: none !important;
 }
