@@ -627,13 +627,6 @@ export default {
         this.planet.removeAttribute("data-settings-active")
       }
     },
-    "lastHotspot.classification": function (newVal, oldVal) {
-      if (newVal.includes("unknown") && !oldVal.includes("unknown")) {
-        this.lastHotspot.classification = ["unknown"]
-      } else if (newVal.includes("unknown") && oldVal.includes("unknown") && newVal.length > oldVal.length) {
-        this.lastHotspot.classification = newVal.filter(item => item !== "unknown")
-      }
-    },
     planetInfoCollapsed: function (newVal) {
       const planetInfo = document.querySelector("#planetInfo")
       const initialHeight = planetInfo.clientHeight
