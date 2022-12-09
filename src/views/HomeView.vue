@@ -84,7 +84,7 @@
       <Transition
           enter-active-class="animate__animated animate__fadeInRight"
           leave-active-class="animate__animated animate__fadeOutRight">
-        <div class="wrapper" v-if="!(hotspots.length === 0 || !loaded || (lastHotspot.position.x === 0 && lastHotspot.position.y === 0 && lastHotspot.position.z === 0)) && sidePanelType === 'hotspotSettings'">
+        <div class="wrapper" v-if="true">
           <FormKit type="form" id="hotspot-settings" form-class="formCollection" submit-label="Übernehmen"
                    @submit="updateLastHotspot();blur()" :actions="false" :disabled="!loaded" v-if="!isMobile" v-auto-animate>
             <h2>Hotspot Einstellungen</h2>
@@ -101,8 +101,10 @@
             <FormKit type="select" name="type" label="Typ" :options="{location: 'Ort', marker: 'Markierung'}" v-model="lastHotspot.type" @change="updateLastHotspot"/>
             <FormKit type="select" name="level" label="Ebene" :options="{1: 'Ebene 1', 2: 'Ebene 2', 3: 'Ebene 3', 4: 'Ebene 4', 5: 'Ebene 5'}"
                      v-if="lastHotspot.type === 'location'" v-model="lastHotspot.level" @change="updateLastHotspot"/>
-            <FormKit type="select" name="classification" label="Klassifizierung" help="Strg + Klick zur Mehrfachauswahl"
-                     :options="classifications" v-model="lastHotspot.classification" @change="updateLastHotspot" multiple/>
+
+            <FormKit type="taglist" name="classification" label="Klassifizierung" help="Strg + Klick zur Mehrfachauswahl"
+                     :options="classifications" v-model="lastHotspot.classification" @change="updateLastHotspot" :disabled="!loaded"/>
+
             <FormKit type="checkbox" name="action" label="Aktion" help="Nur für besondere Hotspots" v-model="lastHotspot.action" @change="updateLastHotspot"/>
             <hr>
             <FormKit type="button" label="Panel schließen" @click="sidePanelType = 'planetInfo'" :disabled="!loaded"/>
@@ -209,7 +211,7 @@ export default {
       textureLoadingProgress: 1, // every progress has to be 1 on init, because always the smallest progress is used
       wikiLoadingProgress: 1,
       currentTexture: null,
-      sidePanelType: "planetInfo",
+      sidePanelType: "hotspotSettings", // todo rollback
       planetInfoCollapsed: false,
       settingsCollapsed: false,
       openPlanetInfoDropdown: "none",
@@ -417,7 +419,7 @@ export default {
       this.textureInputForm = {}
     },
     changePlanet(planet, force = false, firstLoad = false) {
-      this.sidePanelType = "planetInfo"
+      // this.sidePanelType = "planetInfo" // todo remove / undo
       this.openPlanetInfoDropdown = "none"
 
       if (!this.loaded && !force) return;
@@ -623,13 +625,6 @@ export default {
         this.planet.setAttribute("data-settings-active", "true")
       } else {
         this.planet.removeAttribute("data-settings-active")
-      }
-    },
-    "lastHotspot.classification": function (newVal, oldVal) {
-      if (newVal.includes("unknown") && !oldVal.includes("unknown")) {
-        this.lastHotspot.classification = ["unknown"]
-      } else if (newVal.includes("unknown") && oldVal.includes("unknown") && newVal.length > oldVal.length) {
-        this.lastHotspot.classification = newVal.filter(item => item !== "unknown")
       }
     },
     planetInfoCollapsed: function (newVal) {
@@ -964,34 +959,13 @@ li.planet-selector:first-of-type.active:not(.parent), li.planet-selector.child.p
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  max-width: 300px;
 }
 .formCollection {
-  background-color: rgba(250, 250, 250, 0.4);
   border-radius: 5px;
-}
-.formkit-form hr {
-  width: 100%;
 }
 html[data-theme="dark"] .formCollection {
   background-color: rgba(0, 0, 0, 0.4);
-}
-html[data-theme="dark"] .formkit-label {
-  color: #b0b0b0;
-}
-select.formkit-input:not([multiple]):focus:hover option.formkit-option, select.formkit-input:not([multiple]):focus:hover {
-  background-color: rgb(0, 0, 0);
-  color: #b0b0b0;
-}
-option {
-  background-color: rgba(0, 0, 0, 0.1);
-  color: #b0b0b0;
-}
-option:hover {
-  background-color: rgba(250, 250, 250, 0.2) !important;
-}
-/*apply next style to options which are checked but not focused*/
-option:checked {
-  background-color: #224081;
 }
 .hidden {
   display: none !important;
