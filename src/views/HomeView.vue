@@ -966,24 +966,13 @@ li.planet-selector:first-of-type.active:not(.parent), li.planet-selector.child.p
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  max-width: 300px;
 }
 .formCollection {
-  background-color: rgba(250, 250, 250, 0.4);
   border-radius: 5px;
 }
 html[data-theme="dark"] .formCollection {
   background-color: rgba(0, 0, 0, 0.4);
-}
-option {
-  background-color: rgba(0, 0, 0, 0.1);
-  color: #b0b0b0;
-}
-option:hover {
-  background-color: rgba(250, 250, 250, 0.2) !important;
-}
-/*apply next style to options which are checked but not focused*/
-option:checked {
-  background-color: #224081;
 }
 .hidden {
   display: none !important;
