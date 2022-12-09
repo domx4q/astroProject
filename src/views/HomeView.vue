@@ -84,7 +84,7 @@
       <Transition
           enter-active-class="animate__animated animate__fadeInRight"
           leave-active-class="animate__animated animate__fadeOutRight">
-        <div class="wrapper" v-if="true">
+        <div class="wrapper" v-if="!(hotspots.length === 0 || !loaded || (lastHotspot.position.x === 0 && lastHotspot.position.y === 0 && lastHotspot.position.z === 0)) && sidePanelType === 'hotspotSettings'">
           <FormKit type="form" id="hotspot-settings" form-class="formCollection" submit-label="Übernehmen"
                    @submit="updateLastHotspot();blur()" :actions="false" :disabled="!loaded" v-if="!isMobile" v-auto-animate>
             <h2>Hotspot Einstellungen</h2>
@@ -211,7 +211,7 @@ export default {
       textureLoadingProgress: 1, // every progress has to be 1 on init, because always the smallest progress is used
       wikiLoadingProgress: 1,
       currentTexture: null,
-      sidePanelType: "hotspotSettings", // todo rollback
+      sidePanelType: "planetInfo",
       planetInfoCollapsed: false,
       settingsCollapsed: false,
       openPlanetInfoDropdown: "none",
@@ -419,7 +419,7 @@ export default {
       this.textureInputForm = {}
     },
     changePlanet(planet, force = false, firstLoad = false) {
-      // this.sidePanelType = "planetInfo" // todo remove / undo
+      this.sidePanelType = "planetInfo"
       this.openPlanetInfoDropdown = "none"
 
       if (!this.loaded && !force) return;
