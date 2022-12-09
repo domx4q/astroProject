@@ -101,8 +101,10 @@
             <FormKit type="select" name="type" label="Typ" :options="{location: 'Ort', marker: 'Markierung'}" v-model="lastHotspot.type" @change="updateLastHotspot"/>
             <FormKit type="select" name="level" label="Ebene" :options="{1: 'Ebene 1', 2: 'Ebene 2', 3: 'Ebene 3', 4: 'Ebene 4', 5: 'Ebene 5'}"
                      v-if="lastHotspot.type === 'location'" v-model="lastHotspot.level" @change="updateLastHotspot"/>
-            <FormKit type="select" name="classification" label="Klassifizierung" help="Strg + Klick zur Mehrfachauswahl"
-                     :options="classifications" v-model="lastHotspot.classification" @change="updateLastHotspot" multiple/>
+
+            <FormKit type="taglist" name="classification" label="Klassifizierung" help="Strg + Klick zur Mehrfachauswahl"
+                     :options="classifications" v-model="lastHotspot.classification" @change="updateLastHotspot" :disabled="!loaded"/>
+
             <FormKit type="checkbox" name="action" label="Aktion" help="Nur für besondere Hotspots" v-model="lastHotspot.action" @change="updateLastHotspot"/>
             <hr>
             <FormKit type="button" label="Panel schließen" @click="sidePanelType = 'planetInfo'" :disabled="!loaded"/>
@@ -625,13 +627,6 @@ export default {
         this.planet.removeAttribute("data-settings-active")
       }
     },
-    "lastHotspot.classification": function (newVal, oldVal) {
-      if (newVal.includes("unknown") && !oldVal.includes("unknown")) {
-        this.lastHotspot.classification = ["unknown"]
-      } else if (newVal.includes("unknown") && oldVal.includes("unknown") && newVal.length > oldVal.length) {
-        this.lastHotspot.classification = newVal.filter(item => item !== "unknown")
-      }
-    },
     planetInfoCollapsed: function (newVal) {
       const planetInfo = document.querySelector("#planetInfo")
       const initialHeight = planetInfo.clientHeight
@@ -964,36 +959,15 @@ li.planet-selector:first-of-type.active:not(.parent), li.planet-selector.child.p
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  max-width: 300px;
 }
 .formCollection {
   background-color: rgba(250, 250, 250, 0.4);
   border-radius: 5px;
 }
-.formkit-form hr {
-  width: 100%;
+html[data-theme="dark"] .formCollection {
+  background-color: rgba(0, 0, 0, 0.4);
 }
-/*html[data-theme="dark"] .formCollection {*/ /*todo extract to formkit custom style and adapt*/
-/*  background-color: rgba(0, 0, 0, 0.4);*/
-/*}*/
-/*html[data-theme="dark"] .formkit-label {*/
-/*  color: #b0b0b0;*/
-/*}*/
-/*html[data-theme="dark"] select.formkit-input:not([multiple]):focus:hover option.formkit-option,*/
-/*html[data-theme="dark"] select.formkit-input:not([multiple]):focus:hover {*/
-/*  background-color: rgb(0, 0, 0);*/
-/*  color: #b0b0b0;*/
-/*}*/
-/*option {*/
-/*  background-color: rgba(0, 0, 0, 0.1);*/
-/*  color: #b0b0b0;*/
-/*}*/
-/*option:hover {*/
-/*  background-color: rgba(250, 250, 250, 0.2) !important;*/
-/*}*/
-/*!*apply next style to options which are checked but not focused*!*/
-/*option:checked {*/
-/*  background-color: #224081;*/
-/*}*/
 .hidden {
   display: none !important;
 }
