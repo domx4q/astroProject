@@ -1,8 +1,12 @@
 <template>
   <ThemeSwitch only-logic override-theme="light"/>
-  <div id="stars" :class="{transition:enableTransition}">
+  <div id="stars" :class="{transition:enableTransition}"
+       @mousedown="handleMouseDown"
+       @mouseup="handleMouseUp"
+       @mousemove="handleMouseMove"
+  >
     <div id="controls">
-      <FormKit type="group">
+      <FormKit type="group" v-if="false">
         <FormKit
             v-model="innerRotation"
             type="range"
@@ -60,13 +64,18 @@
           ]"
           @input="setOrientation"
           @inputRaw="setOrientation"/>
+
+        <p>
+          Um die Karte zu drehen, ziehe mit der Maus auf dem Bild.<br>
+          Wenn sie die obere Karte drehen möchten, drücken Sie die <b>Strg-Taste</b> und ziehen Sie mit der Maus.
+        </p>
       </FormKit>
     </div>
 
-    <div id="entireDisc" :style="entireDiscStyle">
-      <div id="marker"/>
-      <div id="outerDisc" :style="outerDiscStyle"/>
-      <div id="innerDisc" :style="innerDiscStyle"/>
+    <div id="entireDisc" ref="entireDisc" :style="entireDiscStyle">
+      <div id="marker" ref="marker"/>
+      <div id="outerDisc" ref="outerDisc" :style="outerDiscStyle"/>
+      <div id="innerDisc" ref="innerDisc" :style="innerDiscStyle"/>
     </div>
   </div>
 </template>
@@ -96,6 +105,10 @@ export default {
       time: "00:00",
       orientation: "none",
       orientationLocked: false,
+      endPosition: {
+        x: 0,
+        y: 0
+      },
       enableTransitionDefault: true,
       enableTransition: true,
     }
@@ -103,12 +116,23 @@ export default {
   mounted() {
     this.enableTransition = this.enableTransitionDefault ? true : false; // to suppress reactivity
 
-    document.addEventListener("wheel", this.handleWheel);
     // add an handler function to move the circle by mouse drag
-    document.addEventListener("mousedown", this.handleMouseDown);
-    document.addEventListener("mousemove", this.handleMouseMove);
-    document.addEventListener("mouseup", this.handleMouseUp);
-    document.addEventListener("mouseleave", this.handleMouseUp);
+    // document.addEventListener("mousedown", this.handleMouseDown);
+    // document.addEventListener("mousemove", this.handleMouseMove);
+    // document.addEventListener("mouseup", this.handleMouseUp);
+    // document.addEventListener("mouseleave", this.handleMouseUp);
+    // document.addEventListener("resize", this.handleResize);
+    //
+    // document.addEventListener("hotreload", () => {
+    //   // delete the old event listeners
+    //   // force reload the page
+    //   window.location.reload(true);
+    //   setTimeout(() => {
+    //     window.location.reload(true);
+    //   }, 1000);
+    // });
+
+    this.handleResize()
   },
   methods: {
     setCurrent() {
@@ -176,33 +200,62 @@ export default {
     },
 
     // region handlers
-    handleWheel(event) {
-      const size = 3
-      if (event.deltaY > 0) {
-        this.innerRotation += size
-      } else {
-        this.innerRotation -= size
+    handleResize() {
+      this.center = {
+        x: this.$refs["entireDisc"].offsetWidth / 2,
+        y: this.$refs["entireDisc"].offsetHeight / 2
       }
     },
     handleMouseDown(event) {
       this.mouseDown = true;
       this.lastMouseX = event.clientX;
       this.lastMouseY = event.clientY;
+      this.startPosition = {
+        x: event.clientX,
+        y: event.clientY
+      }
+      this.lastAngleInner = this.innerRotation;
+      this.lastAngleOuter = this.outerRotation;
+
+      this.enableTransition = false;
     },
     handleMouseMove(event) {
       if (!this.mouseDown) return;
-      const deltaX = event.clientX - this.lastMouseX;
-      const deltaY = event.clientY - this.lastMouseY;
+
+      const getDegree = (value) => {
+        let x = value.x - this.center.x
+        let y = value.y - this.center.y
+        const rad = Math.atan2(y, x);
+        return this.radiantToDegrees(rad);
+      }
+
       this.lastMouseX = event.clientX;
       this.lastMouseY = event.clientY;
-      this.innerRotation += deltaX / 4;
-      this.outerRotation += deltaY / 4;
-    },
-    handleMouseUp() {
-      this.mouseDown = false;
 
-      // deselect the text
-      window.getSelection().removeAllRanges();
+      const angle = getDegree({x: this.lastMouseX, y: this.lastMouseY});
+      let rotation = angle;
+
+      const startAngle = getDegree(this.startPosition);
+      // const endAngle = getDegree(this.endPosition);
+      // let totalOffset = startAngle - endAngle
+
+      if (!event.ctrlKey) {
+        rotation = this.getNearestDegree(this.innerRotation, rotation - startAngle + this.lastAngleInner);
+        this.innerRotation = rotation;
+      } else {
+        rotation = this.getNearestDegree(this.outerRotation, rotation - startAngle + this.lastAngleOuter);
+        this.outerRotation = rotation;
+      }
+
+    },
+    handleMouseUp(event) {
+      this.mouseDown = false;
+      this.endPosition = {
+        x: event.clientX,
+        y: event.clientY
+      }
+
+      this.enableTransition = this.enableTransitionDefault ? true : false; // to suppress reactivity
     },
     // endregion
   },
@@ -335,5 +388,6 @@ export default {
   display: flex;
   flex-direction: column;
   z-index: 5;
+  max-width: 200px;
 }
 </style>
