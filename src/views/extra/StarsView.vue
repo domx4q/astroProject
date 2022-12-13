@@ -66,7 +66,7 @@
           @inputRaw="setOrientation"/>
 
         <p>
-          Um die Karte zu drehen, ziehe mit der Maus auf dem Bild.<br>
+          Um die Karte zu drehen, ziehen Sie mit der Maus über die Karte.<br>
           Wenn sie die obere Karte drehen möchten, drücken Sie die <b>Strg-Taste</b> und ziehen Sie mit der Maus.
         </p>
       </FormKit>
