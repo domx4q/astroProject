@@ -31,7 +31,11 @@ const routes = [
   {
     path: "/:pathMatch(.*)*",
     name: "not-found",
-    component: () => import("../views/NotFoundView.vue"),
+    component: () => import("../views/ErrorView.vue"),
+    props: {
+        code: 404,
+        message: "Seite nicht gefunden"
+    },
     meta: { status: 404 }
   },
   {

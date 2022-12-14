@@ -1,10 +1,8 @@
 <template>
   <ThemeSwitch only-logic override-theme="light"/>
   <div id="stars" :class="{transition:enableTransition}"
-       @mousedown="handleMouseDown"
-       @mouseup="handleMouseUp"
-       @mousemove="handleMouseMove"
-  >
+       @mousedown="handleMouseDown" @mouseup="handleMouseUp" @mouseleave="handleMouseUp"
+       @mousemove="handleMouseMove">
     <div id="controls">
       <FormKit type="group" v-if="false">
         <FormKit
@@ -115,22 +113,6 @@ export default {
   },
   mounted() {
     this.enableTransition = this.enableTransitionDefault ? true : false; // to suppress reactivity
-
-    // add an handler function to move the circle by mouse drag
-    // document.addEventListener("mousedown", this.handleMouseDown);
-    // document.addEventListener("mousemove", this.handleMouseMove);
-    // document.addEventListener("mouseup", this.handleMouseUp);
-    // document.addEventListener("mouseleave", this.handleMouseUp);
-    // document.addEventListener("resize", this.handleResize);
-    //
-    // document.addEventListener("hotreload", () => {
-    //   // delete the old event listeners
-    //   // force reload the page
-    //   window.location.reload(true);
-    //   setTimeout(() => {
-    //     window.location.reload(true);
-    //   }, 1000);
-    // });
 
     this.handleResize()
   },
