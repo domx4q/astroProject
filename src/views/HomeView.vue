@@ -54,7 +54,7 @@
         </Transition>
 
       </div>
-      <Transition enter-active-class="animate__animated animate__fadeInLeftBig" mode="in-out" v-if="screenSize.height > (((totalPlanetCount*30)+10)+340)">
+      <Transition enter-active-class="animate__animated animate__fadeInLeftBig" mode="in-out" v-if="screenSize.height > (((totalPlanetCount*30)+10)+410)">
         <ul id="planets" v-auto-animate v-if="showOverlays">
           <template v-for="planet in planets" :key="planet.uuid">
             <li class="planet-selector" v-if="planet.enabled"
