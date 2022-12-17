@@ -25,6 +25,11 @@ const routes = [
         path: "snake",
         name: "snake",
         component: () => import("../views/easter/SnakeView.vue")
+      },
+      {
+        path: "pacman",
+        name: "pacman",
+        component: () => import("../views/easter/PacmanView.vue")
       }
     ]
   }
