@@ -962,6 +962,7 @@ li.planet-selector:first-of-type.active:not(.parent), li.planet-selector.child.p
   max-width: 300px;
 }
 .formCollection {
+  background-color: rgba(250, 250, 250, 0.4);
   border-radius: 5px;
 }
 html[data-theme="dark"] .formCollection {

@@ -78,6 +78,9 @@ export default {
                 .replaceAll("<space>", " ")
             return jsonA
         },
+        radiantToDegrees(radians) {
+            return radians * (180 / Math.PI);
+        },
 
         __onResize() {
             this.__resizeUUID = this.genUUID();
