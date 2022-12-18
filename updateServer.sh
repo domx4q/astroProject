@@ -1,5 +1,7 @@
 git fetch --all
+git checkout --force master
 git reset --hard origin/master
-npm i
+git pull origin master
+npm ci
 npm run build
 ./startServer.sh
