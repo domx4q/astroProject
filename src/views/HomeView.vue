@@ -31,30 +31,34 @@
     <div class="controls">
       <div id="buttons" class="formCollection">
         <Transition enter-active-class="animate__animated animate__fadeInLeftBig" mode="in-out">
-          <div class="flex-column" style="margin-top: 10px; margin-left: 10px" v-if="showOverlays">
-            <FormKit
-                type="group"
-                :disabled="!loaded">
-              <FormKit type="group" v-model="textureInputForm" :disabled="!loaded">
-                <!--              needed because otherwise the file input can't be cleared-->
-                <FormKit type="file" id="textureInput" label="Datei auswählen" :accept="allowedFileTypes"
-                         @change="onFileChange"/>
+          <div class="wrapper" id="settings" style="margin-top: 10px; margin-left: 10px" v-if="showOverlays">
+            <div class="iconHolder" @click="settingsCollapsed = !settingsCollapsed" id="settingsCollapse">
+              <Icon icon="ph:caret-double-left-bold" class="collapseIcon"/>
+            </div>
+            <div class="flex-column content">
+              <FormKit
+                  type="group"
+                  :disabled="!loaded">
+                <FormKit type="group" v-model="textureInputForm" :disabled="!loaded">
+                  <!--              needed because otherwise the file input can't be cleared-->
+                  <FormKit type="file" id="textureInput" label="Datei auswählen" :accept="allowedFileTypes"
+                           @change="onFileChange"/>
+                </FormKit>
+                <FormKit type="button" label="Hotspots speichern" v-if="!isMobile" :disabled="lastHotspot.name === ''"
+                         @click="downloadHotspots"/>
+                <FormKit type="checkbox" label="Automatische Rotation"
+                         :help="!isMobile ? 'Tastenkombination: Strg + Leertaste' : ''" v-model="auto_rotate"/>
+                <FormKit type="checkbox" label="Verschieben aktivieren"
+                         :help="!isMobile ? 'Tastenkombination: Strg + Shift + Leertaste' : ''" v-model="enable_pan"/>
               </FormKit>
-              <FormKit type="button" label="Hotspots speichern" v-if="!isMobile" :disabled="lastHotspot.name === ''"
-                       @click="downloadHotspots"/>
-              <FormKit type="checkbox" label="Automatische Rotation"
-                       :help="!isMobile ? 'Tastenkombination: Strg + Leertaste' : ''" v-model="auto_rotate"/>
-              <FormKit type="checkbox" label="Verschieben aktivieren"
-                       :help="!isMobile ? 'Tastenkombination: Strg + Shift + Leertaste' : ''" v-model="enable_pan"/>
-            </FormKit>
-            <hr>
-            <ThemeSwitch/>
+              <hr>
+              <ThemeSwitch/>
 
-          </div>
-        </Transition>
+            </div>
+          </div></Transition>
 
       </div>
-      <Transition enter-active-class="animate__animated animate__fadeInLeftBig" mode="in-out" v-if="screenSize.height > (((totalPlanetCount*30)+10)+410)">
+      <Transition enter-active-class="animate__animated animate__fadeInLeftBig" mode="in-out" v-if="(screenSize.height > (((totalPlanetCount*30)+10)+380)) && !isMobile" >
         <ul id="planets" v-auto-animate v-if="showOverlays">
           <template v-for="planet in planets" :key="planet.uuid">
             <li class="planet-selector" v-if="planet.enabled"
@@ -214,6 +218,7 @@ export default {
       sidePanelType: "planetInfo",
       planetInfoCollapsed: false,
       settingsCollapsed: false,
+      settingsInitWidth: 0,
       openPlanetInfoDropdown: "none",
       lastFieldOfView: 0,
       hotspot_settings_focused: false,
@@ -646,6 +651,30 @@ export default {
         }, 400)
       }
     },
+    settingsCollapsed: function (newVal) {
+      const settings = document.querySelector("#settings")
+      const initialHeight = settings.clientHeight
+      const initialWidth = settings.clientWidth
+      if (newVal) {
+        this.settingsInitWidth = initialWidth
+        settings.classList.add("collapsed") // need to be all done here because if using :class, it will be overwritten by vue
+        settings.style.height = `${initialHeight}px`
+        settings.style.width = `${initialWidth}px`
+        setTimeout(() => {
+          settings.classList.add("fullyCollapsed")
+        }, 400)
+      } else {
+        settings.style.height = "auto"
+        settings.style.width = this.settingsInitWidth + "px"
+        settings.classList.remove("collapsed")
+        settings.classList.remove("fullyCollapsed")
+        settings.classList.add("expanding")
+        setTimeout(() => {
+          settings.classList.remove("expanding")
+          settings.style.width = "auto"
+        }, 400)
+      }
+    },
     ourProgress: function (newVal) {
       this.hideProgressBar = false
       if (newVal === 100) {
@@ -677,7 +706,12 @@ export default {
 
   transition: width 0.4s ease-in-out;
 }
-#planetInfo .iconHolder {
+#settings {
+  /*i need to set a with, otherwise the transition is not working, but i want it to still be responsible*/
+  transition: width 0.4s ease-in-out;
+}
+
+#planetInfo .iconHolder, #settingsCollapse {
   position: absolute;
   top: 10px;
   right: 2px;
@@ -689,18 +723,22 @@ export default {
 
   transition: transform 0.4s ease-in-out, filter 0.2s ease-in-out;
 }
-#planetInfo .iconHolder:hover {
+#planetInfo .iconHolder:hover, #settingsCollapse:hover {
   filter: brightness(5);
 }
-html[data-theme="dark"] #planetInfo .iconHolder:hover {
+html[data-theme="dark"] #planetInfo .iconHolder:hover, html[data-theme="dark"] #settingsCollapse:hover {
   filter: brightness(.4);
 }
-#planetInfo.collapsed .iconHolder {
+#planetInfo.collapsed .iconHolder, #settings.collapsed .iconHolder {
   transform: rotate(180deg);
 }
 #planetInfo.collapsed {
   width: 0;
   padding: 15px;
+}
+#settings.fullyCollapsed {
+  width: 0 !important;
+  padding: 5px;
 }
 #planetInfo .content {
   display: flex;
@@ -714,10 +752,13 @@ html[data-theme="dark"] #planetInfo .iconHolder:hover {
 
   transition: opacity 0.4s ease-in-out;
 }
-#planetInfo.collapsed .content {
+#settings .content {
+  transition: opacity 0.4s ease-in-out;
+}
+#planetInfo.collapsed .content, #settings.collapsed .content {
   opacity: 0;
 }
-#planetInfo.fullyCollapsed .content {
+#planetInfo.fullyCollapsed .content, #settings.fullyCollapsed .content {
   display: none;
 }
 html[data-theme="dark"] #planetInfo {
