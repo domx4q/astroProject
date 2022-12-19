@@ -62,6 +62,10 @@
           ]"
           @input="setOrientation"
           @inputRaw="setOrientation"/>
+        <FormKit
+          type="checkbox"
+          label="Lock Rotation"
+          v-model="orientationLocked"/>
 
         <p>
           Um die Karte zu drehen, ziehen Sie mit der Maus über die Karte.<br>
@@ -285,10 +289,6 @@ export default {
     },
   },
   watch: {
-    orientation(value) {
-      this.orientationLocked = value !== "none";
-    },
-
     innerRotation(newValue, oldValue) {
       this.finalRotation.inner = this.getNearestDegree(oldValue, newValue)
     },
