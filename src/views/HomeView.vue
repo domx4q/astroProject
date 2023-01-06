@@ -62,14 +62,14 @@
         <ul id="planets" v-auto-animate v-if="showOverlays">
           <template v-for="planet in planets" :key="planet.uuid">
             <li class="planet-selector" v-if="planet.enabled"
-                :class="{active: planet.uuid === currentPlanet.uuid, disabled: !loaded, parent: planet.children.length > 0}">
+                :class="{active: planet.uuid === currentPlanet.uuid, disabled: !loaded, parent: planet.moons.length > 0}">
               <span @click="changePlanet(planet)">{{ planet.name }}</span>
             </li>
-            <template v-for="(child, index) in planet.children" :key="child.uuid">
-              <li class="planet-selector child" v-if="child.enabled && child.uuid !== currentPlanet.uuid"
-                  :class="{active: child.uuid === currentPlanet.uuid, disabled: !loaded,
-                      parentActive: planet.uuid === currentPlanet.uuid, last: index === planet.children.length - 1}">
-                <span @click="changePlanet(child)">{{ child.name }}</span>
+            <template v-for="(moon, index) in planet.moons" :key="moon.uuid">
+              <li class="planet-selector moon" v-if="moon.enabled && moon.uuid !== currentPlanet.uuid"
+                  :class="{active: moon.uuid === currentPlanet.uuid, disabled: !loaded,
+                      parentActive: planet.uuid === currentPlanet.uuid, last: index === planet.moons.length - 1}">
+                <span @click="changePlanet(moon)">{{ moon.name }}</span>
               </li>
             </template>
           </template>
@@ -81,7 +81,7 @@
           type="select"
           label="Planet auswählen"
           :options="convertPlanetsFormKit(planets)"
-          @change="changePlanet(findPlanet($event.target.value))"
+          @change="changePlanet(SOLAR_SYSTEM.findPlanet($event.target.value))"
       />
       </teleport>
 
@@ -174,14 +174,14 @@
 // @ is an alias to /src
 import "animate.css";
 
-import {EMPTY_HOTSPOT, Hotspot, ZERO_VECTOR} from "@/extra/HomeClasses";
+import {Hotspot, Vector3D, EMPTY_HOTSPOT, ZERO_VECTOR, SOLAR_SYSTEM} from "@/extra/HomeClasses";
 
 import defaults from "@/mixins/defaults";
 import message from "@/components/message";
 import dropdown from "@/components/dropdown";
 import themeSwitch from "@/components/themeSwitch";
 
-import planets from "@/assets/data/planets.json"
+// import planets from "@/assets/data/planets.json"
 import annotations from "@/assets/data/annotations.json"
 import axios from "axios";
 
@@ -205,7 +205,7 @@ export default {
       auto_rotate: true,
       enable_pan: false,
 
-      currentPlanet: this.convertPlanet(planets.empty, "empty"),
+      currentPlanet: SOLAR_SYSTEM.empty,
       lastPlanetChild: false,
       defaultPlanet: null,
       totalPlanetCount: 0,
@@ -233,6 +233,8 @@ export default {
       hotspots: [],
       messages: [],
       textureInputForm: null,
+
+      SOLAR_SYSTEM: SOLAR_SYSTEM,
     }
   },
   computed: {
@@ -248,7 +250,7 @@ export default {
       return Math.min(...valueList) * 100
     },
     planetInfo() {
-      if (this.currentPlanet === undefined || this.currentPlanet === null || this.currentPlanet === planets.empty || this.currentPlanet.key === "empty") {
+      if (this.currentPlanet === undefined || this.currentPlanet === null || this.currentPlanet === SOLAR_SYSTEM.empty || this.currentPlanet.key === "empty") {
         return {
           name: "Kein Planet ausgewählt",
           description: "Wähle einen Planeten aus, um mehr Informationen zu erhalten.",
@@ -310,15 +312,7 @@ export default {
     window.addEventListener("keydown", keyDown)
     window.addEventListener("keyup", keyUp)
 
-    this.planets = Object.keys(planets).map(key => {
-      let children = []
-      if (planets[key].children !== undefined && planets[key].children !== null) {
-        children = Object.keys(planets[key].children).map(childKey => {
-          return this.convertPlanet(planets[key].children[childKey], childKey, [], true)
-        })
-      }
-      return this.convertPlanet(planets[key], key, children, false)
-    })
+    this.planets = SOLAR_SYSTEM.asArray
     this.sortPlanets()
     this.addMessage("Willkommen!", "Willkommen auf der Planeten-App")
 
@@ -352,17 +346,6 @@ export default {
       }
       const defaultAppend = "Das neu laden der Seite könnte helfen. Andernfalls versuche es später noch einmal."
       this.addMessage("Fehler", `${messageContent} ${defaultAppend}`, 10000, "error")
-    },
-    convertPlanet(planet, key, children = [], isChild = false) {
-      return {
-        ...planet,
-        key: key,
-        children: children,
-        isChild: isChild,
-        copyright: planet.copyright !== undefined ? planet.copyright : "© NASA",
-        uuid: this.genUUID(),
-        customModel: planet.customModel || false,
-      }
     },
     removeMessage(message) {
       this.messages = this.messages.filter(m => m.uuid !== message.uuid)
@@ -424,7 +407,7 @@ export default {
               })
             }
           } else {
-            this.currentPlanet = this.findPlanet("empty")
+            this.currentPlanet = SOLAR_SYSTEM.empty
             this.createAndApplyTexture(URL.createObjectURL(file))
             this.hotspots = []
           }
@@ -483,20 +466,6 @@ export default {
         return temp
       })
     },
-    findPlanet(key) {
-      for (let planet of this.planets) {
-        if (planet.key === key) {
-          return planet
-        }
-        if (planet.children.length > 0) {
-          for (let child of planet.children) {
-            if (child.key === key) {
-              return child
-            }
-          }
-        }
-      }
-    },
     updateZoom(){
       let fieldOfView = 0;
       try {
@@ -510,7 +479,7 @@ export default {
       this.planet.setAttribute("orbit-sensitivity", this.defaultOrbitSensi * Math.pow(zoom, 2))
       this.zoomFactor = zoom
     },
-    addHotspot(event) {
+    addHotspot(event) { // todo bug, when adding new hotspot and panel is closed, last one will be overwritten
       const condition = this.hotspots.length === 0 && (this.lastHotspot.position.x === 0 && this.lastHotspot.position.y === 0 && this.lastHotspot.position.z === 0) || this.sidePanelType !== "hotspotSettings"
       const xClick = event.offsetX;
       const yClick = event.offsetY;
@@ -595,10 +564,10 @@ export default {
         if (planet.enabled) {
           planetDict[planet.key] = planet.name
         }
-        if (planet.children.length > 0) {
-          planet.children.forEach(child => {
-            if (child.enabled) {
-              planetDict[child.key] = `${planet.name} - ${child.name}`
+        if (planet.moons.length > 0) {
+          planet.moons.forEach(moon => {
+            if (moon.enabled) {
+              planetDict[moon.key] = `${planet.name} - ${moon.name}`
             }
           })
         }
@@ -611,9 +580,9 @@ export default {
         if (planet.enabled) {
           count++;
         }
-        if (planet.children.length > 0) {
-          for (let child of planet.children) {
-            if (child.enabled) {
+        if (planet.moons.length > 0) {
+          for (let moon of planet.moons) {
+            if (moon.enabled) {
               count++;
             }
           }
@@ -643,7 +612,7 @@ export default {
     loaded: function (newVal) {
       if (newVal) {
         this.firstLoad = true
-        this.changePlanet(this.findPlanet(this.defaultPlanet), true, true)
+        this.changePlanet(SOLAR_SYSTEM.findPlanet(this.defaultPlanet), true, true)
         setTimeout(() => {
           // do this manually because when set to false in data but not manually changed, then it won't update
           if (this.auto_rotate) {
@@ -877,7 +846,7 @@ li.planet-selector {
 
   transition: background-color 0.2s linear, color 0.2s linear;
 }
-li.planet-selector.child {
+li.planet-selector.moon {
   padding-left: 20px;
 }
 li.planet-selector.active {
@@ -886,7 +855,7 @@ li.planet-selector.active {
 li.planet-selector.disabled {
   color: darkgray;
 }
-li.planet-selector:first-of-type.active:not(.parent), li.planet-selector.child.parentActive.last {
+li.planet-selector:first-of-type.active:not(.parent), li.planet-selector.moon.parentActive.last {
   margin-bottom: 10px;
 }
 
