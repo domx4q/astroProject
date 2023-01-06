@@ -92,8 +92,10 @@
           <FormKit type="form" id="hotspot-settings" form-class="formCollection" submit-label="Übernehmen"
                    @submit="updateLastHotspot();blur()" :actions="false" :disabled="!loaded" v-if="!isMobile" v-auto-animate>
             <h2>Hotspot Einstellungen</h2>
-            <p style="max-width: 225px" v-if="windowHeight >= 913">Direkt nach dem hinzufügen (<kbd>Alt + Klick auf den Planeten</kbd>) hier die
-              Einstellungen vornehmen.<br>Andernfalls können die Einstellungen nicht mehr geändert werden.</p>
+            <p style="max-width: 225px" v-if="windowHeight >= 913">
+              Direkt nach dem hinzufügen (<kbd>Alt + Klick auf den Planeten</kbd>) hier die Einstellungen vornehmen.<br>
+              Um einen Hotspot zu bearbeiten, einfach (mit gedrückter <kbd>Strg</kbd>-Taste) auf den Hotspot klicken.
+            </p>
             <FormKit type="text" id="hotspot_name_input" name="name" label="Name" aria-autocomplete="none"
                      autocomplete="off" spellcheck="true" validation="required|length:3,50" v-model="lastHotspot.name"
                      @focus="$event.target.select();hotspot_settings_focused=true" @blur="hotspot_settings_focused=false"
@@ -110,6 +112,7 @@
                      :options="classifications" v-model="lastHotspot.classification" @change="updateLastHotspot" :disabled="!loaded"/>
 
             <FormKit type="checkbox" name="action" label="Aktion" help="Nur für besondere Hotspots" v-model="lastHotspot.action" @change="updateLastHotspot"/>
+            <FormKit type="button" prefix-icon="trash" label="Löschen" @click="deleteCurrentHotspot" :disabled="!loaded" id="deleteButton"/>
             <hr>
             <FormKit type="button" label="Panel schließen" @click="sidePanelType = 'planetInfo'" :disabled="!loaded"/>
           </FormKit>
@@ -145,9 +148,10 @@
     <!-- region hotspots-->
     <template v-for="hotspot in hotspots" :key="hotspot.uuid">
       <button class="hotspot" :slot="'hotspot-' + hotspot.type + '-' + hotspot.uuid"
-              :data-position="makeHotspotString(hotspot.position.x, hotspot.position.y, hotspot.position.z)"
-              :data-normal="makeHotspotString(hotspot.normal.x, hotspot.normal.y, hotspot.normal.z)"
-              :class="[hotspot.class, {action: hotspot.action}]" data-visibility-attribute="visible">
+              :data-position="hotspot.position.modelString"
+              :data-normal="hotspot.normal.modelString"
+              :class="[hotspot.class, {action: hotspot.action}]" data-visibility-attribute="visible"
+              @click.ctrl="modifyHotspot(hotspot)">
         <span class="hotspot-annotation">{{ hotspot.name }}</span>
       </button>
     </template>
@@ -170,6 +174,8 @@
 // @ is an alias to /src
 import "animate.css";
 
+import {EMPTY_HOTSPOT, Hotspot, ZERO_VECTOR} from "@/extra/HomeClasses";
+
 import defaults from "@/mixins/defaults";
 import message from "@/components/message";
 import dropdown from "@/components/dropdown";
@@ -177,9 +183,9 @@ import themeSwitch from "@/components/themeSwitch";
 
 import planets from "@/assets/data/planets.json"
 import annotations from "@/assets/data/annotations.json"
+import axios from "axios";
 
 import("@google/model-viewer")
-import axios from "axios";
 export default {
   name: "HomeView",
   components: {
@@ -219,19 +225,11 @@ export default {
       planetInfoCollapsed: false,
       settingsCollapsed: false,
       settingsInitWidth: 0,
+      ctrlDown: false,
       openPlanetInfoDropdown: "none",
       lastFieldOfView: 0,
       hotspot_settings_focused: false,
-      lastHotspot: {
-        name: "",
-        description: "",
-        classification: ["unknown"],
-        action: false,
-        position: {x: 0, y: 0, z: 0},
-        normal: {x: 0, y: 0, z: 0},
-        type: "marker",
-        level: "1", // desto höher, desto detaillierter / kleiner
-      },
+      lastHotspot: EMPTY_HOTSPOT,
       hotspots: [],
       messages: [],
       textureInputForm: null,
@@ -299,6 +297,19 @@ export default {
     }
   },
   mounted() {
+    const keyDown = (e) => {
+      if (e.key === "Control") {
+        this.ctrlDown = true
+      }
+    }
+    const keyUp = (e) => {
+      if (e.key === "Control") {
+        this.ctrlDown = false
+      }
+    }
+    window.addEventListener("keydown", keyDown)
+    window.addEventListener("keyup", keyUp)
+
     this.planets = Object.keys(planets).map(key => {
       let children = []
       if (planets[key].children !== undefined && planets[key].children !== null) {
@@ -407,7 +418,9 @@ export default {
             fileReader.onload = () => {
               json = JSON.parse(fileReader.result)
               this.hotspots = json.map(hotspot => {
-                return {...hotspot, uuid: this.genUUID()}
+                const temp = new Hotspot("", ZERO_VECTOR, ZERO_VECTOR)
+                temp.fromSaveData(hotspot)
+                return temp
               })
             }
           } else {
@@ -464,9 +477,11 @@ export default {
       // update hotspots
       this.hotspots = annotations.planets[this.currentPlanet.key]
       if (this.hotspots === undefined) this.hotspots = []
-        this.hotspots = this.hotspots.map(hotspot => {
-          return {...hotspot, uuid: this.genUUID()}
-        })
+      this.hotspots = this.hotspots.map(hotspot => {
+        const temp = new Hotspot("", ZERO_VECTOR, ZERO_VECTOR)
+        temp.fromSaveData(hotspot)
+        return temp
+      })
     },
     findPlanet(key) {
       for (let planet of this.planets) {
@@ -481,9 +496,6 @@ export default {
           }
         }
       }
-    },
-    makeHotspotString(x, y, z) {
-      return `${x}m ${y}m ${z}m`
     },
     updateZoom(){
       let fieldOfView = 0;
@@ -510,18 +522,13 @@ export default {
       const normal = positionAndNormal.normal;
 
       const name = "Hotspot " + Math.floor(Math.random() * 1000)
-      this.hotspots.push({
-        position: position,
-        normal: normal,
-        name: name,
-        uuid: this.genUUID(),
-        type: "marker",
-        class: "marker",
-      });
-      this.lastHotspot.name = name;
-      this.lastHotspot.position = position;
-      this.lastHotspot.normal = normal;
-      this.lastHotspot.description = "";
+      const hotspot = new Hotspot(name, position, normal)
+      this.hotspots.push(hotspot);
+      // make this one by another to keep previous settings
+      this.lastHotspot.name = hotspot.name;
+      this.lastHotspot.position = hotspot.position;
+      this.lastHotspot.normal = hotspot.normal;
+      this.lastHotspot.description = hotspot.description;
 
       if (condition) {
         setTimeout(() => {
@@ -539,9 +546,36 @@ export default {
         }, 100)
       }
     },
+    modifyHotspot(hotspot) {
+      if (this.sidePanelType !== "hotspotSettings") return;
+
+      // remove old hotspot and append to the end
+      this.deleteHotspot(hotspot)
+      this.hotspots.push(hotspot)
+
+      this.lastHotspot = hotspot;
+
+      const nameInput = document.querySelector("#hotspot_name_input")
+      nameInput.focus()
+      setTimeout(() => {
+        nameInput.select()
+      }, 100)
+    },
+    deleteHotspot(hotspot) {
+      this.hotspots = this.hotspots.filter(h => h.uuid !== hotspot.uuid)
+    },
+    deleteCurrentHotspot() {
+      this.hotspots.pop()
+      try {
+        this.lastHotspot = this.hotspots[this.hotspots.length - 1];
+      }
+      catch (e) {
+        this.lastHotspot = EMPTY_HOTSPOT;
+      }
+    },
     downloadHotspots() {
       let hotspots = JSON.parse(JSON.stringify(this.hotspots));
-      // rmove from every hotspot the uuid and the type
+      // remove from every hotspot the uuid and the type
       hotspots = hotspots.map(hotspot => {
         delete hotspot.uuid;
         return hotspot;
@@ -550,12 +584,10 @@ export default {
     },
     updateLastHotspot() {
       this.hotspots.pop();
-      this.hotspots.push({
-        ...this.lastHotspot,
-        uuid: this.genUUID(),
-        class: this.lastHotspot.type === "location" ? "location level-" + this.lastHotspot.level : this.lastHotspot.type,
-        level: this.lastHotspot.type === "location" ? this.lastHotspot.level : undefined,
-      })
+      this.lastHotspot.renewUUID();
+      this.lastHotspot.class = this.lastHotspot.type === "location" ? "location level-" + this.lastHotspot.level : this.lastHotspot.type;
+      this.lastHotspot.level = this.lastHotspot.type === "location" ? this.lastHotspot.level : undefined;
+      this.hotspots.push(this.lastHotspot);
     },
     convertPlanetsFormKit(planets) {
       const planetDict = {}
@@ -684,6 +716,13 @@ export default {
       }
       if (newVal >= 100) {
         this.ourProgress = 100
+      }
+    },
+    ctrlDown: function (newVal) {
+      if (newVal) {
+        document.body.classList.add("ctrlDown")
+      } else {
+        document.body.classList.remove("ctrlDown")
       }
     },
   }
@@ -872,6 +911,7 @@ li.planet-selector:first-of-type.active:not(.parent), li.planet-selector.child.p
   box-sizing: border-box;
   pointer-events: none;
   opacity: var(--max-hotspot-opacity);
+  z-index: 5000;
 
   transition: height .2s linear, width .2s linear, opacity .2s linear;
 }
@@ -906,6 +946,10 @@ li.planet-selector:first-of-type.active:not(.parent), li.planet-selector.child.p
 }
 .hotspot.action, .hotspot.action > * {
   cursor: pointer;
+  pointer-events: initial;
+}
+body.ctrlDown .hotspot, body.ctrlDown .hotspot > * {
+  cursor: move;
   pointer-events: initial;
 }
 .hotspot:not([data-visible]) .hotspot-annotation {
@@ -1078,5 +1122,9 @@ html[data-theme="dark"] .formCollection {
   border-radius: 5px;
   background: rgba(19, 83, 215, 0.2);
   color: #4d84fc;
+}
+
+#deleteButton {
+  background-color: var(--fk-color-danger);
 }
 </style>
