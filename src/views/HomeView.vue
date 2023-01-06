@@ -62,14 +62,14 @@
         <ul id="planets" v-auto-animate v-if="showOverlays">
           <template v-for="planet in planets" :key="planet.uuid">
             <li class="planet-selector" v-if="planet.enabled"
-                :class="{active: planet.uuid === currentPlanet.uuid, disabled: !loaded, parent: planet.children.length > 0}">
+                :class="{active: planet.uuid === currentPlanet.uuid, disabled: !loaded, parent: planet.moons.length > 0}">
               <span @click="changePlanet(planet)">{{ planet.name }}</span>
             </li>
-            <template v-for="(child, index) in planet.children" :key="child.uuid">
-              <li class="planet-selector child" v-if="child.enabled && child.uuid !== currentPlanet.uuid"
-                  :class="{active: child.uuid === currentPlanet.uuid, disabled: !loaded,
-                      parentActive: planet.uuid === currentPlanet.uuid, last: index === planet.children.length - 1}">
-                <span @click="changePlanet(child)">{{ child.name }}</span>
+            <template v-for="(moon, index) in planet.moons" :key="moon.uuid">
+              <li class="planet-selector moon" v-if="moon.enabled && moon.uuid !== currentPlanet.uuid"
+                  :class="{active: moon.uuid === currentPlanet.uuid, disabled: !loaded,
+                      parentActive: planet.uuid === currentPlanet.uuid, last: index === planet.moons.length - 1}">
+                <span @click="changePlanet(moon)">{{ moon.name }}</span>
               </li>
             </template>
           </template>
@@ -81,7 +81,7 @@
           type="select"
           label="Planet auswählen"
           :options="convertPlanetsFormKit(planets)"
-          @change="changePlanet(findPlanet($event.target.value))"
+          @change="changePlanet(SOLAR_SYSTEM.findPlanet($event.target.value))"
       />
       </teleport>
 
@@ -92,8 +92,10 @@
           <FormKit type="form" id="hotspot-settings" form-class="formCollection" submit-label="Übernehmen"
                    @submit="updateLastHotspot();blur()" :actions="false" :disabled="!loaded" v-if="!isMobile" v-auto-animate>
             <h2>Hotspot Einstellungen</h2>
-            <p style="max-width: 225px" v-if="windowHeight >= 913">Direkt nach dem hinzufügen (<kbd>Alt + Klick auf den Planeten</kbd>) hier die
-              Einstellungen vornehmen.<br>Andernfalls können die Einstellungen nicht mehr geändert werden.</p>
+            <p style="max-width: 225px" v-if="windowHeight >= 913">
+              Direkt nach dem hinzufügen (<kbd>Alt + Klick auf den Planeten</kbd>) hier die Einstellungen vornehmen.<br>
+              Um einen Hotspot zu bearbeiten, einfach (mit gedrückter <kbd>Strg</kbd>-Taste) auf den Hotspot klicken.
+            </p>
             <FormKit type="text" id="hotspot_name_input" name="name" label="Name" aria-autocomplete="none"
                      autocomplete="off" spellcheck="true" validation="required|length:3,50" v-model="lastHotspot.name"
                      @focus="$event.target.select();hotspot_settings_focused=true" @blur="hotspot_settings_focused=false"
@@ -110,6 +112,7 @@
                      :options="classifications" v-model="lastHotspot.classification" @change="updateLastHotspot" :disabled="!loaded"/>
 
             <FormKit type="checkbox" name="action" label="Aktion" help="Nur für besondere Hotspots" v-model="lastHotspot.action" @change="updateLastHotspot"/>
+            <FormKit type="button" prefix-icon="trash" label="Löschen" @click="deleteCurrentHotspot" :disabled="!loaded" id="deleteButton"/>
             <hr>
             <FormKit type="button" label="Panel schließen" @click="sidePanelType = 'planetInfo'" :disabled="!loaded"/>
           </FormKit>
@@ -145,9 +148,10 @@
     <!-- region hotspots-->
     <template v-for="hotspot in hotspots" :key="hotspot.uuid">
       <button class="hotspot" :slot="'hotspot-' + hotspot.type + '-' + hotspot.uuid"
-              :data-position="makeHotspotString(hotspot.position.x, hotspot.position.y, hotspot.position.z)"
-              :data-normal="makeHotspotString(hotspot.normal.x, hotspot.normal.y, hotspot.normal.z)"
-              :class="[hotspot.class, {action: hotspot.action}]" data-visibility-attribute="visible">
+              :data-position="hotspot.position.modelString"
+              :data-normal="hotspot.normal.modelString"
+              :class="[hotspot.class, {action: hotspot.action}]" data-visibility-attribute="visible"
+              @click.ctrl="modifyHotspot(hotspot)">
         <span class="hotspot-annotation">{{ hotspot.name }}</span>
       </button>
     </template>
@@ -170,16 +174,18 @@
 // @ is an alias to /src
 import "animate.css";
 
+import {Hotspot, Vector3D, EMPTY_HOTSPOT, ZERO_VECTOR, SOLAR_SYSTEM} from "@/extra/HomeClasses";
+
 import defaults from "@/mixins/defaults";
 import message from "@/components/message";
 import dropdown from "@/components/dropdown";
 import themeSwitch from "@/components/themeSwitch";
 
-import planets from "@/assets/data/planets.json"
+// import planets from "@/assets/data/planets.json"
 import annotations from "@/assets/data/annotations.json"
+import axios from "axios";
 
 import("@google/model-viewer")
-import axios from "axios";
 export default {
   name: "HomeView",
   components: {
@@ -199,7 +205,7 @@ export default {
       auto_rotate: true,
       enable_pan: false,
 
-      currentPlanet: this.convertPlanet(planets.empty, "empty"),
+      currentPlanet: SOLAR_SYSTEM.empty,
       lastPlanetChild: false,
       defaultPlanet: null,
       totalPlanetCount: 0,
@@ -219,22 +225,16 @@ export default {
       planetInfoCollapsed: false,
       settingsCollapsed: false,
       settingsInitWidth: 0,
+      ctrlDown: false,
       openPlanetInfoDropdown: "none",
       lastFieldOfView: 0,
       hotspot_settings_focused: false,
-      lastHotspot: {
-        name: "",
-        description: "",
-        classification: ["unknown"],
-        action: false,
-        position: {x: 0, y: 0, z: 0},
-        normal: {x: 0, y: 0, z: 0},
-        type: "marker",
-        level: "1", // desto höher, desto detaillierter / kleiner
-      },
+      lastHotspot: EMPTY_HOTSPOT,
       hotspots: [],
       messages: [],
       textureInputForm: null,
+
+      SOLAR_SYSTEM: SOLAR_SYSTEM,
     }
   },
   computed: {
@@ -250,7 +250,7 @@ export default {
       return Math.min(...valueList) * 100
     },
     planetInfo() {
-      if (this.currentPlanet === undefined || this.currentPlanet === null || this.currentPlanet === planets.empty || this.currentPlanet.key === "empty") {
+      if (this.currentPlanet === undefined || this.currentPlanet === null || this.currentPlanet === SOLAR_SYSTEM.empty || this.currentPlanet.key === "empty") {
         return {
           name: "Kein Planet ausgewählt",
           description: "Wähle einen Planeten aus, um mehr Informationen zu erhalten.",
@@ -299,15 +299,20 @@ export default {
     }
   },
   mounted() {
-    this.planets = Object.keys(planets).map(key => {
-      let children = []
-      if (planets[key].children !== undefined && planets[key].children !== null) {
-        children = Object.keys(planets[key].children).map(childKey => {
-          return this.convertPlanet(planets[key].children[childKey], childKey, [], true)
-        })
+    const keyDown = (e) => {
+      if (e.key === "Control") {
+        this.ctrlDown = true
       }
-      return this.convertPlanet(planets[key], key, children, false)
-    })
+    }
+    const keyUp = (e) => {
+      if (e.key === "Control") {
+        this.ctrlDown = false
+      }
+    }
+    window.addEventListener("keydown", keyDown)
+    window.addEventListener("keyup", keyUp)
+
+    this.planets = SOLAR_SYSTEM.asArray
     this.sortPlanets()
     this.addMessage("Willkommen!", "Willkommen auf der Planeten-App")
 
@@ -341,17 +346,6 @@ export default {
       }
       const defaultAppend = "Das neu laden der Seite könnte helfen. Andernfalls versuche es später noch einmal."
       this.addMessage("Fehler", `${messageContent} ${defaultAppend}`, 10000, "error")
-    },
-    convertPlanet(planet, key, children = [], isChild = false) {
-      return {
-        ...planet,
-        key: key,
-        children: children,
-        isChild: isChild,
-        copyright: planet.copyright !== undefined ? planet.copyright : "© NASA",
-        uuid: this.genUUID(),
-        customModel: planet.customModel || false,
-      }
     },
     removeMessage(message) {
       this.messages = this.messages.filter(m => m.uuid !== message.uuid)
@@ -407,11 +401,13 @@ export default {
             fileReader.onload = () => {
               json = JSON.parse(fileReader.result)
               this.hotspots = json.map(hotspot => {
-                return {...hotspot, uuid: this.genUUID()}
+                const temp = new Hotspot("", ZERO_VECTOR, ZERO_VECTOR)
+                temp.fromSaveData(hotspot)
+                return temp
               })
             }
           } else {
-            this.currentPlanet = this.findPlanet("empty")
+            this.currentPlanet = SOLAR_SYSTEM.empty
             this.createAndApplyTexture(URL.createObjectURL(file))
             this.hotspots = []
           }
@@ -464,26 +460,11 @@ export default {
       // update hotspots
       this.hotspots = annotations.planets[this.currentPlanet.key]
       if (this.hotspots === undefined) this.hotspots = []
-        this.hotspots = this.hotspots.map(hotspot => {
-          return {...hotspot, uuid: this.genUUID()}
-        })
-    },
-    findPlanet(key) {
-      for (let planet of this.planets) {
-        if (planet.key === key) {
-          return planet
-        }
-        if (planet.children.length > 0) {
-          for (let child of planet.children) {
-            if (child.key === key) {
-              return child
-            }
-          }
-        }
-      }
-    },
-    makeHotspotString(x, y, z) {
-      return `${x}m ${y}m ${z}m`
+      this.hotspots = this.hotspots.map(hotspot => {
+        const temp = new Hotspot("", ZERO_VECTOR, ZERO_VECTOR)
+        temp.fromSaveData(hotspot)
+        return temp
+      })
     },
     updateZoom(){
       let fieldOfView = 0;
@@ -498,7 +479,7 @@ export default {
       this.planet.setAttribute("orbit-sensitivity", this.defaultOrbitSensi * Math.pow(zoom, 2))
       this.zoomFactor = zoom
     },
-    addHotspot(event) {
+    addHotspot(event) { // todo bug, when adding new hotspot and panel is closed, last one will be overwritten
       const condition = this.hotspots.length === 0 && (this.lastHotspot.position.x === 0 && this.lastHotspot.position.y === 0 && this.lastHotspot.position.z === 0) || this.sidePanelType !== "hotspotSettings"
       const xClick = event.offsetX;
       const yClick = event.offsetY;
@@ -510,18 +491,13 @@ export default {
       const normal = positionAndNormal.normal;
 
       const name = "Hotspot " + Math.floor(Math.random() * 1000)
-      this.hotspots.push({
-        position: position,
-        normal: normal,
-        name: name,
-        uuid: this.genUUID(),
-        type: "marker",
-        class: "marker",
-      });
-      this.lastHotspot.name = name;
-      this.lastHotspot.position = position;
-      this.lastHotspot.normal = normal;
-      this.lastHotspot.description = "";
+      const hotspot = new Hotspot(name, position, normal)
+      this.hotspots.push(hotspot);
+      // make this one by another to keep previous settings
+      this.lastHotspot.name = hotspot.name;
+      this.lastHotspot.position = hotspot.position;
+      this.lastHotspot.normal = hotspot.normal;
+      this.lastHotspot.description = hotspot.description;
 
       if (condition) {
         setTimeout(() => {
@@ -539,9 +515,36 @@ export default {
         }, 100)
       }
     },
+    modifyHotspot(hotspot) {
+      if (this.sidePanelType !== "hotspotSettings") return;
+
+      // remove old hotspot and append to the end
+      this.deleteHotspot(hotspot)
+      this.hotspots.push(hotspot)
+
+      this.lastHotspot = hotspot;
+
+      const nameInput = document.querySelector("#hotspot_name_input")
+      nameInput.focus()
+      setTimeout(() => {
+        nameInput.select()
+      }, 100)
+    },
+    deleteHotspot(hotspot) {
+      this.hotspots = this.hotspots.filter(h => h.uuid !== hotspot.uuid)
+    },
+    deleteCurrentHotspot() {
+      this.hotspots.pop()
+      try {
+        this.lastHotspot = this.hotspots[this.hotspots.length - 1];
+      }
+      catch (e) {
+        this.lastHotspot = EMPTY_HOTSPOT;
+      }
+    },
     downloadHotspots() {
       let hotspots = JSON.parse(JSON.stringify(this.hotspots));
-      // rmove from every hotspot the uuid and the type
+      // remove from every hotspot the uuid and the type
       hotspots = hotspots.map(hotspot => {
         delete hotspot.uuid;
         return hotspot;
@@ -550,12 +553,10 @@ export default {
     },
     updateLastHotspot() {
       this.hotspots.pop();
-      this.hotspots.push({
-        ...this.lastHotspot,
-        uuid: this.genUUID(),
-        class: this.lastHotspot.type === "location" ? "location level-" + this.lastHotspot.level : this.lastHotspot.type,
-        level: this.lastHotspot.type === "location" ? this.lastHotspot.level : undefined,
-      })
+      this.lastHotspot.renewUUID();
+      this.lastHotspot.class = this.lastHotspot.type === "location" ? "location level-" + this.lastHotspot.level : this.lastHotspot.type;
+      this.lastHotspot.level = this.lastHotspot.type === "location" ? this.lastHotspot.level : undefined;
+      this.hotspots.push(this.lastHotspot);
     },
     convertPlanetsFormKit(planets) {
       const planetDict = {}
@@ -563,10 +564,10 @@ export default {
         if (planet.enabled) {
           planetDict[planet.key] = planet.name
         }
-        if (planet.children.length > 0) {
-          planet.children.forEach(child => {
-            if (child.enabled) {
-              planetDict[child.key] = `${planet.name} - ${child.name}`
+        if (planet.moons.length > 0) {
+          planet.moons.forEach(moon => {
+            if (moon.enabled) {
+              planetDict[moon.key] = `${planet.name} - ${moon.name}`
             }
           })
         }
@@ -579,9 +580,9 @@ export default {
         if (planet.enabled) {
           count++;
         }
-        if (planet.children.length > 0) {
-          for (let child of planet.children) {
-            if (child.enabled) {
+        if (planet.moons.length > 0) {
+          for (let moon of planet.moons) {
+            if (moon.enabled) {
               count++;
             }
           }
@@ -611,7 +612,7 @@ export default {
     loaded: function (newVal) {
       if (newVal) {
         this.firstLoad = true
-        this.changePlanet(this.findPlanet(this.defaultPlanet), true, true)
+        this.changePlanet(SOLAR_SYSTEM.findPlanet(this.defaultPlanet), true, true)
         setTimeout(() => {
           // do this manually because when set to false in data but not manually changed, then it won't update
           if (this.auto_rotate) {
@@ -684,6 +685,13 @@ export default {
       }
       if (newVal >= 100) {
         this.ourProgress = 100
+      }
+    },
+    ctrlDown: function (newVal) {
+      if (newVal) {
+        document.body.classList.add("ctrlDown")
+      } else {
+        document.body.classList.remove("ctrlDown")
       }
     },
   }
@@ -838,7 +846,7 @@ li.planet-selector {
 
   transition: background-color 0.2s linear, color 0.2s linear;
 }
-li.planet-selector.child {
+li.planet-selector.moon {
   padding-left: 20px;
 }
 li.planet-selector.active {
@@ -847,7 +855,7 @@ li.planet-selector.active {
 li.planet-selector.disabled {
   color: darkgray;
 }
-li.planet-selector:first-of-type.active:not(.parent), li.planet-selector.child.parentActive.last {
+li.planet-selector:first-of-type.active:not(.parent), li.planet-selector.moon.parentActive.last {
   margin-bottom: 10px;
 }
 
@@ -872,6 +880,7 @@ li.planet-selector:first-of-type.active:not(.parent), li.planet-selector.child.p
   box-sizing: border-box;
   pointer-events: none;
   opacity: var(--max-hotspot-opacity);
+  z-index: 5000;
 
   transition: height .2s linear, width .2s linear, opacity .2s linear;
 }
@@ -906,6 +915,10 @@ li.planet-selector:first-of-type.active:not(.parent), li.planet-selector.child.p
 }
 .hotspot.action, .hotspot.action > * {
   cursor: pointer;
+  pointer-events: initial;
+}
+body.ctrlDown .hotspot, body.ctrlDown .hotspot > * {
+  cursor: move;
   pointer-events: initial;
 }
 .hotspot:not([data-visible]) .hotspot-annotation {
@@ -1078,5 +1091,9 @@ html[data-theme="dark"] .formCollection {
   border-radius: 5px;
   background: rgba(19, 83, 215, 0.2);
   color: #4d84fc;
+}
+
+#deleteButton {
+  background-color: var(--fk-color-danger);
 }
 </style>

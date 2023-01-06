@@ -166,7 +166,8 @@ html {
 }
 
 hr {
-  width: 100%;
+  width: 95%;
+  border-radius: 1px;
 }
 /*make the scroll bars in chrome nicer*/
 ::-webkit-scrollbar {
