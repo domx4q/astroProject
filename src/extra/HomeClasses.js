@@ -18,6 +18,22 @@ export class Hotspot {
         this.class = ""
     }
 
+    clearSettings() {
+        this.description = "";
+        this.classification = ["unknown"];
+        this.action = false;
+        this.type = "marker";
+        this.level = "1";
+        this.class = "";
+    }
+    copySettings(hotspot) {
+        this.classification = hotspot.classification;
+        this.action = hotspot.action;
+        this.type = hotspot.type;
+        this.level = hotspot.level;
+        this.class = hotspot.class;
+    }
+
     fromSaveData(data) {
         this.name = data.name;
         this.position = new Vector3D(data.position.x, data.position.y, data.position.z);

@@ -494,10 +494,9 @@ export default {
       const hotspot = new Hotspot(name, position, normal)
       this.hotspots.push(hotspot);
       // make this one by another to keep previous settings
-      this.lastHotspot.name = hotspot.name;
-      this.lastHotspot.position = hotspot.position;
-      this.lastHotspot.normal = hotspot.normal;
-      this.lastHotspot.description = hotspot.description;
+      hotspot.copySettings(this.lastHotspot);
+      this.lastHotspot = hotspot;
+      this.updateLastHotspot();
 
       if (condition) {
         setTimeout(() => {
@@ -542,20 +541,24 @@ export default {
         this.lastHotspot = EMPTY_HOTSPOT;
       }
     },
-    downloadHotspots() {
+    downloadHotspots(event) {
       let hotspots = JSON.parse(JSON.stringify(this.hotspots));
       // remove from every hotspot the uuid and the type
       hotspots = hotspots.map(hotspot => {
         delete hotspot.uuid;
         return hotspot;
       })
+      // on ctrl press, only log the hotspots
+      if (event.ctrlKey) {
+        console.log(hotspots)
+        return;
+      }
       this.download("hotspots-" + this.currentPlanet.annotationsKey + ".txt", JSON.stringify(hotspots))
     },
     updateLastHotspot() {
       this.hotspots.pop();
       this.lastHotspot.renewUUID();
       this.lastHotspot.class = this.lastHotspot.type === "location" ? "location level-" + this.lastHotspot.level : this.lastHotspot.type;
-      this.lastHotspot.level = this.lastHotspot.type === "location" ? this.lastHotspot.level : undefined;
       this.hotspots.push(this.lastHotspot);
     },
     convertPlanetsFormKit(planets) {
