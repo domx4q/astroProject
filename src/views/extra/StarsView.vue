@@ -1,5 +1,4 @@
 <template>
-  <ThemeSwitch only-logic override-theme="light"/>
   <div id="stars" :class="{transition:enableTransition}"
        @mousedown="handleMouseDown" @mouseup="handleMouseUp" @mouseleave="handleMouseUp"
        @mousemove="handleMouseMove">
@@ -71,6 +70,16 @@
           Um die Karte zu drehen, ziehen Sie mit der Maus über die Karte.<br>
           Wenn sie die obere Karte drehen möchten, drücken Sie die <b>Strg-Taste</b> und ziehen Sie mit der Maus.
         </p>
+        <ThemeSwitch override-theme="light"/><div style="margin-bottom: 10px"></div>
+        <FormKit type="group">
+<!--          upload discs-->
+          <FormKit
+            type="file"
+            label="Discs"
+            accept="image/*"
+            v-model="fileInput"
+            @change="uploadDiscs"/>
+        </FormKit>
       </FormKit>
     </div>
 
@@ -113,6 +122,8 @@ export default {
       },
       enableTransitionDefault: true,
       enableTransition: true,
+
+      fileInput: null
     }
   },
   mounted() {
@@ -183,6 +194,30 @@ export default {
       } else {
         console.log(`${oldValue}, ${newValue} ==> ${result}`)
       }
+    },
+    uploadDiscs(event) {
+      const files = event.target.files
+      if (files.length > 0) {
+        const file = files[0]
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          let key = "innerDisc"
+          let userInput = prompt("Welche Scheibe soll ersetzt werden? (inner/outer)", "inner")
+          switch (userInput) {
+            case "inner": {
+              key = "innerDisc"
+              break
+            }
+            case "outer": {
+              key = "outerDisc"
+              break
+            }
+          }
+          this.$refs[key].style.backgroundImage = `url(${e.target.result})`
+        }
+        reader.readAsDataURL(file)
+      }
+      this.fileInput = {}
     },
 
     // region handlers
@@ -324,6 +359,9 @@ export default {
   justify-content: center;
   align-items: center;
 }
+html[data-theme="dark"] #stars {
+  background: black;
+}
 
 #outerDisc {
   background-image: url("@/assets/extra/images/sternenscheibe_outer.png");
@@ -371,5 +409,10 @@ export default {
   flex-direction: column;
   z-index: 5;
   max-width: 200px;
+}
+</style>
+<style>
+html[data-theme="dark"] #app #entireDisc * {
+  filter: invert(1) !important
 }
 </style>
