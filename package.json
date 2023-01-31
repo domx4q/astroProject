@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@formkit/addons": "^1.0.0-beta.14",
-    "@formkit/auto-animate": "^1.0.0-beta.5",
+    "@formkit/auto-animate": "^1.0.0-beta.6",
     "@formkit/i18n": "^1.0.0-beta.14",
     "@formkit/pro": "^1.0.0-alpha.62",
     "@formkit/vue": "^1.0.0-beta.14",
