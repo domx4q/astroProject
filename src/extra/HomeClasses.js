@@ -327,7 +327,8 @@ export const SOLAR_SYSTEM = new SolarSystem([
 
                     detailed: {
                         Oberfläche: "Radius: 1.821,6 km\nÄquatordurchmesser: 3.643,2 km\nmittlere Dichte: 3,528 g/cm³\nGravitation: 1,796 m/s²\nTemperatur: Min.<space>? °C  Mittel -143,15 °C  Max.<space>-73,15 °C",
-                        Allgemeines: "Entfernung zur Erde: 628.300.000 km\nUmlaufzeit: 42 Stunden"
+                        Allgemeines: "Entfernung zur Erde: 628.300.000 km\nUmlaufzeit: 42 Stunden",
+                        Besonderes:"Io ist der mit Abstand vulkanisch aktivste Planet in unserem Sonnensystem. Durch diesen Vulkanismus werden Schwefel und Schwefeloxid in die Höhe gestoßen. Dieser Vorgang geschieht mit einer maximalen Geschwindigkeit von 1 km/s und kann Temperaturen von 1000 bis 1300 °C haben. Durch die Schwefelablagerungen sit der Mond sehr gelb.",
                     }
                 }),
             }),
