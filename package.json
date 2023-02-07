@@ -21,7 +21,7 @@
     "core-js": "^3.27.2",
     "register-service-worker": "^1.7.2",
     "unity-webgl": "latest",
-    "vue": "^3.2.45",
+    "vue": "^3.2.47",
     "vue-router": "^4.1.6",
     "vuex": "^4.0.0",
     "webgl-fluid": "^0.3.2"
