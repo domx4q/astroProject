@@ -124,7 +124,9 @@
             <Icon icon="ph:caret-double-right-bold" class="collapseIcon"/>
           </div>
           <div class="content">
-            <h2 class="name">{{ planetInfo.name }}</h2>
+            <span v-if="currentPlanet.mag !== 1.00001"
+                  class="mag_badge" title="Magnitude (scheinbare Helligkeit)">Mag: {{round(currentPlanet.mag, 2)}}</span>
+            <h2 class="name" :title="planetInfo.nameTooltip">{{ planetInfo.name }}</h2>
             <div class="description">
               <Dropdown title="Beschreibung" :open-override="openPlanetInfoDropdown === 'none'" :onlyShowTitleOnClose="true"
                         @open="openPlanetInfoDropdown = 'none'" @close="openPlanetInfoDropdown = 'none'">
@@ -1011,6 +1013,16 @@ body.ctrlDown .hotspot, body.ctrlDown .hotspot > * {
   border-radius: 3px;
   color: var(--text-color);
   text-transform: uppercase;
+}
+.mag_badge {
+  position: absolute;
+  top: 20px;
+  left: 5px;
+
+  border: 2px solid var(--text-color);
+  padding: 1px 3px;
+  border-radius: 3px;
+  color: var(--text-color);
 }
 </style>
 <style>
