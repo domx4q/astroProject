@@ -84,6 +84,13 @@ export default {
 
         __onResize() {
             this.__resizeUUID = this.genUUID();
+        },
+        round(number, digits=2, asNum=false){
+            const out = Number(number).toFixed(digits);
+            if (asNum) {
+                return Number(out);
+            }
+            return out;
         }
     }
 };

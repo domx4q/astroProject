@@ -103,7 +103,7 @@ class SpaceObject {
     type;
     moons = []; // need to be declared here because otherwise some moons will raise an error
 
-    constructor({name, texture, resolution, orderPriority, enabled = true, annotationsKey, copyright = "© NASA", key, info, customModel = false, customModelFile = null, mag=-1}) {
+    constructor({name, texture, resolution, orderPriority, enabled = true, annotationsKey, copyright = "© NASA", key, info, customModel = false, customModelFile = null, mag=1.00001}) {
         this.name = name;
         this.texture = texture;
         this.resolution = resolution;
@@ -120,7 +120,7 @@ class SpaceObject {
 }
 
 class Moon extends SpaceObject {
-    constructor({name, texture, resolution, orderPriority, enabled = true, annotationsKey, copyright = "© NASA", key, info, customModel = false, customModelFile = null, mag=-1}) {
+    constructor({name, texture, resolution, orderPriority, enabled = true, annotationsKey, copyright = "© NASA", key, info, customModel = false, customModelFile = null, mag=1.00001}) {
         super({
             name, texture, resolution, orderPriority, enabled, annotationsKey, copyright, key, info, customModel, customModelFile, mag});
         this.type = "moon";
@@ -129,7 +129,7 @@ class Moon extends SpaceObject {
 }
 
 class Planet extends SpaceObject {
-    constructor({name, texture, resolution, orderPriority, enabled = true, annotationsKey, copyright = "© NASA", key, info, customModel = false, customModelFile = null, moons = [], mag=-1}) {
+    constructor({name, texture, resolution, orderPriority, enabled = true, annotationsKey, copyright = "© NASA", key, info, customModel = false, customModelFile = null, moons = [], mag=1.00001}) {
         super({
             name, texture, resolution, orderPriority, enabled, annotationsKey, copyright, key, info, customModel, customModelFile, mag});
         this.type = "planet";
