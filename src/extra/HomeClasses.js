@@ -189,7 +189,9 @@ export const SOLAR_SYSTEM = new SolarSystem([
             autoFetch: true,
 
             detailed: {
+                Atmosphäre: "Die äußere Atmosphäre besteht aus 80% Wasserstoff, 19% Helium und ein kleiner Teil aus Methan bei hohe Höhen.",
                 Oberfläche: "Radius: 24.622 km\nÄquatordurchmesser: 49.528 km\nmittlere Dichte: 1,638 g/cm³\nGravitation: 11,15 m/s²\nTemperatur: −201 °C",
+                Mantel: "Der Mantel vom Neptun besteht aus Wasser, Ammonium und Methan, wobei dieser eine ionisierte überkritische Flüssigkeit ist.\n Eine ionisierte überkritische Flüssigkeit ist eine Substanz, welche eine Temperatur und einen Druck über ihren kritischen Punkt aufweist und keine Flüssigkeits-und Gasgrenzen hat, aber sich unter dem Druck befindet um ein fester Stoff zu sein.\n Die Voraussetzungen für den Mantel sind eine hohe Temperatur, ein hoher Druck und die Fähigkeit elektrischen Strom zu leiten.",
                 Allgemeines: "Entfernung: 4.495.000.000 km\nUmlaufzeit: 165 Jahre"
             }
         }),
@@ -213,7 +215,8 @@ export const SOLAR_SYSTEM = new SolarSystem([
 
             detailed: {
                 Oberfläche: "Radius: 25.362 km\nÄquatordurchmesser: 51.118 km\nmittlere Dichte: 1,271 g/cm³\nGravitation: 24,79 m/s²\nTemperatur: –197 °C",
-                Allgemeines: "Entfernung: 2.871.00.000 km\nUmlaufzeit: 84 Jahre"
+                Mantel: "Der Mantel vom Neptun besteht aus Wasser, Ammonium und Methan, wobei dieser eine ionisierte überkritische Flüssigkeit ist.\n Eine ionisierte überkritische Flüssigkeit ist eine Substanz, welche eine Temperatur und einen Druck über ihren kritischen Punkt aufweist und keine Flüssigkeits-und Gasgrenzen hat, aber sich unter dem Druck befindet um ein fester Stoff zu sein.\n Die Voraussetzungen für den Mantel sind eine hohe Temperatur, ein hoher Druck und die Fähigkeit elektrischen Strom zu leiten.",
+                Allgemeines: "Entfernung: 2.871.00.000 km\nUmlaufzeit: 84 Jahre\nUranus ist im inneren der kälteste Plante des Sonnensystems\nEs gibt keine fest definierte feste Oberfläche\nEs ist bekannt, dass der Uranus 13 extrem dunkle partikel Ringe aufweist"
             }
         }),
     }),
@@ -327,7 +330,8 @@ export const SOLAR_SYSTEM = new SolarSystem([
 
                     detailed: {
                         Oberfläche: "Radius: 1.821,6 km\nÄquatordurchmesser: 3.643,2 km\nmittlere Dichte: 3,528 g/cm³\nGravitation: 1,796 m/s²\nTemperatur: Min.<space>? °C  Mittel -143,15 °C  Max.<space>-73,15 °C",
-                        Allgemeines: "Entfernung zur Erde: 628.300.000 km\nUmlaufzeit: 42 Stunden"
+                        Allgemeines: "Entfernung zur Erde: 628.300.000 km\nUmlaufzeit: 42 Stunden",
+                        Besonderes:"Io ist der mit Abstand vulkanisch aktivste Planet in unserem Sonnensystem. Durch diesen Vulkanismus werden Schwefel und Schwefeloxid in die Höhe gestoßen. Dieser Vorgang geschieht mit einer maximalen Geschwindigkeit von 1 km/s und kann Temperaturen von 1000 bis 1300 °C haben. Durch die Schwefelablagerungen sit der Mond sehr gelb.",
                     }
                 }),
             }),
