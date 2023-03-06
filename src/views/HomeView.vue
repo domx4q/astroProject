@@ -63,13 +63,13 @@
           <template v-for="planet in planets" :key="planet.uuid">
             <li class="planet-selector" v-if="planet.enabled"
                 :class="{active: planet.uuid === currentPlanet.uuid, disabled: !loaded, parent: planet.moons.length > 0}">
-              <span @click="changePlanet(planet)">{{ planet.name }}</span>
+              <span @click="changePlanet(planet)">{{ planet.name }}</span> <span class="resolution_badge">{{ planet.resolution }}k</span>
             </li>
             <template v-for="(moon, index) in planet.moons" :key="moon.uuid">
               <li class="planet-selector moon" v-if="moon.enabled && moon.uuid !== currentPlanet.uuid"
                   :class="{active: moon.uuid === currentPlanet.uuid, disabled: !loaded,
                       parentActive: planet.uuid === currentPlanet.uuid, last: index === planet.moons.length - 1}">
-                <span @click="changePlanet(moon)">{{ moon.name }}</span>
+                <span @click="changePlanet(moon)">{{ moon.name }}</span> <span class="resolution_badge">{{ moon.resolution }}k</span>
               </li>
             </template>
           </template>
@@ -1003,6 +1003,14 @@ body.ctrlDown .hotspot, body.ctrlDown .hotspot > * {
   opacity: 0;
   pointer-events: none;
   height: 50px;
+}
+
+.resolution_badge {
+  border: 2px solid var(--text-color);
+  padding: 1px 3px;
+  border-radius: 3px;
+  color: var(--text-color);
+  text-transform: uppercase;
 }
 </style>
 <style>
