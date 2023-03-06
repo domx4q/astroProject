@@ -85,7 +85,7 @@ export const EMPTY_HOTSPOT = new Hotspot("", ZERO_VECTOR, ZERO_VECTOR);
 
 //region Solar System
 class SpaceObjectInfo {
-    constructor({name, description, link, linkText, newLineDot, autoFetch, detailed}) {
+    constructor({name, description, link, linkText, newLineDot, autoFetch, detailed, nameTooltip}) {
         this.name = name;
         this.description = description;
         this.link = link;
@@ -93,6 +93,7 @@ class SpaceObjectInfo {
         this.newLineDot = newLineDot;
         this.autoFetch = autoFetch;
         this.detailed = detailed;
+        this.nameTooltip = nameTooltip;
     }
 }
 
@@ -102,7 +103,7 @@ class SpaceObject {
     type;
     moons = []; // need to be declared here because otherwise some moons will raise an error
 
-    constructor({name, texture, resolution, orderPriority, enabled = true, annotationsKey, copyright = "© NASA", key, info, customModel = false, customModelFile = null}) {
+    constructor({name, texture, resolution, orderPriority, enabled = true, annotationsKey, copyright = "© NASA", key, info, customModel = false, customModelFile = null, mag=-1}) {
         this.name = name;
         this.texture = texture;
         this.resolution = resolution;
@@ -114,22 +115,23 @@ class SpaceObject {
         this.customModel = customModel;
         this.customModelFile = customModelFile;
         this.info = info;
+        this.mag = mag
     }
 }
 
 class Moon extends SpaceObject {
-    constructor({name, texture, resolution, orderPriority, enabled = true, annotationsKey, copyright = "© NASA", key, info, customModel = false, customModelFile = null}) {
+    constructor({name, texture, resolution, orderPriority, enabled = true, annotationsKey, copyright = "© NASA", key, info, customModel = false, customModelFile = null, mag=-1}) {
         super({
-            name, texture, resolution, orderPriority, enabled, annotationsKey, copyright, key, info, customModel, customModelFile});
+            name, texture, resolution, orderPriority, enabled, annotationsKey, copyright, key, info, customModel, customModelFile, mag});
         this.type = "moon";
         this.isChild = true;
     }
 }
 
 class Planet extends SpaceObject {
-    constructor({name, texture, resolution, orderPriority, enabled = true, annotationsKey, copyright = "© NASA", key, info, customModel = false, customModelFile = null, moons = []}) {
+    constructor({name, texture, resolution, orderPriority, enabled = true, annotationsKey, copyright = "© NASA", key, info, customModel = false, customModelFile = null, moons = [], mag=-1}) {
         super({
-            name, texture, resolution, orderPriority, enabled, annotationsKey, copyright, key, info, customModel, customModelFile});
+            name, texture, resolution, orderPriority, enabled, annotationsKey, copyright, key, info, customModel, customModelFile, mag});
         this.type = "planet";
         this.moons = moons;
         this.isChild = false;
@@ -179,6 +181,7 @@ export const SOLAR_SYSTEM = new SolarSystem([
         enabled: true,
         annotationsKey: "neptune",
         key: "neptune",
+        mag: 7.96,
         copyright: "Solar System Scope",
         info: new SpaceObjectInfo({
             name: "Neptun",
@@ -202,6 +205,7 @@ export const SOLAR_SYSTEM = new SolarSystem([
         enabled: true,
         annotationsKey: "uranus",
         key: "uranus",
+        mag: 5.8,
         copyright: "Solar System Scope",
         info: new SpaceObjectInfo({
             name: "Uranus",
@@ -225,6 +229,7 @@ export const SOLAR_SYSTEM = new SolarSystem([
         enabled: true,
         annotationsKey: "venus",
         key: "venus_atm",
+        mag: -3.87,
         copyright: "Solar System Scope",
         info: new SpaceObjectInfo({
             name: "Venus",
@@ -247,6 +252,7 @@ export const SOLAR_SYSTEM = new SolarSystem([
         enabled: true,
         annotationsKey: "venus",
         key: "venus_grd",
+        mag: -3.87,
         copyright: "Solar System Scope",
         info: new SpaceObjectInfo({
             name: "Venus",
@@ -293,6 +299,7 @@ export const SOLAR_SYSTEM = new SolarSystem([
         enabled: true,
         annotationsKey: "jupiter",
         key: "jupiter",
+        mag: -1.93,
         copyright: "Solar System Scope",
         info: new SpaceObjectInfo({
             name: "Jupiter",
@@ -316,9 +323,11 @@ export const SOLAR_SYSTEM = new SolarSystem([
                 enabled: true,
                 annotationsKey: "io",
                 key: "io",
+                mag: 12.7,
                 copyright: "NASA 3D Resources",
                 info: new SpaceObjectInfo({
-                    name: "Io (Jupitermond)",
+                    name: "Io",
+                    nameTooltip: "Jupitermond",
                     description: "",
                     link: "https://de.wikipedia.org/wiki/Io_(Mond)",
                     linkText: "Wikipedia",
@@ -339,9 +348,11 @@ export const SOLAR_SYSTEM = new SolarSystem([
                 enabled: true,
                 annotationsKey: "europa",
                 key: "europa",
+                mag: 5.99,
                 copyright: "NASA 3D Resources",
                 info: new SpaceObjectInfo({
-                    name: "Europa (Jupitermond)",
+                    name: "Europa",
+                    nameTooltip: "Jupitermond",
                     description: "",
                     link: "https://de.wikipedia.org/wiki/Europa_(Mond)",
                     linkText: "Wikipedia",
@@ -362,9 +373,11 @@ export const SOLAR_SYSTEM = new SolarSystem([
                 enabled: true,
                 annotationsKey: "ganymede",
                 key: "ganymede",
+                mag: 5.3,
                 copyright: "NASA 3D Resources",
                 info: new SpaceObjectInfo({
-                    name: "Ganymed (Jupitermond)",
+                    name: "Ganymed",
+                    nameTooltip: "Jupitermond",
                     description: "",
                     link: "https://de.wikipedia.org/wiki/Ganymed_(Mond)",
                     linkText: "Wikipedia",
@@ -385,9 +398,11 @@ export const SOLAR_SYSTEM = new SolarSystem([
                 enabled: true,
                 annotationsKey: "callisto",
                 key: "callisto",
+                mag: 6.24,
                 copyright: "NASA 3D Resources",
                 info: new SpaceObjectInfo({
-                    name: "Kallisto (Jupitermond)",
+                    name: "Kallisto",
+                    nameTooltip: "Jupitermond",
                     description: "",
                     link: "https://de.wikipedia.org/wiki/Kallisto_(Mond)",
                     linkText: "Wikipedia",
@@ -410,6 +425,7 @@ export const SOLAR_SYSTEM = new SolarSystem([
         enabled: true,
         annotationsKey: "mars",
         key: "mars",
+        mag: 0.54,
         copyright: "Solar System Scope",
         info: new SpaceObjectInfo({
             name: "Mars / der Rote Planet",
@@ -433,6 +449,7 @@ export const SOLAR_SYSTEM = new SolarSystem([
         enabled: true,
         annotationsKey: "mercury",
         key: "mercury",
+        mag: -0.82,
         copyright: "Solar System Scope",
         info: new SpaceObjectInfo({
             name: "Merkur",
@@ -456,6 +473,7 @@ export const SOLAR_SYSTEM = new SolarSystem([
         enabled: true,
         annotationsKey: "moon",
         key: "moon",
+        mag: -12.54,
         copyright: "Solar System Scope",
         info: new SpaceObjectInfo({
             name: "Mond",
@@ -481,6 +499,7 @@ export const SOLAR_SYSTEM = new SolarSystem([
         enabled: true,
         annotationsKey: "saturn",
         key: "saturn",
+        mag: 0.88,
         copyright: "Solar System Scope",
         info: new SpaceObjectInfo({
             name: "Saturn",
