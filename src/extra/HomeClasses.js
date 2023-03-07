@@ -1,3 +1,5 @@
+// noinspection JSNonASCIINames
+
 import defaults from "@/mixins/defaults";
 // IMPORTANT: Private properties are not supported in Vue 3, so we can't use getters and setters
 // region Hotspots
