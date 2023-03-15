@@ -19,4 +19,4 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag domx4q/astro:$(date +%s)
     - name: Push the image
-      run: docker push domx4q/astro
+      run: docker push domx4q/astro -a
