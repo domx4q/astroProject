@@ -3,6 +3,8 @@
 set -e # Exit on error
 
 #region Install dependencies
+. ~/.nvm/nvm.sh && nvm install --lts
+
 apt-get install -y npm
 nvm install --lts
 nvm use --lts
