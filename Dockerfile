@@ -25,4 +25,4 @@ RUN apt-get install -y git
 RUN apt-get install -y screen
 
 # Download the App
-RUN cd /opt && git clone ${GITHUB_URL} -b 178-docker
+RUN cd /opt && git clone ${GITHUB_URL}

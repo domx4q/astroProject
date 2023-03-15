@@ -6,7 +6,7 @@ if screen -list | grep -q "AUTO-astro"; then
 else
   echo "Screen does not exist"
   screen -dmS AUTO-astro
-  screen -S AUTO-astro -X stuff $'cd /home/extra_server/private/astroProject\n./updateServer.sh\n'
+  screen -S AUTO-astro -X stuff $'cd /opt/astroProject\n./updateServer.sh\n'
 fi
 
 # this will run forever
@@ -22,7 +22,7 @@ while true; do
     echo "Up-to-date - "$(date)
   elif [ $LOCAL = $BASE ]; then
     echo "Need to pull - "$(date)
-    screen -S AUTO-astro -X stuff $'^C\ncd /home/extra_server/private/astroProject\n./updateServer.sh\n'
+    screen -S AUTO-astro -X stuff $'^C\ncd /opt/astroProject\n./updateServer.sh\n'
   elif [ $REMOTE = $BASE ]; then
     echo "Need to push - "$(date)
     git reset --hard HEAD
