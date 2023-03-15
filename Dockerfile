@@ -1,7 +1,7 @@
 FROM ubuntu:20.04
-EXPOSE 3511
+EXPOSE 3000
 
-VOLUME /home/cloudster/certificates/
+VOLUME /opt/certs
 
 ENTRYPOINT ["/bin/bash", "-c", "cd /opt/astroProject && bash ./dockerEntrypoint.sh"]
 WORKDIR /opt/astroProject
