@@ -12,8 +12,10 @@ ENV USERNAME=domx4q
 ENV GITHUB_PAT=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
 ENV GITHUB_URL="https://${USERNAME}:${GITHUB_PAT}@github.com/domx4q/astroProject.git"
 
+# Install Python
+RUN apt-get update && apt-get install -y python3 python3-pip
 # Install Node.js via nvm
-RUN apt-get update && apt-get install -y curl
+RUN apt-get install -y curl
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
 RUN . ~/.nvm/nvm.sh && nvm install --lts
 # Install npm
