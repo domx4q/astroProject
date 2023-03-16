@@ -8,7 +8,7 @@ on:
 
 jobs:
 
-  build:
+  build_and_publish:
 
     runs-on: ubuntu-latest
 
@@ -17,6 +17,6 @@ jobs:
     - name: Login to Docker
       run: docker login -u domx4q -p dckr_pat_XRoQfUTJZlptcmQ3hEOzTBp59Sg
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag domx4q/astro:$(date +%s)
+      run: docker build . --file Dockerfile --tag domx4q/astro:autoGit
     - name: Push the image
-      run: docker push domx4q/astro -a
+      run: docker push domx4q/astro:autoGit
