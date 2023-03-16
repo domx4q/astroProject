@@ -16,11 +16,8 @@ echo "Node version: $(node -v)"
 echo "NPM version: $(npm -v)"
 #endregion
 
-if ! screen -list | grep -q -i "astro"; then
-   screen -wipe
-else
-  screen
-fi
+screen -S listen_for_exception
+screen -wipe
 screen -dmS astro bash -c "cd /opt/astroProject && ./updateDaemon.sh"
 sleep 10
 screen -xr AUTO-astro
