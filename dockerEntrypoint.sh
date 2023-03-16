@@ -16,6 +16,7 @@ echo "Node version: $(node -v)"
 echo "NPM version: $(npm -v)"
 #endregion
 
+screen -wipe
 screen -dmS astro bash -c "cd /opt/astroProject && ./updateDaemon.sh"
 sleep 10
 screen -xr AUTO-astro
