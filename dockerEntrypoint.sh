@@ -16,7 +16,7 @@ echo "Node version: $(node -v)"
 echo "NPM version: $(npm -v)"
 #endregion
 
-screen -S listen_for_exception
+screen -dmS listen_for_exception # to create a fallback session, to skip future checks if screen is initialized
 screen -wipe
 screen -dmS astro bash -c "cd /opt/astroProject && ./updateDaemon.sh"
 sleep 10
