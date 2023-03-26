@@ -434,7 +434,8 @@ export const SOLAR_SYSTEM = new SolarSystem([
         mag: 0.54,
         copyright: "Solar System Scope",
         info: new SpaceObjectInfo({
-            name: "Mars / der Rote Planet",
+            name: "Mars",
+            nameTooltip: "der rote Planet",
             description: "",
             link: "https://de.wikipedia.org/wiki/Mars_(Planet)",
             linkText: "Wikipedia",
