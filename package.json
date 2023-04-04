@@ -18,7 +18,7 @@
     "animate.css": "^4.1.1",
     "axios": "^1.3.4",
     "clientjs": "^0.2.1",
-    "core-js": "^3.29.1",
+    "core-js": "^3.30.0",
     "register-service-worker": "^1.7.2",
     "unity-webgl": "latest",
     "vue": "^3.2.47",
