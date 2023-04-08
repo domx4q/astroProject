@@ -12,7 +12,7 @@ import { de } from "@formkit/i18n";
 // import "@formkit/themes/genesis";
 import '@formkit/pro/genesis'
 
-import "@/assets/styles/formkit.css"
+import "@/assets/styles/formkit.css" // own modified genesis theme (mostly to add dark mode)
 
 import { Icon } from "@iconify/vue";
 
