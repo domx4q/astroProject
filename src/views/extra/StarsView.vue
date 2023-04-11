@@ -63,7 +63,7 @@
           @inputRaw="setOrientation"/>
         <FormKit
           type="checkbox"
-          label="Lock Rotation"
+          label="Rotation sperren"
           v-model="orientationLocked"/>
 
         <p>
