@@ -18,16 +18,16 @@ while true; do
   REMOTE=$(git rev-parse "$UPSTREAM")
   BASE=$(git merge-base @ "$UPSTREAM")
 
-  if [ $LOCAL = $REMOTE ]; then
-    echo "Up-to-date - "$(date)
-  elif [ $LOCAL = $BASE ]; then
-    echo "Need to pull - "$(date)
+  if [ "$LOCAL" = "$REMOTE" ]; then
+    echo "Up-to-date - $(date)"
+  elif [ "$LOCAL" = "$BASE" ]; then
+    echo "Need to pull - $(date)"
     screen -S AUTO-astro -X stuff $'^C\ncd /opt/astroProject\n./updateServer.sh\n'
-  elif [ $REMOTE = $BASE ]; then
-    echo "Need to push - "$(date)
+  elif [ "$REMOTE" = "$BASE" ]; then
+    echo "Need to push - $(date)"
     git reset --hard HEAD
   else
-    echo "Diverged - "$(date)
+    echo "Diverged - $(date)"
     git reset --hard HEAD
   fi
 

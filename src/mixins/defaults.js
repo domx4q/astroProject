@@ -28,6 +28,7 @@ export default {
         },
 
         screenSize() {
+            // skipcq: JS-0128
             const uuid = this.__resizeUUID; // through this dependency, the computed property will be re-evaluated on resize
             return {
                 x: window.innerWidth,
