@@ -130,7 +130,7 @@
             <div class="description">
               <Dropdown title="Beschreibung" :open-override="openPlanetInfoDropdown === 'none'" :onlyShowTitleOnClose="true"
                         @open="openPlanetInfoDropdown = 'none'" @close="openPlanetInfoDropdown = 'none'">
-                <p v-html="planetDescription"/><br> <!--skipcq: JS-0693-->
+                <p v-html="planetDescription"/><br> <!-- // skipcq: JS-0693 -->
                 <p v-if="planetInfo.link">Quelle: <a :href="planetInfo.link" target="_blank"
                                                      rel="noopener noreferrer">{{ planetInfo.linkText }}</a></p>
               </Dropdown>
@@ -139,7 +139,7 @@
               <hr>
               <div v-for="(value, key) in planetInfo.detailed" :key="key" class="dropdowns">
                 <Dropdown :title="key" :open-override="openPlanetInfoDropdown === key" @open="openPlanetInfoDropdown = key" @close="openPlanetInfoDropdown = 'none'">
-                  <p v-html="formatJSON(value, planetInfo.newLineDot)"/> <!--skipcq: JS-0693-->
+                  <p v-html="formatJSON(value, planetInfo.newLineDot)"/> <!-- // skipcq: JS-0693 -->
                 </Dropdown>
               </div>
             </template>
