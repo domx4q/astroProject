@@ -2,7 +2,7 @@
   <ThemeSwitch only-logic/>
   <main>
     <h1 id="code">{{code}}</h1>
-    <h2 id="message" v-html="message"/>
+    <h2 id="message">{{message}}</h2>
 
     <div v-if="code == 404">
       <p>Sie werden in <span id="countdown">{{countdown}}</span> Sekunden auf die Startseite weitergeleitet.</p>
