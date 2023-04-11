@@ -21,22 +21,23 @@ jobs:
         run: npm ci
       - name: Build app
         run: npm run build
-      - name: Install jq
-        run: sudo apt-get install jq -y
       - name: Zip-Release4cpp
         uses: darshitsri/zip-release@v3
         with:
           filename: release.zip
           path: ./dist/
           directory: .
+      - name: Get current package version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
       - name: Create release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v$(cat package.json | jq -r '.version')
-          release_name: Release $(cat package.json | jq -r '.version')
+          tag_name: v${{ steps.package-version.outputs.current-version}}
+          release_name: Release ${{ steps.package-version.outputs.current-version}}
           draft: false
           prerelease: true
       - name: Upload Release Asset
