@@ -8,10 +8,6 @@ WORKDIR /opt/astroProject
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Europe/Berlin
 
-ENV USERNAME=domx4q
-ENV GITHUB_PAT=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
-ENV GITHUB_URL="https://${USERNAME}:${GITHUB_PAT}@github.com/domx4q/astroProject.git"
-
 # Install Python
 RUN apt-get update && apt-get install -y python3 python3-pip
 # Install Node.js via nvm
@@ -27,4 +23,4 @@ RUN apt-get install -y git
 RUN apt-get install -y screen
 
 # Download the App
-RUN cd /opt && git clone ${GITHUB_URL}
+RUN cd /opt && git clone "https://github.com/domx4q/astroProject.git"
