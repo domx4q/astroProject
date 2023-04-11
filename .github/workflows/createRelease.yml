@@ -1,6 +1,9 @@
 name: Build and Release Vue.js App
 
 on:
+  push:
+      tags:
+        - '*'
   workflow_dispatch:
 
 jobs:
@@ -27,6 +30,11 @@ jobs:
           filename: release.zip
           path: ./dist/
           directory: .
+      - name: Build Changelog
+        id: github_release
+        uses: mikepenz/release-changelog-builder-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Get current package version
         id: package-version
         uses: martinbeentjes/npm-get-version-action@v1.3.1
