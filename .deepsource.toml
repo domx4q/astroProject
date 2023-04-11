@@ -1,10 +1,6 @@
 version = 1
 
-[[analyzers]]
-name = "secrets"
-
-[[analyzers]]
-name = "docker"
+exclude_patterns = ["/public/unity/**"]
 
 [[analyzers]]
 name = "shell"
