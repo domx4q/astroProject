@@ -46,6 +46,7 @@ jobs:
         with:
           tag_name: v${{ steps.package-version.outputs.current-version}}
           release_name: Release ${{ steps.package-version.outputs.current-version}}
+          body: ${{steps.github_release.outputs.changelog}}
           draft: false
           prerelease: true
       - name: Upload Release Asset
