@@ -21,6 +21,8 @@ jobs:
         run: npm ci
       - name: Build app
         run: npm run build
+      - name: Install jq
+        run: sudo apt-get install jq -y
       - name: Zip-Release4cpp
         uses: darshitsri/zip-release@v3
         with:
