@@ -60,12 +60,12 @@
       </div>
       <Transition enter-active-class="animate__animated animate__fadeInLeftBig" mode="in-out" v-if="(screenSize.height > (((totalPlanetCount*30)+10)+380)) && !isMobile" >
         <ul id="planets" v-auto-animate v-if="showOverlays">
-          <template v-for="planet in planets" :key="planet.uuid">
+          <template v-for="planet in planets" :key="planet.uuid"> <!--skipcq: JS-V001-->
             <li class="planet-selector" v-if="planet.enabled"
                 :class="{active: planet.uuid === currentPlanet.uuid, disabled: !loaded, parent: planet.moons.length > 0}">
               <span @click="changePlanet(planet)">{{ planet.name }}</span> <span class="resolution_badge">{{ planet.resolution }}k</span>
             </li>
-            <template v-for="(moon, index) in planet.moons" :key="moon.uuid">
+            <template v-for="(moon, index) in planet.moons" :key="moon.uuid"> <!--skipcq: JS-V001-->
               <li class="planet-selector moon" v-if="moon.enabled && moon.uuid !== currentPlanet.uuid"
                   :class="{active: moon.uuid === currentPlanet.uuid, disabled: !loaded,
                       parentActive: planet.uuid === currentPlanet.uuid, last: index === planet.moons.length - 1}">
@@ -130,15 +130,16 @@
             <div class="description">
               <Dropdown title="Beschreibung" :open-override="openPlanetInfoDropdown === 'none'" :onlyShowTitleOnClose="true"
                         @open="openPlanetInfoDropdown = 'none'" @close="openPlanetInfoDropdown = 'none'">
-                <p v-html="planetDescription"/><br>
-                <p v-if="planetInfo.link">Quelle: <a :href="planetInfo.link" target="_blank">{{ planetInfo.linkText }}</a></p>
+                <p v-html="planetDescription"/><br> <!-- // skipcq: JS-0693 -->
+                <p v-if="planetInfo.link">Quelle: <a :href="planetInfo.link" target="_blank"
+                                                     rel="noopener noreferrer">{{ planetInfo.linkText }}</a></p>
               </Dropdown>
             </div>
             <template v-if="planetInfo.detailed !== undefined && Object.keys(planetInfo.detailed).length > 0">
               <hr>
               <div v-for="(value, key) in planetInfo.detailed" :key="key" class="dropdowns">
                 <Dropdown :title="key" :open-override="openPlanetInfoDropdown === key" @open="openPlanetInfoDropdown = key" @close="openPlanetInfoDropdown = 'none'">
-                  <p v-html="formatJSON(value, planetInfo.newLineDot)"/>
+                  <p v-html="formatJSON(value, planetInfo.newLineDot)"/> <!-- // skipcq: JS-0693 -->
                 </Dropdown>
               </div>
             </template>
@@ -148,15 +149,14 @@
     </div>
 
     <!-- region hotspots-->
-    <template v-for="hotspot in hotspots" :key="hotspot.uuid">
-      <button class="hotspot" :slot="'hotspot-' + hotspot.type + '-' + hotspot.uuid"
-              :data-position="hotspot.position.modelString"
-              :data-normal="hotspot.normal.modelString"
-              :class="[hotspot.class, {action: hotspot.action}]" data-visibility-attribute="visible"
-              @click.ctrl="modifyHotspot(hotspot)">
-        <span class="hotspot-annotation">{{ hotspot.name }}</span>
-      </button>
-    </template>
+    <button v-for="hotspot in hotspots" :key="hotspot.uuid"
+            class="hotspot" :slot="'hotspot-' + hotspot.type + '-' + hotspot.uuid"
+            :data-position="hotspot.position.modelString"
+            :data-normal="hotspot.normal.modelString"
+            :class="[hotspot.class, {action: hotspot.action}]" data-visibility-attribute="visible"
+            @click.ctrl="modifyHotspot(hotspot)">
+      <span class="hotspot-annotation">{{ hotspot.name }}</span>
+    </button>
     <!-- endregion hotspots-->
   </model-viewer>
   <div class="messages">
