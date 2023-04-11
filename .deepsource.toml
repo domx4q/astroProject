@@ -1,6 +1,12 @@
 version = 1
 
 [[analyzers]]
+name = "secrets"
+
+[[analyzers]]
+name = "docker"
+
+[[analyzers]]
 name = "shell"
 
 [[analyzers]]
