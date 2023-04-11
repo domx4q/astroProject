@@ -6,37 +6,44 @@ on:
 jobs:
   build_and_release:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.14.0]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
         with:
-          node-version: '18.x'
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
       - name: Install dependencies
-        run: npm install
+        run: npm ci
       - name: Build app
         run: npm run build
+      - name: Zip-Release4cpp
+        uses: darshitsri/zip-release@v3
+        with:
+          filename: release.zip
+          path: ./dist/
+          directory: .
       - name: Create release
         id: create_release
         uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v$(cat package.json | jq -r '.version')
           release_name: Release $(cat package.json | jq -r '.version')
           draft: false
-          prerelease: false
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: dist
-          path: dist
-      - name: Get release ID
-        id: get_release_id
-        run: echo "::set-output name=id::$(echo ${{ steps.create_release.outputs.id }} | cut -c 2-)"
-      - name: Add build artifact to release
+          prerelease: true
+      - name: Upload Release Asset
+        id: upload-release-asset 
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist
-          asset_name: dist
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: ./release.zip
+          asset_name: release.zip
           asset_content_type: application/zip
