@@ -42,6 +42,7 @@ export default {
             generatedToken: '',
 
             timeLeft: 0,
+            timePassed: false,
 
             possibleAnswers: {
                 "01": "ja",
@@ -85,6 +86,7 @@ export default {
     },
     computed: {
         answer() {
+            if (!this.timePassed) return '';
             let indexOfFirstDash = this.token.indexOf('-');
 
             return this.possibleAnswers[this.token.substring(indexOfFirstDash + 3, indexOfFirstDash + 5)];
@@ -114,6 +116,10 @@ export default {
         setInterval(() => {
             this.calculateTimeLeft();
         }, 1000);
+
+        setTimeout(() => {
+            this.timePassed = true;
+        }, 6000); // to prevent the answer from being shown before the timer is shown
     },
     watch: {}
 }
