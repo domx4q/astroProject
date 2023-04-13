@@ -30,6 +30,12 @@ const routes = [
         path: "pacman",
         name: "pacman",
         component: () => import("../views/easter/PacmanView.vue")
+      },
+      {
+        path: "reveal",
+        name: "revealAnswer",
+        component: () => import("../views/easter/RevealView.vue"),
+        props: (route) => ({ token: route.query.token, admin: route.query.admin === "true"  })
       }
     ]
   },
