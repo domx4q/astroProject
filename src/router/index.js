@@ -8,10 +8,6 @@ const routes = [
     component: HomeView
   },
   {
-    // create a sub route folder so
-    // /easter/clock
-    // /easter/snake
-
     path: "/easter",
     name: "easter",
     redirect: {name: "home"},
@@ -58,7 +54,12 @@ const routes = [
           path: "stars",
           name: "stars",
           component: () => import("../views/extra/StarsView.vue")
-        }
+        },
+        {
+          path: "example",
+          name: "example",
+          component: () => import("../views/extra/ExampleView.vue"),
+        },
     ]
   }
 ]
