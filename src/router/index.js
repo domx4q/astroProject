@@ -8,10 +8,6 @@ const routes = [
     component: HomeView
   },
   {
-    // create a sub route folder so
-    // /easter/clock
-    // /easter/snake
-
     path: "/easter",
     name: "easter",
     redirect: {name: "home"},
@@ -36,6 +32,11 @@ const routes = [
         name: "revealAnswer",
         component: () => import("../views/easter/RevealView.vue"),
         props: (route) => ({ token: route.query.token, admin: route.query.admin === "true"  })
+      },
+      {
+        path: "colors",
+        name: "colors",
+        component: () => import("../views/easter/ColorsView.vue")
       }
     ]
   },
