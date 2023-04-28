@@ -13,7 +13,7 @@
     "@formkit/auto-animate": "^1.0.0-beta.6",
     "@formkit/i18n": "^0.16.4",
     "@formkit/inputs": "^0.16.4",
-    "@formkit/pro": "^0.111.11",
+    "@formkit/pro": "^0.111.14",
     "@formkit/vue": "^0.16.5",
     "@google/model-viewer": "^3.1.1",
     "animate.css": "^4.1.1",
