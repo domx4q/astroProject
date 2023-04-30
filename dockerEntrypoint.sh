@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e # Exit on error
+ set +e # disable exit on error
 
 #region certificates
 CERT_DIR=/opt/certs

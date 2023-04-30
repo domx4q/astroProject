@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:20.04 as base
 EXPOSE 3000
 
 VOLUME /opt/certs/cert.crt
@@ -19,6 +19,7 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | b
 RUN . ~/.nvm/nvm.sh && nvm install --lts
 
 # Download the App
+FROM base as download_app
 RUN git clone -b testing --single-branch "https://github.com/domx4q/astroProject.git"
 
 WORKDIR /opt/astroProject
