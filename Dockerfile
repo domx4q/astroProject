@@ -1,9 +1,6 @@
 FROM ubuntu:20.04 as base
 EXPOSE 3000
 
-VOLUME /opt/certs/cert.crt
-VOLUME /opt/certs/cert.key
-
 WORKDIR /opt
 ENTRYPOINT ["./dockerEntrypoint.sh"]
 ENV DEBIAN_FRONTEND=noninteractive
