@@ -7,11 +7,12 @@ services:
       environment:
         - TZ=Europe/Berlin
       volumes:
-        - '/home/cloudster/certificates:/opt/certs'
+        - '/home/cloudster/certificates/cert.crt:/opt/certs/cert.crt:ro'
+        - '/home/cloudster/certificates/cloudster.online.key:/opt/certs/cert.key:ro'
       image: domx4q/astro:autoGit
       tty: true # -t flag
       stdin_open: true # -i flag
       restart: always
-      
+
       ulimits:
         nproc: 65535
