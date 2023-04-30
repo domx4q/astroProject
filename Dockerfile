@@ -4,10 +4,10 @@ EXPOSE 3000
 VOLUME /opt/certs/cert.crt
 VOLUME /opt/certs/cert.key
 
-ENTRYPOINT ["/bin/bash", "-c", "cd /opt/astroProject && bash ./dockerEntrypoint.sh"]
 WORKDIR /opt
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Europe/Berlin
+ENV TERM=xterm
 
 # Install Python, Git, screen, curl and npm
 # skipcq: DOK-DL3008,  DOK-DL3015
@@ -23,3 +23,4 @@ FROM base as download_app
 RUN git clone -b testing --single-branch "https://github.com/domx4q/astroProject.git"
 
 WORKDIR /opt/astroProject
+ENTRYPOINT ["./dockerEntrypoint.sh", "-it"]
