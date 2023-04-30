@@ -5,6 +5,7 @@ VOLUME /opt/certs/cert.crt
 VOLUME /opt/certs/cert.key
 
 WORKDIR /opt
+ENTRYPOINT ["./dockerEntrypoint.sh"]
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Europe/Berlin
 ENV TERM=xterm
@@ -20,7 +21,7 @@ RUN . ~/.nvm/nvm.sh && nvm install --lts
 
 # Download the App
 FROM base as download_app
-RUN git clone -b testing --single-branch "https://github.com/domx4q/astroProject.git"
+RUN git clone --single-branch "https://github.com/domx4q/astroProject.git"
+# COPY . /opt/astroProject
 
 WORKDIR /opt/astroProject
-ENTRYPOINT ["./dockerEntrypoint.sh", "-it"]

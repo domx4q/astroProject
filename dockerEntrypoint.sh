@@ -28,6 +28,8 @@ if [ ! -f "$CERT_DIR/cert.crt" ] || [ ! -f "$CERT_DIR/cert.key" ]; then
     openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout $CERT_DIR/cert.key -out $CERT_DIR/cert.crt -subj "/C=DE/CN=$HOSTNAME"
     echo "Certificate generated"
   fi
+else
+  echo "Certificate found using $CERT_DIR/cert.crt and $CERT_DIR/cert.key"
 fi
 #endregion
 
