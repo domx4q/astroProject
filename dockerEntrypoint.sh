@@ -4,14 +4,17 @@ set -e # Exit on error
 
 #region certificates
 CERT_DIR=/opt/certs
+export GENERATE_CERT=false
 
 if [ ! -f "$CERT_DIR/cert.crt" ] || [ ! -f "$CERT_DIR/cert.key" ]; then
   echo "Certificate not found, try to generate..."
-  rmdir $CERT_DIR/cert.crt $CERT_DIR/cert.key
+  # set env = generatet (for global usage)
+  export GENERATE_CERT=true
+  CERT_DIR=$CERT_DIR/generated
 
   if [ "$SELFSIGNED" = "true" ]; then
     echo "Generating self-signed certificate"
-    mkdir -p $CERT_DIR
+    mkdir -p $CERT_DIR/selfsigned
     openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout $CERT_DIR/cert.key -out $CERT_DIR/cert.crt
     echo "Certificate generated"
 
