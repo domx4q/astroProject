@@ -834,6 +834,7 @@ html[data-theme="dark"] #planetInfo {
   justify-content: center;
 }
 #planets {
+  padding-left: 20px;
   position: absolute;
   bottom: 0;
   left: 0;
