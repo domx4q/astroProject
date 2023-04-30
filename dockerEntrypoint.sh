@@ -49,5 +49,16 @@ echo "NPM version: $(npm -v)"
 screen -dmS listen_for_exception # to create a fallback session, to skip future checks if screen is initialized
 screen -wipe
 screen -dmS astro bash -c "cd /opt/astroProject && ./updateDaemon.sh"
-sleep 10
-screen -xr AUTO-astro
+
+function checkScreen {
+  screen -ls | grep -q "AUTO-astro"
+  if [ $? -eq 0 ]; then
+    echo "Screen exists"
+    screen -xr AUTO-astro
+  else
+    echo "Screen does not exist"
+    sleep 5
+    checkScreen
+  fi
+}
+checkScreen
