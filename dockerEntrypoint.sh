@@ -7,8 +7,9 @@ CERT_DIR=/opt/certs
 export GENERATE_CERT=false
 
 mkdir -p $CERT_DIR
-if [ ! -f "$CERT_DIR/cert.crt" ] || [ ! -f "$CERT_DIR/cert.key" ]; then
+if [ ! -f "/opt/generated.bool" ] && { [ ! -f "$CERT_DIR/cert.crt" ] || [ ! -f "$CERT_DIR/cert.key" ]; }; then
   echo "Certificate not found, try to generate..."
+  touch /opt/generated.bool
   export GENERATE_CERT=true
   CERT_DIR=$CERT_DIR/generated
   mkdir -p $CERT_DIR
@@ -21,6 +22,7 @@ if [ ! -f "$CERT_DIR/cert.crt" ] || [ ! -f "$CERT_DIR/cert.key" ]; then
   else
     if [ -z "$HOSTNAME" ]; then
       echo "HOSTNAME not set, cannot generate certificate"
+      rm /opt/generated.bool
       exit 1
     fi
 
