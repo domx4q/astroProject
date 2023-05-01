@@ -7,32 +7,37 @@ CERT_DIR=/opt/certs
 export GENERATE_CERT=false
 
 mkdir -p $CERT_DIR
-if [ ! -f "/opt/generated.bool" ] && { [ ! -f "$CERT_DIR/cert.crt" ] || [ ! -f "$CERT_DIR/cert.key" ]; }; then
-  echo "Certificate not found, try to generate..."
-  touch /opt/generated.bool
+if [ -f "/opt/generated.bool" ]; then
+  echo "Certificate was already generated, skipping..."
   export GENERATE_CERT=true
-  CERT_DIR=$CERT_DIR/generated
-  mkdir -p $CERT_DIR
-
-  if [ "$SELFSIGNED" = "true" ]; then
-    echo "Generating self-signed certificate"
-    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout $CERT_DIR/cert.key -out $CERT_DIR/cert.crt -subj "/CN=localhost"
-    echo "Certificate generated"
-
-  else
-    if [ -z "$HOSTNAME" ]; then
-      echo "HOSTNAME not set, cannot generate certificate"
-      rm /opt/generated.bool
-      exit 1
-    fi
-
-    echo "Generating certificate for $HOSTNAME"
-    mkdir -p $CERT_DIR
-    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout $CERT_DIR/cert.key -out $CERT_DIR/cert.crt -subj "/C=DE/CN=$HOSTNAME"
-    echo "Certificate generated"
-  fi
 else
-  echo "Certificate found using $CERT_DIR/cert.crt and $CERT_DIR/cert.key"
+  if [ ! -f "$CERT_DIR/cert.crt" ] || [ ! -f "$CERT_DIR/cert.key" ]; then
+    echo "Certificate not found, try to generate..."
+    touch /opt/generated.bool
+    export GENERATE_CERT=true
+    CERT_DIR=$CERT_DIR/generated
+    mkdir -p $CERT_DIR
+
+    if [ "$SELFSIGNED" = "true" ]; then
+      echo "Generating self-signed certificate"
+      openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout $CERT_DIR/cert.key -out $CERT_DIR/cert.crt -subj "/CN=localhost"
+      echo "Certificate generated"
+
+    else
+      if [ -z "$HOSTNAME" ]; then
+        echo "HOSTNAME not set, cannot generate certificate"
+        rm /opt/generated.bool
+        exit 1
+      fi
+
+      echo "Generating certificate for $HOSTNAME"
+      mkdir -p $CERT_DIR
+      openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout $CERT_DIR/cert.key -out $CERT_DIR/cert.crt -subj "/C=DE/CN=$HOSTNAME"
+      echo "Certificate generated"
+    fi
+  else
+    echo "Certificate found using $CERT_DIR/cert.crt and $CERT_DIR/cert.key"
+  fi
 fi
 #endregion
 
