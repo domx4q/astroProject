@@ -25,7 +25,11 @@ Io ![Io](public/textures/2k_io.jpg)
 Europa ![Europa](public/textures/2k_europa.jpg)
 Ganymed ![Ganymed](public/textures/2k_ganymed.jpg)
 Callisto ![Callisto](public/textures/2k_callisto.jpg)
+### [Nasa - Photojournal](https://photojournal.jpl.nasa.gov/)
+Ceres ![Ceres](public/textures/4k_ceres.jpg)
+Pluto ![Pluto](public/textures/6k_pluto.jpg)
 # Usage Rights / License
 - [Solarsystemscope](https://www.solarsystemscope.com/textures/): CC BY-NC-SA 4.0
 - [Nasa - visible earth](https://visibleearth.nasa.gov/): Public Domain
 - [Nasa - 3d resources](https://github.com/nasa/NASA-3D-Resources): Public Domain
+- [Nasa - Photojournal](https://photojournal.jpl.nasa.gov/): Public Domain

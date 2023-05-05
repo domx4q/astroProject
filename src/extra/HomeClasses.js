@@ -1,4 +1,4 @@
-// noinspection JSNonASCIINames
+// noinspection JSNonASCIINames,NonAsciiCharacters
 
 import defaults from "@/mixins/defaults";
 // IMPORTANT: Private properties are not supported in Vue 3, so we can't use getters and setters
@@ -520,11 +520,61 @@ export const SOLAR_SYSTEM = new SolarSystem([
 
             detailed: {
                 Oberfläche: "Radius: 58.232 km\nÄquatordurchmesser: 120.536km\nmittlere Dichte: 0,687 g/cm³\nGravitation: 10,44 m/s²\nTemperatur: −139 °C",
-                Allgemeines: "Entfernung: 1.434.000.000 km\nUmlaufzeit: 29 Jahre"
+                Allgemeines: "Entfernung: 1.433.000.000 km\nUmlaufzeit: 29 Jahre"
             }
         }),
         customModel: true,
         customModelFile: "models/saturn.glb",
+    }),
+    new Planet({
+        name: "Ceres",
+        texture: "4k_ceres.jpg",
+        resolution: 4,
+        orderPriority: 6.5,
+        enabled: true,
+        annotationsKey: "ceres",
+        key: "ceres",
+        mag: 7.62,
+        copyright: "NASA Photojournal",
+        info: new SpaceObjectInfo({
+            name: "Ceres",
+            description: "",
+            link: "https://de.wikipedia.org/wiki/(1)_Ceres",
+            linkText: "Wikipedia",
+            newLineDot: true,
+            autoFetch: true,
+
+            detailed: {
+                "Infos zur Textur": "Die grüne oben und gelbe unten markierte Textur sind künstlich hergestellte Abschnitte, wobei der mittlere unmarkierte Bereich ein so aufgenommenes Bild ist.",
+                Oberfläche: "Radius: 476,2 km\nÄquatordurchmesser: 964,4 km\nMittlere Dichte: 2,161 g/cm³\nGravitation: 0,27 m/s²\nTemperatur: −106 °C",
+                Allgemeines: "Entfernung: 414.000.000 km\nUmlaufzeit: 1.682 Tage, was 4,6 Jahre entspricht"
+            }
+        }),
+    }),
+    new Planet({
+        name: "Pluto",
+        texture: "6k_pluto.jpg",
+        resolution: 6,
+        orderPriority: 1,
+        enabled: true,
+        annotationsKey: "pluto",
+        key: "pluto",
+        mag: 15.1,
+        copyright: "NASA Photojournal",
+        info: new SpaceObjectInfo({
+            name: "Pluto",
+            description: "",
+            link: "https://de.wikipedia.org/wiki/Pluto",
+            linkText: "Wikipedia",
+            newLineDot: true,
+            autoFetch: true,
+
+            detailed: {
+                "Infos zur Textur": "Das Bild beinhaltet nur Daten von Mitte bis oben, wodurch der schwarze untere Teil zustande kommt .",
+                Oberfläche: "Radius: 1.188,3 km\nÄquatordurchmesser: 2.374 km\nMittlere Dichte: 1,88 g/cm³\nGravitation: 0,62 m/s²\nTemperatur: Min.<space>−249 °C  Mittel -242 °C  Max.<space>-235 °C",
+                Allgemeines: "Entfernung: 5.906.000.000 km\nUmlaufzeit: 248 Jahre"
+            }
+        }),
     }),
     new Planet({
         name: "Leer",
