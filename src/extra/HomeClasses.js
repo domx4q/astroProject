@@ -570,7 +570,7 @@ export const SOLAR_SYSTEM = new SolarSystem([
             autoFetch: true,
 
             detailed: {
-                "Infos zur Textur": "Das Bild beinhaltet nur Daten von Mitte bis oben, wodurch der schwarze untere Teil zustande kommt .",
+                "Infos zur Textur": "Das Bild beinhaltet nur Daten von Mitte bis oben, wodurch der schwarze untere Teil zustande kommt.",
                 Oberfläche: "Radius: 1.188,3 km\nÄquatordurchmesser: 2.374 km\nMittlere Dichte: 1,88 g/cm³\nGravitation: 0,62 m/s²\nTemperatur: Min.<space>−249 °C  Mittel -242 °C  Max.<space>-235 °C",
                 Allgemeines: "Entfernung: 5.906.000.000 km\nUmlaufzeit: 248 Jahre"
             }
