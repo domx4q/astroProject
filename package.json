@@ -23,7 +23,7 @@
     "register-service-worker": "^1.7.2",
     "unity-webgl": "latest",
     "vue": "^3.2.47",
-    "vue-router": "^4.1.6",
+    "vue-router": "^4.2.0",
     "vuex": "^4.0.0",
     "webgl-fluid": "^0.3.3"
   },
