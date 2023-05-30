@@ -437,7 +437,7 @@ export const SOLAR_SYSTEM = new SolarSystem([
         copyright: "Solar System Scope",
         info: new SpaceObjectInfo({
             name: "Mars",
-            nameTooltip: "der rote Planet",
+            nameTooltip: "Der rote Planet",
             description: "",
             link: "https://de.wikipedia.org/wiki/Mars_(Planet)",
             linkText: "Wikipedia",
@@ -452,7 +452,7 @@ export const SOLAR_SYSTEM = new SolarSystem([
     }),
     new Planet({
         name: "Merkur",
-        texture: "8k_mercury.jpg",
+        texture : "8k_mercury.jpg",
         resolution: 8,
         orderPriority: 11,
         enabled: true,
