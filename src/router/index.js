@@ -70,13 +70,15 @@ const routes = [
 ]
 
 let router
-if (process.env.iAmOnGithubPages === "true") {
+if (process.env.BASE_URL === "/astroProject/") {
+  console.log("Using hash history")
   router = createRouter({
     history: createWebHashHistory(process.env.BASE_URL),
     routes
   })
 }
 else {
+  console.log("Using web history")
   router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
     routes

@@ -18,5 +18,5 @@ module.exports = defineConfig({
   // also check, if it will be run on github pages
   publicPath: process.env.NODE_ENV === 'production' && process.env.iAmOnGithubPages === 'true'
       ? '/astroProject/'
-      : '/test/'
+      : '/'
 })
