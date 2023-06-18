@@ -71,14 +71,14 @@ const routes = [
 
 let router
 if (process.env.BASE_URL === "/astroProject/") {
-  console.log("Using hash history")
+  console.info("Using hash history") // skipcq: JS-0002
   router = createRouter({
     history: createWebHashHistory(process.env.BASE_URL),
     routes
   })
 }
 else {
-  console.log("Using web history")
+  console.info("Using web history") // skipcq: JS-0002
   router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
     routes
