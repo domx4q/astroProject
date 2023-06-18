@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router"
+import { createRouter, createWebHistory, createWebHashHistory } from "vue-router"
 import HomeView from "../views/HomeView.vue"
 
 const routes = [
@@ -69,19 +69,18 @@ const routes = [
   }
 ]
 
+let router
 if (process.env.iAmOnGithubPages === "true") {
-  // copy each route and add a /astroProject/ prefix
-  const routesWithPrefix = routes.map(route => {
-    const newRoute = Object.assign({}, route)
-    newRoute.path = "/astroProject" + route.path
-    return newRoute
+  router = createRouter({
+    history: createWebHashHistory(process.env.BASE_URL),
+    routes
   })
-  routes.push(...routesWithPrefix)
 }
-
-const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes
-})
+else {
+  router = createRouter({
+    history: createWebHistory(process.env.BASE_URL),
+    routes
+  })
+}
 
 export default router

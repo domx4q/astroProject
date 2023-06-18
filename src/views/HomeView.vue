@@ -240,6 +240,10 @@ export default {
     }
   },
   computed: {
+    publicPath() {
+      return process.env.BASE_URL
+    },
+
     classifications() {
       return annotations.data.classifications
     },
@@ -431,18 +435,20 @@ export default {
         this.currentTexture = null
         this.planetType = "custom"
       } else {
-        this.currentTexture = `/textures/${planet.texture}`
+        // const texturePATH = `${this.publicPath}textures/${planet.texture}`
+        const texturePATH = `textures/${planet.texture}` // this also works, because webpack then understands it, if there is NO trailing slash
+        this.currentTexture = texturePATH
         if (this.planetType === "custom") {
           this.modelSrc = "models/sphere.glb"
           this.planetType = "normal"
           if (!(planet.key === this.modelDefaultTexture && firstLoad)) {
             setTimeout(() => {
-              this.createAndApplyTexture(`/textures/${planet.texture}`)
+              this.createAndApplyTexture(texturePATH)
             }, 100)
           }
         } else {
           if (!(planet.key === this.modelDefaultTexture && firstLoad)) {
-            this.createAndApplyTexture(`/textures/${planet.texture}`)
+            this.createAndApplyTexture(texturePATH)
           }
         }
       }
