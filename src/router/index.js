@@ -69,6 +69,16 @@ const routes = [
   }
 ]
 
+if (process.env.iAmOnGithubPages === "true") {
+  // copy each route and add a /astroProject/ prefix
+  const routesWithPrefix = routes.map(route => {
+    const newRoute = Object.assign({}, route)
+    newRoute.path = "/astroProject" + route.path
+    return newRoute
+  })
+  routes.push(...routesWithPrefix)
+}
+
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
