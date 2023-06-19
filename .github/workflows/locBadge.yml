@@ -15,7 +15,7 @@ jobs:
         with:
           debug: true
           directory: ./
-          badge: ./github/assets/loc.svg
+          badge: ./output/loc.svg
           patterns: '*.js|*.json|*.css|*.vue|*.html'  # Patterns in the format of a '.gitignore' file, separated by pipes.
           ignore: 'node_modules|dist|archive|unity'
 
@@ -23,3 +23,12 @@ jobs:
         run: |
           echo "Scanned: ${{ steps.badge.outputs.counted_files }}";
           echo "Line Count: ${{ steps.badge.outputs.total_lines }}";
+
+      - name: Deploy to image-data branch
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          publish_dir: ./output
+          publish_branch: image-data
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
