@@ -7,11 +7,12 @@ let unityComponent = null;
 
 onMounted(() => {
   if (!unityComponent) {
+    const publicPath = process.env.BASE_URL;
     unityComponent = new UnityWebgl(canvasRef.value, {
-      loaderUrl: "/unity/Build/WebGL.loader.js",
-      dataUrl: "/unity/Build/WebGL.data",
-      frameworkUrl: "/unity/Build/WebGL.framework.js",
-      codeUrl: "/unity/Build/WebGL.wasm",
+      loaderUrl: `${publicPath}unity/Build/WebGL.loader.js`,
+      dataUrl: `${publicPath}unity/Build/WebGL.data`,
+      frameworkUrl: `${publicPath}unity/Build/WebGL.framework.js`,
+      codeUrl: `${publicPath}unity/Build/WebGL.wasm`,
     });
   }
 });
