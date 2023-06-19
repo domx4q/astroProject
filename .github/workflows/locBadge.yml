@@ -1,0 +1,25 @@
+on: [ push ]
+name: Lines of Code Badge
+
+jobs:
+  generateSVG:
+    runs-on: ubuntu-latest
+    name: Generate SVG
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Make Code Badge
+        uses: shadowmoose/GHA-LoC-Badge@1.0.0
+        id: badge
+        with:
+          debug: true
+          directory: ./
+          badge: ./github/assets/loc.svg
+          patterns: '*.js|*.json|*.css|*.vue|*.html'  # Patterns in the format of a '.gitignore' file, separated by pipes.
+          ignore: 'node_modules|dist|archive|unity'
+
+      - name: Print the output
+        run: |
+          echo "Scanned: ${{ steps.badge.outputs.counted_files }}";
+          echo "Line Count: ${{ steps.badge.outputs.total_lines }}";

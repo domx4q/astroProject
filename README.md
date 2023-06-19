@@ -1,11 +1,36 @@
+<style>
+.badge {
+    background-color: #007bff;
+    color: white;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    vertical-align: middle;
+}
+</style>
+
+
 [![Node.js CI](https://github.com/domx4q/astroProject/actions/workflows/node.js.yml/badge.svg)](https://github.com/domx4q/astroProject/actions/workflows/node.js.yml)
 [![Codespaces Prebuilds](https://github.com/domx4q/astroProject/actions/workflows/codespaces/create_codespaces_prebuilds/badge.svg)](https://github.com/domx4q/astroProject/actions/workflows/codespaces/create_codespaces_prebuilds)
 [![Docker Image CI](https://github.com/domx4q/astroProject/actions/workflows/docker-image.yml/badge.svg)](https://github.com/domx4q/astroProject/actions/workflows/docker-image.yml)
 
 [![CodeScene Code Health](https://codescene.io/projects/31104/status-badges/code-health)](https://codescene.io/projects/31104)
 [![DeepSource](https://app.deepsource.com/gh/domx4q/astroProject.svg/?label=active+issues&show_trend=true&token=au7UeFncEauubfJgbm3Hk_zh)](https://app.deepsource.com/gh/domx4q/astroProject/?ref=repository-badge)
+[![LOC](./github/assets/loc.svg)](https://github.com/marketplace/actions/lines-of-code-badge)
 # Allgemein
-Die angefertigte Projektarbeit ist [hier](Astronomie%20Projektarbeit.pdf) zu finden. Das Projekt kann über [Cloudster](https://cloudster.online) geöffnet werden.
+Die angefertigte Projektarbeit ist [hier](Astronomie%20Projektarbeit.pdf) direkt verfügbar.
+Sie kann auch vom [CFG Schülerlabor Astronomie](https://www.schuelerlabor-astronomie.de/) abgerufen werden.
+Dort stehen noch weitere Informationen zu dieser Projektarbeit zur Verfügung.
+## Hilfreiche <u>Links</u>
+| Link                                   | Beschreibung                                                                      |
+|----------------------------------------|-----------------------------------------------------------------------------------|
+| https://cloudster.online/              | (momentaner<sup>1</sup>) Zugang zur App                                           |
+| https://astro-project-pi.vercel.app/   | Zugang zur App <a href="https://vercel.com" class="badge">Vercel</a>              |
+| https://domx4q.github.io/astroProject/ | Zugang zur App <a href="https://pages.github.com/" class="badge">GitHub Pages</a> |
+
+<sup>1</sup> Da ich für diesen Server zahlen muss, werde ich diesen eventuell kündigen, oder für andere Projekte nutzen. In diesem Fall wird der Link nicht mehr funktionieren.
+Ich werde versuchen, falls das geschieht, dass hier zu vermerken.
+
 # Installation
 ## Normale Installation
 Für die normale Installation wird ein Docker Container benötigt. Dieser kann mit folgendem Befehl erstellt werden:
