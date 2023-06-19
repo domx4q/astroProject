@@ -2,8 +2,8 @@ name: Build and Release Vue.js App
 
 on:
   push:
-      tags:
-        - '*'
+    tags:
+      - '*'
   workflow_dispatch:
 
 jobs:
@@ -11,8 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [16.14.0]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        node-version: [ 16.14.0 ]
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
@@ -50,7 +49,7 @@ jobs:
           draft: false
           prerelease: false
       - name: Upload Release Asset
-        id: upload-release-asset 
+        id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
