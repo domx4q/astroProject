@@ -1,4 +1,3 @@
-[![Node.js CI](https://github.com/domx4q/astroProject/actions/workflows/node.js.yml/badge.svg)](https://github.com/domx4q/astroProject/actions/workflows/node.js.yml)
 [![Codespaces Prebuilds](https://github.com/domx4q/astroProject/actions/workflows/codespaces/create_codespaces_prebuilds/badge.svg)](https://github.com/domx4q/astroProject/actions/workflows/codespaces/create_codespaces_prebuilds)
 [![Docker Image CI](https://github.com/domx4q/astroProject/actions/workflows/docker-image.yml/badge.svg)](https://github.com/domx4q/astroProject/actions/workflows/docker-image.yml)
 
