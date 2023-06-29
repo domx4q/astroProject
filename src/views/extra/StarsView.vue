@@ -11,17 +11,11 @@
         <FormKit
             v-model="time"
             :label="`Zeit (${timezone})`"
-            type="time"
-            @input="setTime"
-            @inputRaw="setTime"
-            @keydown="setTime"/>
+            type="time"/>
         <FormKit
             v-model="date"
             label="Datum"
-            type="date"
-            @input="setDate"
-            @inputRaw="setDate"
-            @keydown="setDate"/>
+            type="date"/>
         <FormKit
             v-model="orientation"
             :options="[
@@ -32,9 +26,7 @@
             {value: 'W', label: 'Westen'},
           ]"
             label="Himmelsrichtung"
-            type="select"
-            @input="setOrientation"
-            @inputRaw="setOrientation"/>
+            type="select"/>
         <FormKit
             v-model="orientationLocked"
             label="Rotation sperren"
@@ -46,7 +38,6 @@
         <ThemeSwitch override-theme="light"/>
         <div style="margin-bottom: 10px"></div>
         <FormKit type="group">
-          <!--          upload discs-->
           <FormKit
               v-model="fileInput"
               accept="image/*"
@@ -119,7 +110,6 @@ export default {
   },
   methods: {
     setCurrent() {
-      // get the 01.01.2000 00:00:00
       this.date = this.convertDate(new Date());
 
       // use utc+1 time
@@ -330,6 +320,9 @@ export default {
     },
     date() {
       this.setDate()
+    },
+    orientation() {
+      this.setOrientation()
     },
   },
 }
