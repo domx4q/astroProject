@@ -1,92 +1,68 @@
 <template>
   <div id="stars" :class="{transition:enableTransition}"
-       @mousedown="handleMouseDown" @mouseup="handleMouseUp" @mouseleave="handleMouseUp"
-       @mousemove="handleMouseMove">
+       @mousedown="handleMouseDown" @mouseleave="handleMouseUp" @mousemove="handleMouseMove"
+       @mouseup="handleMouseUp">
     <div id="controls">
-      <FormKit type="group" v-if="false">
-        <FormKit
-            v-model="innerRotation"
-            type="range"
-            label="Inner Rotation"
-            help="The rotation of the inner circle"
-            min="0"
-            max="360"
-            step="1"
-        />
-        <FormKit
-            v-model="outerRotation"
-            type="range"
-            label="Outer Rotation"
-            help="The rotation of the outer circle"
-            min="0"
-            max="360"
-            step="1"
-        />
-        <FormKit
-            v-model="entireRotation"
-            type="range"
-            label="Entire Rotation"
-            help="The rotation of the entire circle"
-            min="0"
-            max="360"
-            step="1"
-            @change="orientation = 'none';orientationLocked = false"
-        />
-      </FormKit>
       <FormKit
-        type="button"
-        label="Aktuelle Zeit"
-        @click="setCurrent"/>
+          label="Aktuelle Zeit"
+          type="button"
+          @click="setCurrent"/>
       <FormKit type="group">
         <FormKit
-          type="time"
-          label="Zeit"
-          v-model="time"
-          @input="setTime"/>
+            v-model="time"
+            :label="`Zeit (${timezone})`"
+            type="time"/>
         <FormKit
-          type="date"
-          label="Datum"
-          v-model="date"
-          @input="setDate"/>
+            v-model="date"
+            label="Datum"
+            type="date"/>
         <FormKit
-          type="select"
-          label="Himmelsrichtung"
-          v-model="orientation"
-          :options="[
+            v-model="orientation"
+            :options="[
             {value: 'none', label: 'Keine'},
             {value: 'N', label: 'Norden'},
             {value: 'S', label: 'Süden'},
             {value: 'E', label: 'Osten'},
             {value: 'W', label: 'Westen'},
           ]"
-          @input="setOrientation"
-          @inputRaw="setOrientation"/>
+            label="Himmelsrichtung"
+            type="select"/>
         <FormKit
-          type="checkbox"
-          label="Rotation sperren"
-          v-model="orientationLocked"/>
-
+            v-model="orientationLocked"
+            label="Rotation sperren"
+            type="checkbox"/>
         <p>
           Um die Karte zu drehen, ziehen Sie mit der Maus über die Karte.<br>
           Wenn sie die obere Karte drehen möchten, drücken Sie die <b>Strg-Taste</b> und ziehen Sie mit der Maus.
         </p>
-        <ThemeSwitch override-theme="light"/><div style="margin-bottom: 10px"></div>
+        <ThemeSwitch override-theme="light"/>
+        <div style="margin-bottom: 10px"></div>
         <FormKit type="group">
-<!--          upload discs-->
           <FormKit
-            type="file"
-            label="Discs"
-            accept="image/*"
-            v-model="fileInput"
-            @change="uploadDiscs"/>
+              v-model="fileInput"
+              accept="image/*"
+              label="Discs"
+              type="file"
+              @change="uploadDiscs"/>
         </FormKit>
       </FormKit>
+      <p style="margin-top: -5px">
+        Diese Anwendung wurde von <u>Dominik Fuchs</u> entwickelt.<br>Für weitere Informationen besuchen Sie bitte <a
+          href="https://github.com/domx4q/astroProject" rel="noopener noreferrer" target="_blank">GitHub</a>
+      </p>
+      <p style="margin-top: -8px">Grundlage der Sternkarte von <u>Dipl.-Phys. Torsten Rahn</u>,
+        mit freundlicher Genehmigung
+      </p>
     </div>
 
     <div id="entireDisc" ref="entireDisc" :style="entireDiscStyle">
       <div id="marker" ref="marker"/>
-      <div id="outerDisc" ref="outerDisc" :style="outerDiscStyle"/>
-      <div id="innerDisc" ref="innerDisc" :style="innerDiscStyle"/>
+      <div id="outerDisc" ref="outerDisc" :style="outerDiscStyle"><img alt="Outer Disc"
+                                                                       src="@/assets/extra/images/sternenscheibe_outer.png">
+      </div>
+      <div id="innerDisc" ref="innerDisc" :style="innerDiscStyle"><img alt="Inner Disc"
+                                                                       src="@/assets/extra/images/sternenscheibe_inner.png">
+      </div>
     </div>
   </div>
 </template>
@@ -94,6 +70,11 @@
 <script>
 import ThemeSwitch from "@/components/themeSwitch.vue";
 import defaults from "@/mixins/defaults";
+
+
+function createDateAsUTC(date, offset = 0) {
+  return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours() - offset, date.getMinutes(), date.getSeconds()))
+}
 
 export default {
   name: "StarsView",
@@ -112,8 +93,9 @@ export default {
         entire: 0
       },
 
-      date: "2020-01-01",
+      date: "2023-01-01",
       time: "00:00",
+      timezone: "MEZ",
       orientation: "none",
       orientationLocked: false,
       endPosition: {
@@ -127,24 +109,32 @@ export default {
     }
   },
   mounted() {
+    // noinspection RedundantConditionalExpressionJS
     this.enableTransition = this.enableTransitionDefault ? true : false; // to suppress reactivity
 
     this.handleResize()
+    window.addEventListener("resize", this.handleResize)
+    this.setCurrent()
   },
   methods: {
     setCurrent() {
-      // get the 01.01.2000 00:00:00
       this.date = this.convertDate(new Date());
 
-      this.time = new Date().toLocaleTimeString("de-DE", {hour: "2-digit", minute: "2-digit"});
+      // use utc+1 time
+      const MEZ_TIME = createDateAsUTC(new Date(), 1)
+      const LOCAL_TIME = new Date()
+      this.time = LOCAL_TIME.toLocaleTimeString("de-DE", {hour: "2-digit", minute: "2-digit"});
+      if (LOCAL_TIME - MEZ_TIME === 0) {
+        this.timezone = "MEZ"
+      } else {
+        this.timezone = "MESZ"
+      }
 
       this.innerRotation = this.dateRotation
       this.outerRotation = this.timeRotation
-      // this.entireRotation = -this.timeRotation
     },
     setTime() {
       this.outerRotation = this.timeRotation
-      // this.entireRotation = -this.timeRotation
     },
     setDate() {
       this.innerRotation = this.dateRotation
@@ -167,7 +157,7 @@ export default {
     },
 
     convertDate(date) {
-      return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+      return date.toISOString().slice(0, 10) // format: YYYY-MM-DD not YYYY-M-D
     },
 
     getNearestDegree(current, target) {
@@ -183,17 +173,6 @@ export default {
         }
       }
       return target
-    },
-
-    printValues(oldValue, newValue) {
-      const result = this.getNearestDegree(oldValue, newValue)
-      if (result > 360) {
-        console.log(`${oldValue}, ${newValue} ==> ${result} ==> ${result - 360}`)
-      } else if (result < 0) {
-        console.log(`${oldValue}, ${newValue} ==> ${result} ==> ${result + 360}`)
-      } else {
-        console.log(`${oldValue}, ${newValue} ==> ${result}`)
-      }
     },
     uploadDiscs(event) {
       const files = event.target.files
@@ -253,12 +232,9 @@ export default {
       this.lastMouseX = event.clientX;
       this.lastMouseY = event.clientY;
 
-      const angle = getDegree({x: this.lastMouseX, y: this.lastMouseY});
-      let rotation = angle;
+      let rotation = getDegree({x: this.lastMouseX, y: this.lastMouseY});
 
       const startAngle = getDegree(this.startPosition);
-      // const endAngle = getDegree(this.endPosition);
-      // let totalOffset = startAngle - endAngle
 
       if (!event.ctrlKey) {
         rotation = this.getNearestDegree(this.innerRotation, rotation - startAngle + this.lastAngleInner);
@@ -276,6 +252,7 @@ export default {
         y: event.clientY
       }
 
+      // noinspection RedundantConditionalExpressionJS
       this.enableTransition = this.enableTransitionDefault ? true : false; // to suppress reactivity
     },
     // endregion
@@ -285,14 +262,17 @@ export default {
       return this.time.split(":").reduce((acc, v, i) => {
         acc[i === 0 ? "hours" : "minutes"] = parseInt(v);
         return acc;
-      }, {});
+      }, {
+        hours: undefined,
+        minutes: undefined
+      });
     },
     convertedDate() {
       const a = this.date.split("-");
       const b = new Date();
-      b.setFullYear(a[0]);
-      b.setMonth(a[1] - 1);
-      b.setDate(a[2]);
+      b.setFullYear(Number(a[0]));
+      b.setMonth(Number(a[1]) - 1);
+      b.setDate(Number(a[2]));
       return b;
     },
 
@@ -314,12 +294,16 @@ export default {
 
     dateRotation() {
       const rotationsoffset = 170;
-      const dayNumber = Math.floor((this.convertedDate - new Date(this.convertedDate.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+      const dayNumber = Math.floor((new Date(this.convertedDate) - new Date(this.convertedDate.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
       return -((dayNumber / 365) * 360 - rotationsoffset);
     },
     timeRotation() {
       const rotationsoffset = 74;
-      const timeNumber = this.convertedTime.hours * 60 + this.convertedTime.minutes;
+      let hourOffset = 0;
+      if (this.timezone === "MESZ") {
+        hourOffset = 1;
+      }
+      const timeNumber = (this.convertedTime.hours + hourOffset) * 60 + this.convertedTime.minutes;
       return +((timeNumber / 1440) * 360 + rotationsoffset);
     },
   },
@@ -337,6 +321,15 @@ export default {
       this.finalRotation.entire = this.getNearestDegree(oldValue, newValue)
     },
 
+    time() {
+      this.setTime()
+    },
+    date() {
+      this.setDate()
+    },
+    orientation() {
+      this.setOrientation()
+    },
   },
 }
 </script>
@@ -359,33 +352,44 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 html[data-theme="dark"] #stars {
   background: black;
 }
 
 #outerDisc {
-  background-image: url("@/assets/extra/images/sternenscheibe_outer.png");
   z-index: 2;
 }
+
 #innerDisc {
-  background-image: url("@/assets/extra/images/sternenscheibe_inner.png");
   z-index: 1;
 }
+
+#innerDisc img, #outerDisc img {
+  width: 1000px;
+  height: 1000px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 #entireDisc {
   pointer-events: none;
+  width: 100%;
+  height: 100%;
 }
+
 #outerDisc, #innerDisc, #entireDisc {
   width: 100%;
   height: 100%;
-
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: auto;
   position: absolute;
 }
+
 #stars.transition #outerDisc, #stars.transition #innerDisc, #stars.transition #entireDisc {
   transition: transform 1s;
 }
+
 #marker {
   /*creates a marker on the edge of the circle*/
   position: absolute;
@@ -410,9 +414,8 @@ html[data-theme="dark"] #stars {
   z-index: 5;
   max-width: 200px;
 }
-</style>
-<style>
-html[data-theme="dark"] #app #entireDisc * {
-  filter: invert(1) !important
+
+a {
+  color: #156dec;
 }
 </style>

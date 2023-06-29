@@ -1,7 +1,8 @@
 <template>
   <div class="dropdown" v-auto-animate>
     <div class="title" @click="toggle" v-if="showTitle">
-      <h3>{{ title }}</h3>
+      <h4 v-if="italic"><i>{{ title }}</i></h4>
+      <h3 v-else>{{ title }}</h3>
     </div>
     <div class="content" v-if="open">
       <slot>Platzhalter für den Inhalt des Dropdowns</slot>
@@ -22,6 +23,10 @@ export default {
       default: false,
     },
     onlyShowTitleOnClose: {
+      type: Boolean,
+      default: false,
+    },
+    italic: {
       type: Boolean,
       default: false,
     },
@@ -87,11 +92,15 @@ html[data-theme="dark"] .dropdown {
   background-color: var(--bg-color);
   cursor: pointer;
 }
-.dropdown .title h3 {
+.dropdown .title h3, .dropdown .title h4 {
   margin: 0;
   padding: 0;
   font-size: 1.2rem;
   font-weight: 400;
+}
+.dropdown .title h4 {
+  font-size: 1rem;
+  font-weight: 300;
 }
 .dropdown .content {
   position: relative;

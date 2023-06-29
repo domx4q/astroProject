@@ -29,7 +29,7 @@ function getPublicPath() {
 
 module.exports = defineConfig({
   transpileDependencies: true,
-  lintOnSave: false,
+  lintOnSave: true,
   devServer: {port: 8080, open: true, hot: true,},
   pwa: {
     name: "AstroProjekt",

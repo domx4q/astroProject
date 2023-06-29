@@ -1,148 +1,180 @@
 <template>
   <model-viewer
+      id="planet"
+      :exposure="theme === 'dark' ? 0.5 : 1"
+      :orbit-sensitivity="defaultOrbitSensi"
+      :poster="isProduction ? 'img/jupiter_poster.png' : ''"
       :src="modelSrc"
       alt="Es ist ein Fehler beim Laden des 3D-Modells aufgetreten."
       ar
-      :poster="isProduction ? 'img/jupiter_poster.png' : ''"
-      touch-action="none"
-      camera-controls
-      camera-orbit="90deg"
       auto-rotate
       auto-rotate-delay="2000"
-      interaction-prompt="none"
-      :orbit-sensitivity="defaultOrbitSensi"
-      shadow-intensity="1"
-      :exposure="theme === 'dark' ? 0.5 : 1"
-      environment-image="neutral"
-
+      camera-controls
+      camera-orbit="90deg"
       disable-pan
+      environment-image="neutral"
+      interaction-prompt="none"
 
-      id="planet"
+      shadow-intensity="1"
+
       style="width: 100%; height: 100%"
+      touch-action="none"
 
+      @error="errorHandler"
+      @load="planetLoaded"
+      @progress="progress = $event.detail.totalProgress"
       @click.alt="addHotspot"
       @keyup.ctrl.space.exact="auto_rotate = !auto_rotate"
       @keyup.shift.ctrl.space.exact="enable_pan = !enable_pan"
-      v-on:camera-change="updateZoom"
-      @load="planetLoaded"
-      @progress="progress = $event.detail.totalProgress"
-      @error="errorHandler">
-    <div id="progress-bar" slot="progress-bar" :style="{width: ourProgress + '%'}" :class="{hide: hideProgressBar}"></div>
+      v-on:camera-change="updateZoom">
+    <div id="progress-bar" slot="progress-bar" :class="{hide: hideProgressBar}"
+         :style="{width: ourProgress + '%'}"></div>
     <div class="controls">
       <div id="buttons" class="formCollection">
         <Transition enter-active-class="animate__animated animate__fadeInLeftBig" mode="in-out">
-          <div class="wrapper" id="settings" style="margin-top: 10px; margin-left: 10px" v-if="showOverlays">
-            <div class="iconHolder" @click="settingsCollapsed = !settingsCollapsed" id="settingsCollapse">
-              <Icon icon="ph:caret-double-left-bold" class="collapseIcon"/>
+          <div v-if="showOverlays" id="settings" class="wrapper" style="margin-top: 10px; margin-left: 10px">
+            <div id="settingsCollapse" class="iconHolder" @click="settingsCollapsed = !settingsCollapsed">
+              <Icon class="collapseIcon" icon="ph:caret-double-left-bold"/>
             </div>
             <div class="flex-column content">
               <FormKit
-                  type="group"
-                  :disabled="!loaded">
-                <FormKit type="group" v-model="textureInputForm" :disabled="!loaded">
+                  :disabled="!loaded"
+                  type="group">
+                <FormKit v-model="textureInputForm" :disabled="!loaded" type="group">
                   <!--              needed because otherwise the file input can't be cleared-->
-                  <FormKit type="file" id="textureInput" label="Datei auswählen" :accept="allowedFileTypes"
+                  <FormKit id="textureInput" :accept="allowedFileTypes" label="Datei auswählen" type="file"
                            @change="onFileChange"/>
                 </FormKit>
-                <FormKit type="button" label="Hotspots speichern" v-if="!isMobile" :disabled="lastHotspot.name === ''"
+                <FormKit v-if="!isMobile" :disabled="lastHotspot.name === ''" label="Hotspots speichern" type="button"
                          @click="downloadHotspots"/>
-                <FormKit type="checkbox" label="Automatische Rotation"
-                         :help="!isMobile ? 'Tastenkombination: Strg + Leertaste' : ''" v-model="auto_rotate"/>
-                <FormKit type="checkbox" label="Verschieben aktivieren"
-                         :help="!isMobile ? 'Tastenkombination: Strg + Shift + Leertaste' : ''" v-model="enable_pan"/>
+                <FormKit v-model="auto_rotate" :help="!isMobile ? 'Tastenkombination: Strg + Leertaste' : ''"
+                         label="Automatische Rotation" type="checkbox"/>
+                <FormKit v-model="enable_pan" :help="!isMobile ? 'Tastenkombination: Strg + Shift + Leertaste' : ''"
+                         label="Verschieben aktivieren" type="checkbox"/>
               </FormKit>
               <hr>
               <ThemeSwitch/>
 
             </div>
-          </div></Transition>
+          </div>
+        </Transition>
 
       </div>
-      <Transition enter-active-class="animate__animated animate__fadeInLeftBig" mode="in-out" v-if="(screenSize.height > (((totalPlanetCount*30)+10)+380)) && !isMobile" >
-        <ul id="planets" v-auto-animate v-if="showOverlays">
+      <Transition v-if="(screenSize.height > (((totalPlanetCount*30)+10)+380)) && !isMobile"
+                  enter-active-class="animate__animated animate__fadeInLeftBig"
+                  mode="in-out">
+        <ul v-if="showOverlays" id="planets" v-auto-animate>
           <template v-for="planet in planets" :key="planet.uuid"> <!--skipcq: JS-V001-->
-            <li class="planet-selector" v-if="planet.enabled"
-                :class="{active: planet.uuid === currentPlanet.uuid, disabled: !loaded, parent: planet.moons.length > 0}">
-              <span @click="changePlanet(planet)">{{ planet.name }}</span> <span class="resolution_badge">{{ planet.resolution }}k</span>
+            <li v-if="planet.enabled"
+                :class="{active: planet.uuid === currentPlanet.uuid, disabled: !loaded, parent: planet.moons.length > 0}"
+                class="planet-selector">
+              <span @click="changePlanet(planet)">{{ planet.name }}</span> <span
+                class="resolution_badge">{{ planet.resolution }}k</span>
             </li>
             <template v-for="(moon, index) in planet.moons" :key="moon.uuid"> <!--skipcq: JS-V001-->
-              <li class="planet-selector moon" v-if="moon.enabled && moon.uuid !== currentPlanet.uuid"
-                  :class="{active: moon.uuid === currentPlanet.uuid, disabled: !loaded,
-                      parentActive: planet.uuid === currentPlanet.uuid, last: index === planet.moons.length - 1}">
-                <span @click="changePlanet(moon)">{{ moon.name }}</span> <span class="resolution_badge">{{ moon.resolution }}k</span>
+              <li v-if="moon.enabled && moon.uuid !== currentPlanet.uuid" :class="{active: moon.uuid === currentPlanet.uuid, disabled: !loaded,
+                      parentActive: planet.uuid === currentPlanet.uuid, last: index === planet.moons.length - 1}"
+                  class="planet-selector moon">
+                <span @click="changePlanet(moon)">{{ moon.name }}</span> <span
+                  class="resolution_badge">{{ moon.resolution }}k</span>
               </li>
             </template>
           </template>
         </ul>
       </Transition>
       <teleport v-else-if="showOverlaysSlow" to="#buttons .flex-column">
-      <hr>
-      <FormKit
-          type="select"
-          label="Planet auswählen"
-          :options="convertPlanetsFormKit(planets)"
-          @change="changePlanet(SOLAR_SYSTEM.findPlanet($event.target.value))"
-      />
+        <hr>
+        <FormKit
+            :options="convertPlanetsFormKit(planets)"
+            label="Planet auswählen"
+            type="select"
+            @change="changePlanet(SOLAR_SYSTEM.findPlanet($event.target.value))"
+        />
       </teleport>
 
       <Transition
           enter-active-class="animate__animated animate__fadeInRight"
           leave-active-class="animate__animated animate__fadeOutRight">
-        <div class="wrapper" v-if="!(hotspots.length === 0 || !loaded || (lastHotspot.position.x === 0 && lastHotspot.position.y === 0 && lastHotspot.position.z === 0)) && sidePanelType === 'hotspotSettings'">
-          <FormKit type="form" id="hotspot-settings" form-class="formCollection" submit-label="Übernehmen"
-                   @submit="updateLastHotspot();blur()" :actions="false" :disabled="!loaded" v-if="!isMobile" v-auto-animate>
+        <div
+            v-if="!(hotspots.length === 0 || !loaded || (lastHotspot.position.x === 0 && lastHotspot.position.y === 0 && lastHotspot.position.z === 0)) && sidePanelType === 'hotspotSettings'"
+            class="wrapper">
+          <FormKit v-if="!isMobile" id="hotspot-settings" v-auto-animate :actions="false"
+                   :disabled="!loaded" form-class="formCollection" submit-label="Übernehmen" type="form"
+                   @submit="updateLastHotspot();blur()">
             <h2>Hotspot Einstellungen</h2>
-            <p style="max-width: 225px" v-if="windowHeight >= 913">
+            <p v-if="windowHeight >= 913" style="max-width: 225px">
               Direkt nach dem hinzufügen (<kbd>Alt + Klick auf den Planeten</kbd>) hier die Einstellungen vornehmen.<br>
               Um einen Hotspot zu bearbeiten, einfach (mit gedrückter <kbd>Strg</kbd>-Taste) auf den Hotspot klicken.
             </p>
-            <FormKit type="text" id="hotspot_name_input" name="name" label="Name" aria-autocomplete="none"
-                     autocomplete="off" spellcheck="true" validation="required|length:3,50" v-model="lastHotspot.name"
-                     @focus="$event.target.select();hotspot_settings_focused=true" @blur="hotspot_settings_focused=false"
-                     @change="updateLastHotspot" @keyup="updateLastHotspot()" @keyup.enter="updateLastHotspot();blur()"/>
-            <FormKit type="text" name="description" label="Beschreibung" aria-autocomplete="none"
-                     autocomplete="off" spellcheck="true" v-model="lastHotspot.description"
-                     @focus="hotspot_settings_focused=true" @blur="hotspot_settings_focused=false"
-                     @change="updateLastHotspot" @keyup="updateLastHotspot" @keyup.enter="updateLastHotspot();blur()"/>
-            <FormKit type="select" name="type" label="Typ" :options="{location: 'Ort', marker: 'Markierung'}" v-model="lastHotspot.type" @change="updateLastHotspot"/>
-            <FormKit type="select" name="level" label="Ebene" :options="{1: 'Ebene 1', 2: 'Ebene 2', 3: 'Ebene 3', 4: 'Ebene 4', 5: 'Ebene 5'}"
-                     v-if="lastHotspot.type === 'location'" v-model="lastHotspot.level" @change="updateLastHotspot"/>
+            <FormKit id="hotspot_name_input" v-model="lastHotspot.name" aria-autocomplete="none" autocomplete="off"
+                     label="Name"
+                     name="name" spellcheck="true" type="text" validation="required|length:3,50"
+                     @blur="hotspot_settings_focused=false"
+                     @change="updateLastHotspot"
+                     @focus="$event.target.select();hotspot_settings_focused=true" @keyup="updateLastHotspot()"
+                     @keyup.enter="updateLastHotspot();blur()"/>
+            <FormKit v-model="lastHotspot.description" aria-autocomplete="none" autocomplete="off" label="Beschreibung"
+                     name="description" spellcheck="true" type="text"
+                     @blur="hotspot_settings_focused=false" @change="updateLastHotspot"
+                     @focus="hotspot_settings_focused=true" @keyup="updateLastHotspot"
+                     @keyup.enter="updateLastHotspot();blur()"/>
+            <FormKit v-model="lastHotspot.type" :options="{location: 'Ort', marker: 'Markierung'}" label="Typ"
+                     name="type"
+                     type="select" @change="updateLastHotspot"/>
+            <FormKit v-if="lastHotspot.type === 'location'" v-model="lastHotspot.level"
+                     :options="{1: 'Ebene 1', 2: 'Ebene 2', 3: 'Ebene 3', 4: 'Ebene 4', 5: 'Ebene 5'}"
+                     label="Ebene"
+                     name="level" type="select" @change="updateLastHotspot"/>
 
-            <FormKit type="taglist" name="classification" label="Klassifizierung" help="Strg + Klick zur Mehrfachauswahl"
-                     :options="classifications" v-model="lastHotspot.classification" @change="updateLastHotspot" :disabled="!loaded"/>
+            <FormKit v-model="lastHotspot.classification" :disabled="!loaded" :options="classifications"
+                     help="Strg + Klick zur Mehrfachauswahl"
+                     label="Klassifizierung" name="classification" type="taglist"
+                     @change="updateLastHotspot"/>
 
-            <FormKit type="checkbox" name="action" label="Aktion" help="Nur für besondere Hotspots" v-model="lastHotspot.action" @change="updateLastHotspot"/>
-            <FormKit type="button" prefix-icon="trash" label="Löschen" @click="deleteCurrentHotspot" :disabled="!loaded" id="deleteButton"/>
+            <FormKit v-model="lastHotspot.action" help="Nur für besondere Hotspots" label="Aktion" name="action"
+                     type="checkbox" @change="updateLastHotspot"/>
+            <FormKit id="deleteButton" :disabled="!loaded" label="Löschen" prefix-icon="trash" type="button"
+                     @click="deleteCurrentHotspot"/>
             <hr>
-            <FormKit type="button" label="Panel schließen" @click="sidePanelType = 'planetInfo'" :disabled="!loaded"/>
+            <FormKit :disabled="!loaded" label="Panel schließen" type="button" @click="sidePanelType = 'planetInfo'"/>
           </FormKit>
         </div>
       </Transition>
-      <Transition v-if="!isMobile" enter-active-class="animate__animated animate__fadeInRightBig" leave-active-class="animate__animated animate__fadeOutRightBig">
-        <div id="planetInfo" class="wrapper" v-if="sidePanelType === 'planetInfo' && showOverlays">
+      <Transition v-if="!isMobile" enter-active-class="animate__animated animate__fadeInRightBig"
+                  leave-active-class="animate__animated animate__fadeOutRightBig">
+        <div v-if="sidePanelType === 'planetInfo' && showOverlays" id="planetInfo" class="wrapper">
           <div class="iconHolder" @click="planetInfoCollapsed = !planetInfoCollapsed">
-            <Icon icon="ph:caret-double-right-bold" class="collapseIcon"/>
+            <Icon class="collapseIcon" icon="ph:caret-double-right-bold"/>
           </div>
           <div class="content">
             <span v-if="currentPlanet.mag !== 1.00001"
-                  class="mag_badge" title="Magnitude (scheinbare Helligkeit)">Mag: {{round(currentPlanet.mag, 2)}}</span>
-            <h2 class="name" :title="planetInfo.nameTooltip">{{ planetInfo.name }}</h2>
+                  class="mag_badge"
+                  title="Magnitude (scheinbare Helligkeit)">Mag: {{ round(currentPlanet.mag, 2) }}</span>
+            <h2 :title="planetInfo.nameTooltip" class="name">{{ planetInfo.name }}</h2>
             <div class="description">
-              <Dropdown title="Beschreibung" :open-override="openPlanetInfoDropdown === 'none'" :onlyShowTitleOnClose="true"
-                        @open="openPlanetInfoDropdown = 'none'" @close="openPlanetInfoDropdown = 'none'">
+              <Dropdown :onlyShowTitleOnClose="true" :open-override="openPlanetInfoDropdown === 'none'"
+                        title="Beschreibung"
+                        @close="openPlanetInfoDropdown = 'none'" @open="openPlanetInfoDropdown = 'none'">
                 <p v-html="planetDescription"/><br> <!-- // skipcq: JS-0693 -->
-                <p v-if="planetInfo.link">Quelle: <a :href="planetInfo.link" target="_blank"
-                                                     rel="noopener noreferrer">{{ planetInfo.linkText }}</a></p>
+                <p v-if="planetInfo.link">Quelle: <a :href="planetInfo.link" rel="noopener noreferrer"
+                                                     target="_blank">{{ planetInfo.linkText }}</a></p>
               </Dropdown>
             </div>
             <template v-if="planetInfo.detailed !== undefined && Object.keys(planetInfo.detailed).length > 0">
               <hr>
               <div v-for="(value, key) in planetInfo.detailed" :key="key" class="dropdowns">
-                <Dropdown :title="key" :open-override="openPlanetInfoDropdown === key" @open="openPlanetInfoDropdown = key" @close="openPlanetInfoDropdown = 'none'">
+                <Dropdown :open-override="openPlanetInfoDropdown === key" :title="key"
+                          @close="openPlanetInfoDropdown = 'none'" @open="openPlanetInfoDropdown = key">
                   <p v-html="formatJSON(value, planetInfo.newLineDot)"/> <!-- // skipcq: JS-0693 -->
                 </Dropdown>
               </div>
             </template>
+            <Dropdown :open-override="openPlanetInfoDropdown === 'appinfo'" italic title="App-Info"
+                      @close="openPlanetInfoDropdown = 'none'" @open="openPlanetInfoDropdown = 'appinfo'">
+              <p>Die App wurde von <u>Dominik Fuchs</u> entwickelt und ist Open Source. Der Quellcode ist auf <a
+                  href="https://github.com/domx4q/astroProject" rel="noopener noreferrer" target="_blank">GitHub</a>
+                verfügbar.</p>
+            </Dropdown>
           </div>
         </div>
       </Transition>
@@ -150,24 +182,26 @@
 
     <!-- region hotspots-->
     <button v-for="hotspot in hotspots" :key="hotspot.uuid"
-            class="hotspot" :slot="'hotspot-' + hotspot.type + '-' + hotspot.uuid"
-            :data-position="hotspot.position.modelString"
+            :slot="'hotspot-' + hotspot.type + '-' + hotspot.uuid" :class="[hotspot.class, {action: hotspot.action}]"
             :data-normal="hotspot.normal.modelString"
-            :class="[hotspot.class, {action: hotspot.action}]" data-visibility-attribute="visible"
+            :data-position="hotspot.position.modelString"
+            class="hotspot" data-visibility-attribute="visible"
             @click.ctrl="modifyHotspot(hotspot)">
       <span class="hotspot-annotation">{{ hotspot.name }}</span>
     </button>
     <!-- endregion hotspots-->
   </model-viewer>
   <div class="messages">
-    <div class="wrapper" v-auto-animate>
-      <Message v-for="message in messages" :key="message.uuid" :message="message.text" :title="message.title" :timeout="message.timeout"
-               :class="message.class"
+    <div v-auto-animate class="wrapper">
+      <Message v-for="message in messages" :key="message.uuid" :class="message.class" :message="message.text"
+               :timeout="message.timeout"
+               :title="message.title"
                @close="removeMessage(message)"/>
     </div>
   </div>
 
-  <Transition appear enter-active-class="animate__animated animate__fadeInRightBig" leave-active-class="animate__animated animate__fadeOutRightBig">
+  <Transition appear enter-active-class="animate__animated animate__fadeInRightBig"
+              leave-active-class="animate__animated animate__fadeOutRightBig">
     <div id="textureCopyright" class="badge"> Copyright: {{ currentPlanet.copyright }}</div>
   </Transition>
 </template>
@@ -176,7 +210,7 @@
 // @ is an alias to /src
 import "animate.css";
 
-import {Hotspot, Vector3D, EMPTY_HOTSPOT, ZERO_VECTOR, SOLAR_SYSTEM} from "@/extra/HomeClasses";
+import {EMPTY_HOTSPOT, Hotspot, SOLAR_SYSTEM, ZERO_VECTOR} from "@/extra/HomeClasses";
 
 import defaults from "@/mixins/defaults";
 import message from "@/components/message";
@@ -240,10 +274,6 @@ export default {
     }
   },
   computed: {
-    publicPath() {
-      return process.env.BASE_URL
-    },
-
     classifications() {
       return annotations.data.classifications
     },
@@ -279,17 +309,19 @@ export default {
         const url = this.planetInfo.link
         const title = url.substring(url.lastIndexOf("/") + 1)
         const wikiUrl = "https://de.wikipedia.org/api/rest_v1/page/summary/" + title
-        axios.get(wikiUrl, {onDownloadProgress: (progressEvent) => {
+        axios.get(wikiUrl, {
+          onDownloadProgress: (progressEvent) => {
             this.wikiLoadingProgress = progressEvent.loaded / progressEvent.total
-          }})
-          .then(response => {
-            description = response.data.extract_html
-            if (description.includes("<p>")) {
-              description = description.substring(description.indexOf("<p>") + 3)
-              description = description.substring(0, description.indexOf("</p>"))
-            }
-            this.planetInfo.description = description
-          })
+          }
+        })
+            .then(response => {
+              description = response.data.extract_html
+              if (description.includes("<p>")) {
+                description = description.substring(description.indexOf("<p>") + 3)
+                description = description.substring(0, description.indexOf("</p>"))
+              }
+              this.planetInfo.description = description
+            })
       }
       return this.formatJSON(description, this.planetInfo.newLineDot)
     },
@@ -341,7 +373,7 @@ export default {
       console.error(error)
       let messageContent = "Ein Fehler ist aufgetreten."
 
-      switch (error.detail.type){
+      switch (error.detail.type) {
         case "loadfailure":
         case "parseerror":
           messageContent = "Das Modell konnte nicht geladen werden."
@@ -435,8 +467,7 @@ export default {
         this.currentTexture = null
         this.planetType = "custom"
       } else {
-        // const texturePATH = `${this.publicPath}textures/${planet.texture}`
-        const texturePATH = `textures/${planet.texture}` // this also works, because webpack then understands it, if there is NO trailing slash
+        const texturePATH = `textures/${planet.texture}` // IMPORTANT: no trailing slash
         this.currentTexture = texturePATH
         if (this.planetType === "custom") {
           this.modelSrc = "models/sphere.glb"
@@ -474,7 +505,7 @@ export default {
         return temp
       })
     },
-    updateZoom(){
+    updateZoom() {
       let fieldOfView = 0;
       try {
         fieldOfView = this.planet.getFieldOfView()
@@ -544,8 +575,7 @@ export default {
       this.hotspots.pop()
       try {
         this.lastHotspot = this.hotspots[this.hotspots.length - 1];
-      }
-      catch (e) {
+      } catch (e) {
         this.lastHotspot = EMPTY_HOTSPOT;
       }
     },
@@ -725,6 +755,7 @@ export default {
 
   transition: width 0.4s ease-in-out;
 }
+
 #settings {
   /*i need to set a with, otherwise the transition is not working, but i want it to still be responsible*/
   transition: width 0.4s ease-in-out;
@@ -742,23 +773,29 @@ export default {
 
   transition: transform 0.4s ease-in-out, filter 0.2s ease-in-out;
 }
+
 #planetInfo .iconHolder:hover, #settingsCollapse:hover {
   filter: brightness(5);
 }
+
 html[data-theme="dark"] #planetInfo .iconHolder:hover, html[data-theme="dark"] #settingsCollapse:hover {
   filter: brightness(.4);
 }
+
 #planetInfo.collapsed .iconHolder, #settings.collapsed .iconHolder {
   transform: rotate(180deg);
 }
+
 #planetInfo.collapsed {
   width: 0;
   padding: 15px;
 }
+
 #settings.fullyCollapsed {
   width: 0 !important;
   padding: 5px;
 }
+
 #planetInfo .content {
   display: flex;
   flex-direction: column;
@@ -771,27 +808,34 @@ html[data-theme="dark"] #planetInfo .iconHolder:hover, html[data-theme="dark"] #
 
   transition: opacity 0.4s ease-in-out;
 }
+
 #settings .content {
   transition: opacity 0.4s ease-in-out;
 }
+
 #planetInfo.collapsed .content, #settings.collapsed .content {
   opacity: 0;
 }
+
 #planetInfo.fullyCollapsed .content, #settings.fullyCollapsed .content {
   display: none;
 }
+
 html[data-theme="dark"] #planetInfo {
   background-color: rgba(101, 101, 101, 0.6);
 }
-#planetInfo h2.name{
+
+#planetInfo h2.name {
   align-self: center;
   margin: 0;
   padding: 0;
 }
+
 #planetInfo p {
   margin: 0;
   padding: 0;
 }
+
 #planetInfo .description a {
   --normalColor: v-bind(accent_color);
   --clickColor: #bb1920;
@@ -799,16 +843,20 @@ html[data-theme="dark"] #planetInfo {
   color: var(--normalColor);
   transition: color 0.14s ease-in-out, filter 0.14s ease-in-out;
 }
+
 #planetInfo .description a:hover {
   filter: brightness(.7);
 }
+
 #planetInfo .description a:active {
   color: var(--clickColor);
 }
+
 #planetInfo hr {
   width: 100%;
   margin: 5px 0;
 }
+
 #planetInfo .dropdowns {
   display: flex;
   flex-direction: row;
@@ -839,6 +887,7 @@ html[data-theme="dark"] #planetInfo {
   align-items: center;
   justify-content: center;
 }
+
 #planets {
   padding-left: 20px;
   position: absolute;
@@ -858,15 +907,19 @@ li.planet-selector {
 
   transition: background-color 0.2s linear, color 0.2s linear;
 }
+
 li.planet-selector.moon {
   padding-left: 20px;
 }
+
 li.planet-selector.active {
   color: v-bind(accent_color);
 }
+
 li.planet-selector.disabled {
   color: darkgray;
 }
+
 li.planet-selector:first-of-type.active:not(.parent), li.planet-selector.moon.parentActive.last {
   margin-bottom: 10px;
 }
@@ -896,15 +949,18 @@ li.planet-selector:first-of-type.active:not(.parent), li.planet-selector.moon.pa
 
   transition: height .2s linear, width .2s linear, opacity .2s linear;
 }
+
 .hotspot:not([data-visible]) { /*todo absprache mit Louis, wie dke verschiedenen Hotspots dargestellt werden*/
   --hotspot-scale: calc(var(--hotspot-base-scale) * 0.5);
   opacity: var(--min-hotspot-opacity);
 }
+
 .hotspot > * {
   pointer-events: none;
   cursor: pointer;
   transform: translateY(-50%);
 }
+
 .hotspot-annotation {
   background: var(--hotspot-color);
   border-radius: 4px;
@@ -925,37 +981,47 @@ li.planet-selector:first-of-type.active:not(.parent), li.planet-selector.moon.pa
 
   transition: all .5s ease, opacity .2s ease; /*transition applied to every object because scale is not available*/
 }
+
 .hotspot.action, .hotspot.action > * {
   cursor: pointer;
   pointer-events: initial;
 }
+
 body.ctrlDown .hotspot, body.ctrlDown .hotspot > * {
   cursor: move;
   pointer-events: initial;
 }
+
 .hotspot:not([data-visible]) .hotspot-annotation {
   opacity: 0;
   pointer-events: none;
   transform: translateX(1em);
 }
+
 .hotspot.normal {
   --hotspot-base-scale: 1;
 }
+
 .hotspot.small {
   --hotspot-base-scale: 0.5;
 }
+
 .hotspot.large {
   --hotspot-base-scale: 1.5;
 }
+
 .hotspot.xxl {
   --hotspot-base-scale: 2;
 }
+
 .hotspot.location {
   --hotspot-color: rgba(255, 255, 255, 0.9);
 }
+
 .hotspot.rover {
   --hotspot-color: rgba(201, 99, 99, 0.9);
 }
+
 .hotspot.marker {
   --hotspot-color: rgba(255, 213, 0, 0.9);
 }
@@ -963,24 +1029,31 @@ body.ctrlDown .hotspot, body.ctrlDown .hotspot > * {
 .hotspot.location[data-visible], .hotspot.location[data-visible] .hotspot-annotation {
   opacity: calc(var(--max-hotspot-opacity) * (1 / var(--hotspot-zoom)) * var(--levelOpacityMultiplier)) !important;
 }
+
 #planet[data-settings-active] .hotspot, #planet[data-settings-active] .hotspot-annotation {
   transition: none !important; /*fixes the blinking when fast typing and updating the hotspot*/
 }
+
 .hotspot.location.level-1 {
   --levelOpacityMultiplier: 1;
 }
+
 .hotspot.location.level-2 {
   --levelOpacityMultiplier: 0.8;
 }
+
 .hotspot.location.level-3 {
   --levelOpacityMultiplier: 0.6;
 }
+
 .hotspot.location.level-4 {
   --levelOpacityMultiplier: 0.4;
 }
+
 .hotspot.location.level-5 {
   --levelOpacityMultiplier: 0.2;
 }
+
 /*endregion hotspots*/
 /* This keeps child nodes hidden while the element loads */
 :not(:defined) > * {
@@ -1004,11 +1077,13 @@ body.ctrlDown .hotspot, body.ctrlDown .hotspot > * {
   padding: 10px;
   box-sizing: border-box;
 }
+
 .messages > .wrapper > * {
   margin: 5px 0;
 }
+
 .messages > .wrapper > .message:first-of-type {
-/*  hide it but dont use display: none, because it must be existent*/
+  /*  hide it but dont use display: none, because it must be existent*/
   opacity: 0;
   pointer-events: none;
   height: 50px;
@@ -1021,6 +1096,7 @@ body.ctrlDown .hotspot, body.ctrlDown .hotspot > * {
   color: var(--text-color);
   text-transform: uppercase;
 }
+
 .mag_badge {
   position: absolute;
   top: 20px;
@@ -1034,7 +1110,7 @@ body.ctrlDown .hotspot, body.ctrlDown .hotspot > * {
 </style>
 <style>
 /*this style will be applied global bacause otherwise it won't work with FormKit*/
-#hotspot-settings{
+#hotspot-settings {
   position: absolute;
   top: 5px;
   right: 5px;
@@ -1045,19 +1121,24 @@ body.ctrlDown .hotspot, body.ctrlDown .hotspot > * {
   justify-content: center;
   max-width: 300px;
 }
+
 .formCollection {
   background-color: rgba(250, 250, 250, 0.4);
   border-radius: 5px;
 }
+
 html[data-theme="dark"] .formCollection {
   background-color: rgba(0, 0, 0, 0.4);
 }
+
 .hidden {
   display: none !important;
 }
+
 .formkit-form#hotspot-settings > .formkit-outer {
   width: 88%;
 }
+
 .disabled, :disabled {
   cursor: not-allowed !important;
   touch-action: none;
@@ -1076,6 +1157,7 @@ html[data-theme="dark"] .formCollection {
 .animate__animated.animate__fadeInRight {
   --animate-delay: 0s;
 }
+
 /*endregion animations*/
 .close {
   position: absolute;
@@ -1086,6 +1168,7 @@ html[data-theme="dark"] .formCollection {
   border: 0;
   border-top-right-radius: 5px;
 }
+
 .close:hover {
   background-color: #ff0000;
 }
@@ -1094,6 +1177,7 @@ html[data-theme="dark"] .formCollection {
   background-color: #6c8bda;
   border-radius: 10px; /*might be look smoother*/
 }
+
 #progress-bar {
   position: absolute;
   top: 0;
@@ -1104,6 +1188,7 @@ html[data-theme="dark"] .formCollection {
   /*surprisingly a longer duration on the width is looking really good*/
   transition: opacity 0.5s ease, width 0.7s ease;
 }
+
 #progress-bar.hide {
   opacity: 0;
   width: 0;
@@ -1114,6 +1199,7 @@ html[data-theme="dark"] .formCollection {
 #planetInfo .accent {
   color: #1353d7;
 }
+
 #planetInfo .highlight {
   font-size: 115%;
   font-family: 'Roboto Mono', monospace;
