@@ -20,8 +20,10 @@ Ich werde versuchen, falls das geschieht, dass hier zu vermerken.
 
 ## QR-Codes
 Für Präsentationen oder ähnliches können die folgenden QR-Codes verwendet werden.
-![QR-Code zur App](https://raw.githubusercontent.com/domx4q/astroProject/master/.github/images/qrcode_astro_main.png)
-![QR-Code zur Sternenscheibe](https://raw.githubusercontent.com/domx4q/astroProject/master/.github/images/qrcode_astro_stars.png)
+
+|                                                          App                                                          |                                                          Sternenscheibe                                                           |
+|:---------------------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------------------------------:|
+| ![QR-Code zur App](https://raw.githubusercontent.com/domx4q/astroProject/master/.github/images/qrcode_astro_main.png) | ![QR-Code zur Sternenscheibe](https://raw.githubusercontent.com/domx4q/astroProject/master/.github/images/qrcode_astro_stars.png) |
 
 # Installation
 ## Normale Installation
