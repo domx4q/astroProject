@@ -48,7 +48,7 @@
       </FormKit>
       <p style="margin-top: -5px">
         Diese Anwendung wurde von <u>Dominik Fuchs</u> entwickelt.<br>Für weitere Informationen besuchen Sie bitte <a
-          href="https://github.com/domx4q/astroProject">GitHub</a>
+          href="https://github.com/domx4q/astroProject" rel="noopener noreferrer" target="_blank">GitHub</a>
       </p>
       <p style="margin-top: -8px">Grundlage der Sternkarte von <u>Dipl.-Phys. Torsten Rahn</u>,
         mit freundlicher Genehmigung
@@ -414,13 +414,8 @@ html[data-theme="dark"] #stars {
   z-index: 5;
   max-width: 200px;
 }
-a{
+
+a {
   color: #156dec;
-}
-</style>
-<style>
-html[data-theme="dark"] #app #entireDisc * {
-  filter: invert(1) !important;
-  -webkit-filter: invert(1) !important;
 }
 </style>
