@@ -18,6 +18,11 @@ Dort stehen noch weitere Informationen zu dieser Projektarbeit zur Verfügung.
 <sup>1</sup> Da ich für diesen Server zahlen muss, werde ich diesen eventuell kündigen, oder für andere Projekte nutzen. In diesem Fall wird der Link nicht mehr funktionieren.
 Ich werde versuchen, falls das geschieht, dass hier zu vermerken.
 
+## QR-Codes
+Für Präsentationen oder ähnliches können die folgenden QR-Codes verwendet werden.
+![QR-Code zur App](https://raw.githubusercontent.com/domx4q/astroProject/master/.github/images/qrcode_astro_main.png)
+![QR-Code zur Sternenscheibe](https://raw.githubusercontent.com/domx4q/astroProject/master/.github/images/qrcode_astro_stars.png)
+
 # Installation
 ## Normale Installation
 Für die normale Installation wird ein Docker Container benötigt. Dieser kann mit folgendem Befehl erstellt werden:
