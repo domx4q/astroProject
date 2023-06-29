@@ -46,6 +46,13 @@
               @change="uploadDiscs"/>
         </FormKit>
       </FormKit>
+      <p style="margin-top: -5px">
+        Diese Anwendung wurde von <u>Dominik Fuchs</u> entwickelt.<br>Für weitere Informationen besuchen Sie bitte <a
+          href="https://github.com/domx4q/astroProject">GitHub</a>
+      </p>
+      <p style="margin-top: -8px">Grundlage der Sternkarte von <u>Dipl.-Phys. Torsten Rahn</u>,
+        mit freundlicher Genehmigung
+      </p>
     </div>
 
     <div id="entireDisc" ref="entireDisc" :style="entireDiscStyle">
@@ -102,6 +109,7 @@ export default {
     }
   },
   mounted() {
+    // noinspection RedundantConditionalExpressionJS
     this.enableTransition = this.enableTransitionDefault ? true : false; // to suppress reactivity
 
     this.handleResize()
@@ -245,6 +253,7 @@ export default {
         y: event.clientY
       }
 
+      // noinspection RedundantConditionalExpressionJS
       this.enableTransition = this.enableTransitionDefault ? true : false; // to suppress reactivity
     },
     // endregion
@@ -407,6 +416,9 @@ html[data-theme="dark"] #stars {
   flex-direction: column;
   z-index: 5;
   max-width: 200px;
+}
+a{
+  color: #156dec;
 }
 </style>
 <style>
