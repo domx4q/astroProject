@@ -123,7 +123,6 @@ export default {
       // use utc+1 time
       const MEZ_TIME = createDateAsUTC(new Date(), 1)
       const LOCAL_TIME = new Date()
-      console.log(MEZ_TIME, LOCAL_TIME)
       this.time = LOCAL_TIME.toLocaleTimeString("de-DE", {hour: "2-digit", minute: "2-digit"});
       if (LOCAL_TIME - MEZ_TIME === 0) {
         this.timezone = "MEZ"
@@ -260,15 +259,13 @@ export default {
   },
   computed: {
     convertedTime() {
-      let reduce = this.time.split(":").reduce((acc, v, i) => {
+      return this.time.split(":").reduce((acc, v, i) => {
         acc[i === 0 ? "hours" : "minutes"] = parseInt(v);
         return acc;
       }, {
         hours: undefined,
         minutes: undefined
       });
-      console.log(reduce)
-      return reduce;
     },
     convertedDate() {
       const a = this.date.split("-");
