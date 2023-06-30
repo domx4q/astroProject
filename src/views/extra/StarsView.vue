@@ -41,6 +41,7 @@
           <FormKit
               v-model="fileInput"
               accept="image/*"
+              help="Neue Sternkarte hochladen (1000x1000px)"
               label="Discs"
               type="file"
               @change="uploadDiscs"/>
@@ -301,7 +302,7 @@ export default {
       const rotationsoffset = 74;
       let hourOffset = 0;
       if (this.timezone === "MESZ") {
-        hourOffset = 1;
+        hourOffset = -1;
       }
       const timeNumber = (this.convertedTime.hours + hourOffset) * 60 + this.convertedTime.minutes;
       return +((timeNumber / 1440) * 360 + rotationsoffset);

@@ -42,7 +42,8 @@
                   type="group">
                 <FormKit v-model="textureInputForm" :disabled="!loaded" type="group">
                   <!--              needed because otherwise the file input can't be cleared-->
-                  <FormKit id="textureInput" :accept="allowedFileTypes" label="Datei auswählen" type="file"
+                  <FormKit id="textureInput" :accept="allowedFileTypes" help="Textur oder Hotspot-Datei auswählen" label="Datei auswählen"
+                           type="file"
                            @change="onFileChange"/>
                 </FormKit>
                 <FormKit v-if="!isMobile" :disabled="lastHotspot.name === ''" label="Hotspots speichern" type="button"
