@@ -58,11 +58,11 @@
 
     <div id="entireDisc" ref="entireDisc" :style="entireDiscStyle">
       <div id="marker" ref="marker"/>
-      <div id="outerDisc" ref="outerDisc" :style="outerDiscStyle"><img alt="Outer Disc"
-                                                                       src="@/assets/extra/images/sternenscheibe_outer.png">
+      <div id="outerDisc" :style="outerDiscStyle"><img ref="outerDisc" alt="Outer Disc"
+                                                       src="@/assets/extra/images/sternenscheibe_outer.png">
       </div>
-      <div id="innerDisc" ref="innerDisc" :style="innerDiscStyle"><img alt="Inner Disc"
-                                                                       src="@/assets/extra/images/sternenscheibe_inner.png">
+      <div id="innerDisc" :style="innerDiscStyle"><img ref="innerDisc" alt="Inner Disc"
+                                                       src="@/assets/extra/images/sternenscheibe_inner.png">
       </div>
     </div>
   </div>
@@ -193,7 +193,7 @@ export default {
               break
             }
           }
-          this.$refs[key].style.backgroundImage = `url(${e.target.result})`
+          this.$refs[key].src = e.target.result
         }
         reader.readAsDataURL(file)
       }
