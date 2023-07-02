@@ -125,16 +125,8 @@ export default {
     this.handleResize()
     window.addEventListener("resize", this.handleResize)
     this.setCurrent()
-    this.openSettings()
   },
   methods: {
-    openSettings() {
-      this.controlsCollapsed = false
-    },
-    closeSettings() {
-      this.controlsCollapsed = true
-    },
-
     setCurrent() {
       this.date = this.convertDate(new Date());
 
