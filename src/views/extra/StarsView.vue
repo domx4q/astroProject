@@ -125,8 +125,16 @@ export default {
     this.handleResize()
     window.addEventListener("resize", this.handleResize)
     this.setCurrent()
+    this.openSettings()
   },
   methods: {
+    openSettings() {
+      this.controlsCollapsed = false
+    },
+    closeSettings() {
+      this.controlsCollapsed = true
+    },
+
     setCurrent() {
       this.date = this.convertDate(new Date());
 
@@ -310,17 +318,21 @@ export default {
     },
 
     dateRotation() {
-      const rotationsoffset = 170;
+      const rotationsoffset = 171;
       const dayNumber = Math.floor((new Date(this.convertedDate) - new Date(this.convertedDate.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
       return -((dayNumber / 365) * 360 - rotationsoffset);
     },
     timeRotation() {
-      const rotationsoffset = 74;
+      const rotationsoffset = 90;
       let hourOffset = 0;
       if (this.timezone === "MESZ") {
         hourOffset = -1;
       }
-      const timeNumber = (this.convertedTime.hours + hourOffset) * 60 + this.convertedTime.minutes;
+      let hour = this.convertedTime.hours + hourOffset
+      if (hour < 0) {
+        hour = 24 + hour
+      }
+      const timeNumber = hour * 60 + this.convertedTime.minutes;
       return +((timeNumber / 1440) * 360 + rotationsoffset);
     },
   },
