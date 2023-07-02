@@ -2,58 +2,64 @@
   <div id="stars" :class="{transition:enableTransition}"
        @mousedown="handleMouseDown" @mouseleave="handleMouseUp" @mousemove="handleMouseMove"
        @mouseup="handleMouseUp">
-    <div id="controls">
-      <FormKit
-          label="Aktuelle Zeit"
-          type="button"
-          @click="setCurrent"/>
-      <FormKit type="group">
+    <div id="controls" class="collapsed fullyCollapsed" style="height: 843px; width: 200px;">
+      <div id="controlsCollapse" :class="{pulse:everOpened===false}" class="iconHolder"
+           @click="controlsCollapsed = !controlsCollapsed; everOpened = true">
+        <Icon class="collapseIcon" icon="ph:caret-double-right-bold"/>
+      </div>
+
+      <div class="content">
         <FormKit
-            v-model="time"
-            :label="`Zeit (${timezone})`"
-            type="time"/>
-        <FormKit
-            v-model="date"
-            label="Datum"
-            type="date"/>
-        <FormKit
-            v-model="orientation"
-            :options="[
-            {value: 'none', label: 'Keine'},
-            {value: 'N', label: 'Norden'},
-            {value: 'S', label: 'Süden'},
-            {value: 'E', label: 'Osten'},
-            {value: 'W', label: 'Westen'},
-          ]"
-            label="Himmelsrichtung"
-            type="select"/>
-        <FormKit
-            v-model="orientationLocked"
-            label="Rotation sperren"
-            type="checkbox"/>
-        <p>
-          Um die Karte zu drehen, ziehen Sie mit der Maus über die Karte.<br>
-          Wenn sie die obere Karte drehen möchten, drücken Sie die <b>Strg-Taste</b> und ziehen Sie mit der Maus.
-        </p>
-        <ThemeSwitch override-theme="light"/>
-        <div style="margin-bottom: 10px"></div>
+            label="Aktuelle Zeit"
+            type="button"
+            @click="setCurrent"/>
         <FormKit type="group">
           <FormKit
-              v-model="fileInput"
-              accept="image/*"
-              help="Neue Sternkarte hochladen (1000x1000px)"
-              label="Discs"
-              type="file"
-              @change="uploadDiscs"/>
+              v-model="time"
+              :label="`Zeit (${timezone})`"
+              type="time"/>
+          <FormKit
+              v-model="date"
+              label="Datum"
+              type="date"/>
+          <FormKit
+              v-model="orientation"
+              :options="[
+                  {value: 'none', label: 'Keine'},
+                  {value: 'N', label: 'Norden'},
+                  {value: 'S', label: 'Süden'},
+                  {value: 'E', label: 'Osten'},
+                  {value: 'W', label: 'Westen'},
+                ]"
+              label="Himmelsrichtung"
+              type="select"/>
+          <FormKit
+              v-model="orientationLocked"
+              label="Rotation sperren"
+              type="checkbox"/>
+          <p>
+            Um die Karte zu drehen, ziehen Sie mit der Maus über die Karte.<br>
+            Wenn sie die obere Karte drehen möchten, drücken Sie die <b>Strg-Taste</b> und ziehen Sie mit der Maus.
+          </p>
+          <ThemeSwitch override-theme="light"/>
+          <div style="margin-bottom: 10px"></div>
+          <FormKit type="group">
+            <FormKit
+                v-model="fileInput"
+                accept="image/*"
+                help="Neue Sternkarte hochladen (1000x1000px)"
+                label="Discs"
+                type="file"
+                @change="uploadDiscs"/>
+          </FormKit>
         </FormKit>
-      </FormKit>
-      <p style="margin-top: -5px">
-        Diese Anwendung wurde von <u>Dominik Fuchs</u> entwickelt.<br>Für weitere Informationen besuchen Sie bitte <a
-          href="https://github.com/domx4q/astroProject" rel="noopener noreferrer" target="_blank">GitHub</a>
-      </p>
-      <p style="margin-top: -8px">Grundlage der Sternkarte von <u>Dipl.-Phys. Torsten Rahn</u>,
-        mit freundlicher Genehmigung
-      </p>
+        <p style="margin-top: -5px">
+          Diese Anwendung wurde von <u>Dominik Fuchs</u> entwickelt.<br>Für weitere Informationen besuchen Sie bitte <a
+            href="https://github.com/domx4q/astroProject" rel="noopener noreferrer" target="_blank">GitHub</a>
+        </p>
+        <p style="margin-top: -8px">Grundlage der Sternkarte von <u>Dipl.-Phys. Torsten Rahn</u>,
+          mit freundlicher Genehmigung
+        </p></div>
     </div>
 
     <div id="entireDisc" ref="entireDisc" :style="entireDiscStyle">
@@ -85,6 +91,9 @@ export default {
   },
   data() {
     return {
+      controlsCollapsed: true,
+      everOpened: false,
+
       innerRotation: 0,
       outerRotation: 0,
       entireRotation: 0,
@@ -259,6 +268,13 @@ export default {
     // endregion
   },
   computed: {
+    query() {
+      return this.$route.query
+    },
+    scale() {
+      return this.query.scale ? Number(this.query.scale) : 1;
+    },
+
     convertedTime() {
       return this.time.split(":").reduce((acc, v, i) => {
         acc[i === 0 ? "hours" : "minutes"] = parseInt(v);
@@ -294,21 +310,50 @@ export default {
     },
 
     dateRotation() {
-      const rotationsoffset = 170;
+      const rotationsoffset = 171;
       const dayNumber = Math.floor((new Date(this.convertedDate) - new Date(this.convertedDate.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
       return -((dayNumber / 365) * 360 - rotationsoffset);
     },
     timeRotation() {
-      const rotationsoffset = 74;
+      const rotationsoffset = 90;
       let hourOffset = 0;
       if (this.timezone === "MESZ") {
         hourOffset = -1;
       }
-      const timeNumber = (this.convertedTime.hours + hourOffset) * 60 + this.convertedTime.minutes;
+      let hour = this.convertedTime.hours + hourOffset
+      if (hour < 0) {
+        hour = 24 + hour
+      }
+      const timeNumber = hour * 60 + this.convertedTime.minutes;
       return +((timeNumber / 1440) * 360 + rotationsoffset);
     },
   },
   watch: {
+    controlsCollapsed: function (newVal) {
+      const controls = document.querySelector("#controls")
+      const initialHeight = controls.clientHeight - 10 // because padding
+      const initialWidth = controls.clientWidth - 10
+      if (newVal) {
+        this.controlsInitWidth = initialWidth
+        controls.classList.add("collapsed") // need to be all done here because if using :class, it will be overwritten by vue
+        controls.style.height = `${initialHeight}px`
+        controls.style.width = `${initialWidth}px`
+        setTimeout(() => {
+          controls.classList.add("fullyCollapsed")
+        }, 400)
+      } else {
+        controls.style.height = "auto"
+        controls.style.width = this.controlsInitWidth + "px"
+        controls.classList.remove("collapsed")
+        controls.classList.remove("fullyCollapsed")
+        controls.classList.add("expanding")
+        setTimeout(() => {
+          controls.classList.remove("expanding")
+          controls.style.width = "auto"
+        }, 400)
+      }
+    },
+
     innerRotation(newValue, oldValue) {
       this.finalRotation.inner = this.getNearestDegree(oldValue, newValue)
     },
@@ -347,7 +392,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background: white;
+  background: hsl(0, 0%, 88%);
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -355,7 +400,7 @@ export default {
 }
 
 html[data-theme="dark"] #stars {
-  background: black;
+  background: hsl(0, 0%, 9%);
 }
 
 #outerDisc {
@@ -385,6 +430,11 @@ html[data-theme="dark"] #stars {
   width: 100%;
   height: 100%;
   position: absolute;
+  color: transparent; /*hide alt text*/
+}
+
+#entireDisc {
+  scale: v-bind(scale);
 }
 
 #stars.transition #outerDisc, #stars.transition #innerDisc, #stars.transition #entireDisc {
@@ -414,9 +464,82 @@ html[data-theme="dark"] #stars {
   flex-direction: column;
   z-index: 5;
   max-width: 200px;
+  background-color: white;
+  border-radius: 5px;
+  padding: 5px;
+
+  transition: width 0.4s ease-in-out;
+}
+
+html[data-theme="dark"] #controls {
+  background-color: black;
 }
 
 a {
   color: #156dec;
+}
+
+.iconHolder, #controlsCollapse {
+  position: absolute;
+  top: 5px;
+  right: 2px;
+  cursor: pointer;
+  margin: 4px;
+  width: 20px;
+  height: 20px;
+  z-index: 100;
+
+  transition: transform 0.4s ease-in-out, filter 0.2s ease-in-out;
+}
+
+.iconHolder:hover, #controlsCollapse:hover {
+  filter: brightness(5);
+}
+
+.iconHolder {
+  transform: rotate(180deg);
+}
+
+#controls.collapsed .iconHolder {
+  transform: rotate(0);
+}
+
+#controls.collapsed {
+  width: 0;
+  padding: 5px;
+}
+
+#controls.fullyCollapsed {
+  width: 0 !important;
+  padding: 15px !important;
+}
+
+#controls .content {
+  opacity: 1;
+  transition: opacity 0.4s ease-in-out;
+}
+
+#controls.collapsed .content, #controls.expanding .content {
+  opacity: 0;
+}
+
+#controls.fullyCollapsed .content {
+  display: none;
+}
+
+.pulse {
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 </style>
