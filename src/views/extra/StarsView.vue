@@ -400,7 +400,7 @@ export default {
 }
 
 html[data-theme="dark"] #stars {
-  background: black;
+  background: hsl(0, 0%, 9%);
 }
 
 #outerDisc {
@@ -469,6 +469,10 @@ html[data-theme="dark"] #stars {
   padding: 5px;
 
   transition: width 0.4s ease-in-out;
+}
+
+html[data-theme="dark"] #controls {
+  background-color: black;
 }
 
 a {
