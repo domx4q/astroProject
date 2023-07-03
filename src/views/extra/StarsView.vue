@@ -85,7 +85,6 @@ function createDateAsUTC(date, offset = 0) {
 
 export default {
   name: "StarsView",
-  name: "StarsView",
   mixins: [defaults],
   components: {
     ThemeSwitch
