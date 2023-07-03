@@ -92,6 +92,9 @@ export default {
                 return Number(out);
             }
             return out;
+        },
+        checkEmpty(value) {
+            return value === undefined || value === null || value === "";
         }
     }
 };

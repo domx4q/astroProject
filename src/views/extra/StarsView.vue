@@ -2,8 +2,8 @@
   <div id="stars" :class="{transition:enableTransition}"
        @mousedown="handleMouseDown" @mouseleave="handleMouseUp" @mousemove="handleMouseMove"
        @mouseup="handleMouseUp">
-    <div id="controls" class="collapsed fullyCollapsed" style="height: 843px; width: 200px;">
-      <div id="controlsCollapse" :class="{pulse:everOpened===false}" class="iconHolder"
+    <div id="controls" :class="{'collapsed fullyCollapsed':!showFullSidePanel}" style="height: 843px; width: 200px;">
+      <div v-if="!showFullSidePanel" id="controlsCollapse" :class="{pulse:everOpened===false}" class="iconHolder"
            @click="controlsCollapsed = !controlsCollapsed; everOpened = true">
         <Icon class="collapseIcon" icon="ph:caret-double-right-bold"/>
       </div>
@@ -211,6 +211,8 @@ export default {
 
     // region handlers
     handleResize() {
+      // skipcq: JS-0049
+      if (this.checkEmpty(this.$refs["entireDisc"])) return;
       this.center = {
         x: this.$refs["entireDisc"].offsetWidth / 2,
         y: this.$refs["entireDisc"].offsetHeight / 2
@@ -275,6 +277,22 @@ export default {
       return this.query.scale ? Number(this.query.scale) : 1;
     },
 
+    adaptedSize() {
+      const DEFAULT_SIZE = 1000;
+      const widthOffset = 60;
+      const heightOffset = -30; // make the region a bit larger to prevent clipping
+      const screenSize = this.screenSize;
+      const smallerSide = Math.min((screenSize.width - widthOffset), (screenSize.height - heightOffset));
+
+      return Math.min(DEFAULT_SIZE, smallerSide);
+    },
+    adaptedSizeStyle() {
+      return `${this.adaptedSize}px`;
+    },
+    showFullSidePanel() {
+      return this.screenSize.width - this.adaptedSize > 480;
+    },
+
     convertedTime() {
       return this.time.split(":").reduce((acc, v, i) => {
         acc[i === 0 ? "hours" : "minutes"] = parseInt(v);
@@ -329,7 +347,7 @@ export default {
     },
   },
   watch: {
-    controlsCollapsed: function (newVal) {
+    controlsCollapsed(newVal) {
       const controls = document.querySelector("#controls")
       const initialHeight = controls.clientHeight - 10 // because padding
       const initialWidth = controls.clientWidth - 10
@@ -400,7 +418,7 @@ export default {
 }
 
 html[data-theme="dark"] #stars {
-  background: hsl(0, 0%, 9%);
+  background: hsl(0, 0%, 10%);
 }
 
 #outerDisc {
@@ -412,8 +430,8 @@ html[data-theme="dark"] #stars {
 }
 
 #innerDisc img, #outerDisc img {
-  width: 1000px;
-  height: 1000px;
+  width: v-bind(adaptedSizeStyle);
+  height: v-bind(adaptedSizeStyle);
   position: absolute;
   top: 50%;
   left: 50%;
@@ -442,12 +460,14 @@ html[data-theme="dark"] #stars {
 }
 
 #marker {
+  --adaptedSize: v-bind(adaptedSizeStyle);
+  --adaptedSizeRaw: v-bind(adaptedSize);
   /*creates a marker on the edge of the circle*/
   position: absolute;
   top: 50%;
-  left: calc(50% + (940px / 2));
-  width: 30px;
-  height: 5px;
+  left: calc(50% + ((var(--adaptedSize) - (60px * (var(--adaptedSizeRaw) / 1000))) / 2));
+  width: calc(30px * (var(--adaptedSizeRaw) / 1000));
+  height: calc(5px * (var(--adaptedSizeRaw) / 1000));
   background: #ff0000;
   z-index: 7;
 
@@ -467,6 +487,10 @@ html[data-theme="dark"] #stars {
   background-color: white;
   border-radius: 5px;
   padding: 5px;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 100vh;
 
   transition: width 0.4s ease-in-out;
 }
@@ -507,6 +531,10 @@ a {
 #controls.collapsed {
   width: 0;
   padding: 5px;
+}
+
+#controls.expanding {
+  overflow-y: hidden;
 }
 
 #controls.fullyCollapsed {
