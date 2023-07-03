@@ -211,6 +211,7 @@ export default {
 
     // region handlers
     handleResize() {
+      // skipcq: JS-0049
       if (this.checkEmpty(this.$refs["entireDisc"])) return;
       this.center = {
         x: this.$refs["entireDisc"].offsetWidth / 2,
@@ -286,7 +287,7 @@ export default {
       return Math.min(DEFAULT_SIZE, smallerSide);
     },
     adaptedSizeStyle() {
-      return this.adaptedSize + "px";
+      return `${this.adaptedSize}px`;
     },
     showFullSidePanel() {
       return this.screenSize.width - this.adaptedSize > 480;
@@ -346,11 +347,7 @@ export default {
     },
   },
   watch: {
-    "screenSize.width": function (newVal) {
-      console.log(newVal)
-    },
-
-    controlsCollapsed: function (newVal) {
+    controlsCollapsed(newVal) {
       const controls = document.querySelector("#controls")
       const initialHeight = controls.clientHeight - 10 // because padding
       const initialWidth = controls.clientWidth - 10
