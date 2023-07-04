@@ -171,18 +171,8 @@ export default {
     },
 
     getNearestDegree(current, target) {
-      current = Number(current)
-      target = Number(target)
-
-      const diff = Math.abs(target - current)
-      if (diff > 180) {
-        if (current > target) {
-          return current + (target + (360 - current))
-        } else {
-          return -(360 - target)
-        }
-      }
-      return target
+      const diff = Math.min(Math.abs(current - target), Math.abs(current - target + 360), Math.abs(current - target - 360))
+      return current - target > 0 ? current - diff : current + diff
     },
     uploadDiscs(event) {
       const files = event.target.files
