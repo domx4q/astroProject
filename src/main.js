@@ -6,17 +6,17 @@ import store from "./store"
 
 import { autoAnimatePlugin } from "@formkit/auto-animate/vue";
 import { plugin, defaultConfig } from "@formkit/vue"
-import { createProPlugin, inputs } from '@formkit/pro'
-import { createAutoAnimatePlugin } from '@formkit/addons'
+import { createProPlugin, inputs } from "@formkit/pro"
+import { createAutoAnimatePlugin } from "@formkit/addons"
 import { de } from "@formkit/i18n";
 // import "@formkit/themes/genesis";
-import '@formkit/pro/genesis'
+import "@formkit/pro/genesis"
 
 import "@/assets/styles/formkit.css" // own modified genesis theme (mostly to add dark mode)
 
 import { Icon } from "@iconify/vue";
 
-const pro = createProPlugin('fk-452f513989', inputs)
+const pro = createProPlugin("fk-452f513989", inputs)
 const formkitConfig = defaultConfig({
     theme: "genesis",
     locales: { de },

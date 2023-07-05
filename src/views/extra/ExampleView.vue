@@ -25,7 +25,7 @@ import DynamicButton from "@/components/examples/Dynamic Button.vue";
 import HTML_Template from "@/components/examples/HTML_Template.vue";
 
 export default {
-    name: 'ExampleView',
+    name: "ExampleView",
     components: {
         StaticButton,
         DynamicButton,

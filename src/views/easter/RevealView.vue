@@ -22,7 +22,7 @@
 
 <script>
 export default {
-    name: 'RevealView',
+    name: "RevealView",
     props: {
         token: {
             type: String,
@@ -37,9 +37,9 @@ export default {
         return {
             reveal: false,
 
-            dateTimeIn: '',
-            answerIn: '',
-            generatedToken: '',
+            dateTimeIn: "",
+            answerIn: "",
+            generatedToken: "",
 
             timeLeft: 0,
             timePassed: false,
@@ -57,18 +57,18 @@ export default {
         // token Format: unix-timestamp-x(random number 2 digits)answerCode(random number 2 digits)
         generateToken() {
             let timestamp = this.convertToUnixTimestamp(new Date(this.dateTimeIn));
-            if (this.dateTimeIn === '') {
+            if (this.dateTimeIn === "") {
                 let date = new Date();
                 timestamp = date.getTime();
             }
-            if (this.answerIn === '') {
-                alert('Please select an answer code!');
+            if (this.answerIn === "") {
+                alert("Please select an answer code!");
                 return;
             }
             const random1 = Math.floor(Math.random() * 100)-1;
-            random1.toString().padStart(2, '0');
+            random1.toString().padStart(2, "0");
             const random2 = Math.floor(Math.random() * 100)-1;
-            random2.toString().padStart(2, '0');
+            random2.toString().padStart(2, "0");
             const answerCode = this.answerIn;
             this.generatedToken = `${timestamp}-${random1}${answerCode}${random2}`;
             return this.generatedToken;
@@ -86,13 +86,13 @@ export default {
     },
     computed: {
         answer() {
-            if (!this.timePassed) return '';
-            let indexOfFirstDash = this.token.indexOf('-');
+            if (!this.timePassed) return "";
+            let indexOfFirstDash = this.token.indexOf("-");
 
             return this.possibleAnswers[this.token.substring(indexOfFirstDash + 3, indexOfFirstDash + 5)];
         },
         tokenDate() {
-            let indexofFirstDash = this.token.indexOf('-');
+            let indexofFirstDash = this.token.indexOf("-");
             let timestamp = this.token.substring(0, indexofFirstDash);
             return new Date(parseInt(timestamp));
         },
