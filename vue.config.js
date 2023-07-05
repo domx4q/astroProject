@@ -1,8 +1,8 @@
 const {defineConfig} = require("@vue/cli-service")
 
 function getPublicPath() {
-  if (process.env.NODE_ENV === 'production' && process.env.iAmOnGithubPages === 'true') {
-    return '/astroProject/'
+  if (process.env.NODE_ENV === "production" && process.env.iAmOnGithubPages === "true") {
+    return "/astroProject/"
   }
   if (process.env.customPrefix !== undefined) {
     // security checks
@@ -10,19 +10,19 @@ function getPublicPath() {
       if (!front && !end) {
         return prefix
       }
-      if (front && prefix.startsWith('/')) {
+      if (front && prefix.startsWith("/")) {
         prefix = prefix.substring(1)
       } else {
         front = false
       }
-      if (end && prefix.endsWith('/')) {
+      if (end && prefix.endsWith("/")) {
         prefix = prefix.substring(0, prefix.length - 1)
       } else {
         end = false
       }
       return checkPrefix(prefix, front, end)
     }
-    return '/' + checkPrefix(process.env.customPrefix) + '/'
+    return "/" + checkPrefix(process.env.customPrefix) + "/"
   }
   return "/"
 }

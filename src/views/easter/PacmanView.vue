@@ -1,6 +1,6 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue';
-import UnityWebgl from 'unity-webgl';
+import { ref, onMounted, onBeforeUnmount } from "vue";
+import UnityWebgl from "unity-webgl";
 
 const canvasRef = ref(null);
 let unityComponent = null;

@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import WebGLFluid from 'webgl-fluid';
+import WebGLFluid from "webgl-fluid";
 
 export default {
   name: "ClockView",
@@ -53,10 +53,10 @@ export default {
       }
     },
     initFluid() {
-      const canvas = document.querySelector('canvas');
+      const canvas = document.querySelector("canvas");
       WebGLFluid(canvas, {
         IMMEDIATE: true, // Whether to trigger multiple random splats when initialized
-        TRIGGER: 'click', // Can be change to 'click'
+        TRIGGER: "click", // Can be change to 'click'
         SIM_RESOLUTION: 128,
         DYE_RESOLUTION: 1024,
         CAPTURE_RESOLUTION: 512,
