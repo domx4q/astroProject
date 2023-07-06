@@ -30,7 +30,12 @@ jobs:
           path: ./dist/
           directory: .
       - name: Build electron app
-        run: npm run electron:build -w # -w for windows, -l for linux, -m for mac
+        uses: ./.github/workflows/electronBuild
+      - name: Download build artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: electron-app
+          path: dist_electron/
       - name: Build Changelog
         id: github_release
         uses: mikepenz/release-changelog-builder-action@v3
@@ -60,13 +65,33 @@ jobs:
           asset_path: ./release.zip
           asset_name: release.zip
           asset_content_type: application/zip
-      - name: Upload Release Asset Electron
-        id: upload-release-asset-electron
+      - name: Upload Release Asset Electron (Windows)
+        id: upload-release-asset-electron-windows
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: $(find ./dist_electron -name "*Setup*.exe")
-          asset_name: $(find ./dist_electron -name "*Setup*.exe")
+          asset_path: $(find ./dist_electron/windows-latest -name "*Setup*.exe")
+          asset_name: $(find ./dist_electron/windows-latest -name "*Setup*.exe")
           asset_content_type: application/x-msdownload
+      - name: Upload Release Asset Electron (MacOS)
+        id: upload-release-asset-electron-macos
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: $(find ./dist_electron/macos-latest -name "*.dmg")
+          asset_name: $(find ./dist_electron/macos-latest -name "*.dmg")
+          asset_content_type: application/x-apple-diskimage
+      - name: Upload Release Asset Electron (Linux)
+        id: upload-release-asset-electron-linux
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: $(find ./dist_electron/ubuntu-latest -name "*.deb")
+          asset_name: $(find ./dist_electron/ubuntu-latest -name "*.deb")
+          asset_content_type: application/x-deb

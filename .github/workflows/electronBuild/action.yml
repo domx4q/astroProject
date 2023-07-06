@@ -1,0 +1,36 @@
+# .github/workflows/build-electron-app.yml
+
+name: Build Electron App
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-electron-app:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - macos-latest
+          - ubuntu-latest
+          - windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 16.14.0
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.14.0
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Electron app
+        run: npm run build
+
+      - name: Archive build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: electron-app
+          path: dist_electron/${{ matrix.os }}
+
