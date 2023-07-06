@@ -9,15 +9,15 @@ on:
 jobs:
   build_and_release:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [ 16.14.0 ]
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      version: ${{ steps.package-version.outputs.current-version}}
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js 16.14.0
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 16.14.0
           cache: 'npm'
       - name: Install dependencies
         run: npm ci
@@ -29,13 +29,6 @@ jobs:
           filename: release.zip
           path: ./dist/
           directory: .
-      - name: Build electron app
-        uses: ./.github/workflows/electronBuild
-      - name: Download build artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: electron-app
-          path: dist_electron/
       - name: Build Changelog
         id: github_release
         uses: mikepenz/release-changelog-builder-action@v3
@@ -65,33 +58,30 @@ jobs:
           asset_path: ./release.zip
           asset_name: release.zip
           asset_content_type: application/zip
-      - name: Upload Release Asset Electron (Windows)
+  electron:
+    runs-on: windows-latest
+    needs: build_and_release
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 16.14.0
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.14.0
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Build Electron app
+        run: npm run electron:buildWin
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Release Asset Electron
         id: upload-release-asset-electron-windows
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: $(find ./dist_electron/windows-latest -name "*Setup*.exe")
-          asset_name: $(find ./dist_electron/windows-latest -name "*Setup*.exe")
+          upload_url: ${{ needs.build_and_release.outputs.upload_url }}
+          asset_path: dist_electron\AstroProjekt Setup ${{ needs.build_and_release.outputs.version}}.exe
+          asset_name: AstroProjekt Setup ${{ needs.build_and_release.outputs.version}}.exe
           asset_content_type: application/x-msdownload
-      - name: Upload Release Asset Electron (MacOS)
-        id: upload-release-asset-electron-macos
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: $(find ./dist_electron/macos-latest -name "*.dmg")
-          asset_name: $(find ./dist_electron/macos-latest -name "*.dmg")
-          asset_content_type: application/x-apple-diskimage
-      - name: Upload Release Asset Electron (Linux)
-        id: upload-release-asset-electron-linux
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: $(find ./dist_electron/ubuntu-latest -name "*.deb")
-          asset_name: $(find ./dist_electron/ubuntu-latest -name "*.deb")
-          asset_content_type: application/x-deb

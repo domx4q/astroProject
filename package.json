@@ -14,7 +14,7 @@
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
     "electron:build": "vue-cli-service electron:build",
-    "electron:buildWin": "vue-cli-service electron:build --windows --x64",
+    "electron:buildWin": "vue-cli-service electron:build --windows --x64 -p never",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"
