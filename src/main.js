@@ -49,7 +49,7 @@ if (module.hot) {
     });
 }
 
-if (process.env.IS_ELECTRON || true) {
+if (process.env.IS_ELECTRON) {
     import("../package.json").then(pkg => {
         const currentVersion = pkg.version;
 
