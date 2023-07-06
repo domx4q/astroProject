@@ -1,6 +1,6 @@
 "use strict"
 
-import { app, protocol, BrowserWindow } from "electron"
+import { app, protocol, BrowserWindow, Menu, MenuItem, shell } from "electron"
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib"
 import installExtension, { VUEJS3_DEVTOOLS } from "electron-devtools-installer"
 const isDevelopment = process.env.NODE_ENV !== "production"
@@ -9,6 +9,8 @@ const isDevelopment = process.env.NODE_ENV !== "production"
 protocol.registerSchemesAsPrivileged([
   { scheme: "app", privileges: { secure: true, standard: true, supportFetchAPI: true } }
 ])
+
+const SHOW_DEV_TOOLS = false
 
 async function createWindow() {
   // Create the browser window.
@@ -24,18 +26,53 @@ async function createWindow() {
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
       contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION
-    }
+    },
+    darkTheme: true,
+    title: "AstroProjekt",
+    icon: "public/favicon.ico",
   })
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
-    if (!process.env.IS_TEST) win.webContents.openDevTools()
+    if (!process.env.IS_TEST && SHOW_DEV_TOOLS) win.webContents.openDevTools()
   } else {
     createProtocol("app")
     // Load the index.html when not in development
     win.loadURL("app://./index.html")
   }
+  win.maximize()
+
+  function addMenus() {
+    const template = [
+      {
+        label: "Routes",
+        submenu: [
+          {
+            label: "Home",
+            click: () => {
+              win.loadURL("app://./index.html")
+            }
+          },
+          {
+            label: "Sternenscheibe",
+            click: () => {
+              win.loadURL("app://./index.html/#/extra/stars")
+            }
+          },
+          {
+            label: "Pacman",
+            click: () => {
+              win.loadURL("app://./index.html/#/easter/pacman")
+            }
+          }
+        ]
+      },
+    ]
+    const menu = Menu.buildFromTemplate(template)
+    Menu.setApplicationMenu(menu)
+  }
+  addMenus()
 }
 
 // Quit when all windows are closed.
