@@ -156,9 +156,14 @@
               <Dropdown :onlyShowTitleOnClose="true" :open-override="openPlanetInfoDropdown === 'none'"
                         title="Beschreibung"
                         @close="openPlanetInfoDropdown = 'none'" @open="openPlanetInfoDropdown = 'none'">
-                <p v-html="planetDescription"/><br> <!-- // skipcq: JS-0693 -->
-                <p v-if="planetInfo.link">Quelle: <a :href="planetInfo.link" rel="noopener noreferrer"
-                                                     target="_blank">{{ planetInfo.linkText }}</a></p>
+                <template v-if="connectionAlive">
+                  <p v-html="planetDescription"/><br> <!-- // skipcq: JS-0693 -->
+                  <p v-if="planetInfo.link">Quelle: <a :href="planetInfo.link" rel="noopener noreferrer"
+                                                       target="_blank">{{ planetInfo.linkText }}</a></p>
+                </template>
+                <template v-else>
+                  <p style="color: red">Keine Verbindung zum Internet</p>
+                </template>
               </Dropdown>
             </div>
             <template v-if="planetInfo.detailed !== undefined && Object.keys(planetInfo.detailed).length > 0">
@@ -234,7 +239,7 @@ export default {
   data() {
     return {
       devDefaultPlanet: "moon",
-      modelSrc: "models/sphere.glb",
+      modelSrc: require("@/assets/models/sphere.glb").default,
       defaultOrbitSensi: 0.8,
       allowedFileTypes: ["image/png", "image/jpeg", "image/jpg", "image/webp", "application/json", "text/plain"],
       zoomFactor: 1,
@@ -471,7 +476,7 @@ export default {
         const texturePATH = `textures/${planet.texture}` // IMPORTANT: no trailing slash
         this.currentTexture = texturePATH
         if (this.planetType === "custom") {
-          this.modelSrc = "models/sphere.glb"
+          this.modelSrc = require("@/assets/models/sphere.glb").default;
           this.planetType = "normal"
           if (!(planet.key === this.modelDefaultTexture && firstLoad)) {
             setTimeout(() => {

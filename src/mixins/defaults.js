@@ -2,8 +2,10 @@ export default {
     data() {
         return {
             version: "x.x.x",
+            isOnline: true,
 
             __resizeUUID: this.genUUID(),
+            __connectionUUID: this.genUUID(),
         }
     },
     mounted() {
@@ -12,6 +14,9 @@ export default {
         })
 
         window.addEventListener("resize", this.__onResize);
+        setInterval(() => {
+            this.__tick()
+        }, 3000)
     },
     computed: {
         isProduction() {
@@ -37,6 +42,16 @@ export default {
                 width: window.innerWidth,
                 height: window.innerHeight,
             }
+        },
+        connectionAlive() {
+            const uuid = this.__connectionUUID; // fetch any site to check if the connection is alive
+            fetch("https://www.google.com", {mode: "no-cors"})
+                .then(() => {
+                    this.isOnline = true
+                }).catch(() => {
+                this.isOnline = false
+            })
+            return this.isOnline
         }
     },
     methods: {
@@ -85,6 +100,9 @@ export default {
 
         __onResize() {
             this.__resizeUUID = this.genUUID();
+        },
+        __tick(){
+            this.__connectionUUID = this.genUUID();
         },
         round(number, digits=2, asNum=false){
             const out = Number(number).toFixed(digits);

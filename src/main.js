@@ -9,7 +9,6 @@ import { plugin, defaultConfig } from "@formkit/vue"
 import { createProPlugin, inputs } from "@formkit/pro"
 import { createAutoAnimatePlugin } from "@formkit/addons"
 import { de } from "@formkit/i18n";
-// import "@formkit/themes/genesis";
 import "@formkit/pro/genesis"
 
 import "@/assets/styles/formkit.css" // own modified genesis theme (mostly to add dark mode)

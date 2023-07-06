@@ -280,7 +280,7 @@ export const SOLAR_SYSTEM = new SolarSystem([
         orderPriority: 9,
         enabled: true,
         customModel: true,
-        customModelFile: "models/earth.glb",
+        customModelFile: require("@/assets/models/earth.glb").default,
         annotationsKey: "earth",
         key: "earth",
         copyright: "Solar System Scope",
@@ -524,7 +524,7 @@ export const SOLAR_SYSTEM = new SolarSystem([
             }
         }),
         customModel: true,
-        customModelFile: "models/saturn.glb",
+        customModelFile: require("@/assets/models/saturn.glb").default,
     }),
     new Planet({
         name: "Ceres",
