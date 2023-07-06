@@ -41,7 +41,7 @@
             Um die Karte zu drehen, ziehen Sie mit der Maus über die Karte.<br>
             Wenn sie die obere Karte drehen möchten, drücken Sie die <b>Strg-Taste</b> und ziehen Sie mit der Maus.
           </p>
-          <ThemeSwitch override-theme="light"/>
+          <ThemeSwitch/>
           <div style="margin-bottom: 10px"></div>
           <FormKit type="group">
             <FormKit

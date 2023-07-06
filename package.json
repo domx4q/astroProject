@@ -14,7 +14,6 @@
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
     "electron:build": "vue-cli-service electron:build",
-    "electron:buildAll": "vue-cli-service electron:build -wl",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"

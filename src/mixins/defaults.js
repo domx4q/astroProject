@@ -45,7 +45,7 @@ export default {
         },
         connectionAlive() {
             const uuid = this.__connectionUUID; // fetch any site to check if the connection is alive
-            fetch("https://www.google.com", {mode: "no-cors"})
+            fetch("https://api.ipify.org/", {mode: "no-cors"})
                 .then(() => {
                     this.isOnline = true
                 }).catch(() => {

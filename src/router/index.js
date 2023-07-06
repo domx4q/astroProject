@@ -65,6 +65,11 @@ const routes = [
           name: "example",
           component: () => import("../views/extra/ExampleView.vue"),
         },
+      {
+        path: "update/:version",
+        name: "update",
+        component: () => import("../views/extra/UpdateView.vue"),
+      }
     ]
   }
 ]
