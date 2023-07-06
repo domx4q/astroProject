@@ -45,24 +45,29 @@ module.exports = defineConfig({
   },
   publicPath: getPublicPath(),
   configureWebpack: {
-    module:
-        {
-          rules:
-              [
-                {
-                  test: /\.(glb|gltf)$/,
-                  use:
-                      [
-                        {
-                          loader: 'file-loader',
-                          options:
-                              {
-                                outputPath: 'assets/models/'
-                              }
-                        }
-                      ]
-                },
-              ]
-        }
+    module: {
+      rules: [{
+        test: /\.(glb|gltf)$/, use: [{
+          loader: 'file-loader', options: {
+            outputPath: 'assets/models/'
+          }
+        }]
+      },]
+    }
+  },
+  pluginOptions: {
+    electronBuilder: {
+      builderOptions: {
+        appId: "astroProjekt", productName: "AstroProjekt", win: {
+          icon: "./public/img/icons/favicon-256x256.png",
+        }, mac: {
+          icon: "./public/img/icons/favicon-256x256.png",
+        }, linux: {
+          icon: "./public/img/icons/favicon-256x256.png",
+        }, extraResources: [{
+          from: "./public/img/icons/favicon-256x256.png", to: "./public/img/icons/favicon-256x256.png", filter: ["**/*"]
+        },],
+      }
+    }
   }
 })

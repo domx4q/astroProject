@@ -27,9 +27,7 @@ async function createWindow() {
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
       contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION
     },
-    darkTheme: true,
-    title: "AstroProjekt",
-    icon: "public/favicon.ico",
+    icon: __dirname + "/img/icons/favicon-256x256.png"
   })
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
@@ -46,26 +44,20 @@ async function createWindow() {
   function addMenus() {
     const template = [
       {
-        label: "Routes",
+        label: "Anwendungen",
         submenu: [
           {
-            label: "Home",
+            label: "Planeten (3D)",
             click: () => {
               win.loadURL("app://./index.html")
             }
           },
           {
-            label: "Sternenscheibe",
+            label: "Drehbare Sternkarte",
             click: () => {
               win.loadURL("app://./index.html/#/extra/stars")
             }
           },
-          {
-            label: "Pacman",
-            click: () => {
-              win.loadURL("app://./index.html/#/easter/pacman")
-            }
-          }
         ]
       },
     ]
@@ -73,6 +65,11 @@ async function createWindow() {
     Menu.setApplicationMenu(menu)
   }
   addMenus()
+
+  win.webContents.on("did-finish-load", () => {
+    const version = app.getVersion()
+    win.setTitle(`AstroProjekt - ${version}`)
+  });
 }
 
 // Quit when all windows are closed.
