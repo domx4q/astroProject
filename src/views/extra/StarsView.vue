@@ -171,8 +171,15 @@ export default {
     },
 
     getNearestDegree(current, target) {
-      const diff = Math.min(Math.abs(current - target), Math.abs(current - target + 360), Math.abs(current - target - 360))
-      return current - target > 0 ? current - diff : current + diff
+      const diff = Math.abs(target - current)
+      if (diff > 180) {
+        if (current > target) {
+          return current + (target + (360 - current))
+        } else {
+          return -(360 - target)
+        }
+      }
+      return target
     },
     uploadDiscs(event) {
       const files = event.target.files
@@ -323,7 +330,7 @@ export default {
       return -((dayNumber / 365) * 360 - rotationsoffset);
     },
     timeRotation() {
-      const rotationsoffset = 90;
+      const rotationsoffset = 75;
       let hourOffset = 0;
       if (this.timezone === "MESZ") {
         hourOffset = -1;
