@@ -1,26 +1,24 @@
 {
   "name": "astro",
-  "version": "1.3.3",
+  "version": "1.3.4",
+  "private": false,
+  "description": "This repo contains the source code for the Astro website. It's a App to visualize planet maps and get information about them.",
   "author": {
     "email": "ev3dom@gmx.de",
     "name": "Dominik Fuchs",
     "url": "https://domx4q.github.io"
   },
-  "description": "This repo contains the source code for the Astro website. It's a App to visualize planet maps and get information about them.",
-  "license": "MIT",
-  "homepage": "https://domx4q.github.io/astroProject/",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/domx4q/astroProject.git",
-    "directory": "./"
-  },
-  "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "electron:build": "vue-cli-service electron:build",
+    "electron:serve": "vue-cli-service electron:serve",
+    "postinstall": "electron-builder install-app-deps",
+    "postuninstall": "electron-builder install-app-deps"
   },
+  "main": "background.js",
   "dependencies": {
     "@formkit/addons": "^0.17.4",
     "@formkit/auto-animate": "^1.0.0-pre-alpha.3",
@@ -54,8 +52,20 @@
     "@vue/test-utils": "^2.4.0",
     "@vue/vue3-jest": "^27.0.0-alpha.1",
     "babel-jest": "^27.0.6",
+    "electron": "^13.0.0",
+    "electron-devtools-installer": "^3.1.0",
     "eslint": "^8.44.0",
     "eslint-plugin-vue": "^9.15.1",
-    "jest": "^27.0.5"
+    "file-loader": "^6.2.0",
+    "jest": "^27.0.5",
+    "spectron": "15.0.0",
+    "vue-cli-plugin-electron-builder": "~2.1.1"
+  },
+  "homepage": "https://domx4q.github.io/astroProject/",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/domx4q/astroProject.git",
+    "directory": "./"
   }
 }

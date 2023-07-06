@@ -65,6 +65,11 @@ const routes = [
           name: "example",
           component: () => import("../views/extra/ExampleView.vue"),
         },
+      {
+        path: "update/:version",
+        name: "update",
+        component: () => import("../views/extra/UpdateView.vue"),
+      }
     ]
   }
 ]
@@ -80,7 +85,7 @@ if (process.env.BASE_URL === "/astroProject/") {
 else {
   console.info("Using web history") // skipcq: JS-0002
   router = createRouter({
-    history: createWebHistory(process.env.BASE_URL),
+    history: process.env.IS_ELECTRON ? createWebHashHistory(process.env.BASE_URL) : createWebHistory(process.env.BASE_URL),
     routes
   })
 }

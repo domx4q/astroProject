@@ -1,4 +1,4 @@
-name: Build and Release Vue.js App
+name: Build and Release Vue.js App + Electron App
 
 on:
   push:
@@ -29,6 +29,8 @@ jobs:
           filename: release.zip
           path: ./dist/
           directory: .
+      - name: Build electron app
+        run: npm run electron:build -w # -w for windows, -l for linux, -m for mac
       - name: Build Changelog
         id: github_release
         uses: mikepenz/release-changelog-builder-action@v3
@@ -48,13 +50,23 @@ jobs:
           body: ${{steps.github_release.outputs.changelog}}
           draft: false
           prerelease: false
-      - name: Upload Release Asset
-        id: upload-release-asset
+      - name: Upload Release Asset Zip Code
+        id: upload-release-asset-zip
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
           asset_path: ./release.zip
           asset_name: release.zip
           asset_content_type: application/zip
+      - name: Upload Release Asset Electron
+        id: upload-release-asset-electron
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: $(find ./dist_electron -name "*Setup*.exe")
+          asset_name: $(find ./dist_electron -name "*Setup*.exe")
+          asset_content_type: application/x-msdownload
