@@ -21,7 +21,7 @@
   },
   "main": "background.js",
   "dependencies": {
-    "@formkit/addons": "^0.17.4",
+    "@formkit/addons": "^0.17.5",
     "@formkit/auto-animate": "^1.0.0-pre-alpha.3",
     "@formkit/i18n": "^0.17.5",
     "@formkit/inputs": "^0.17.4",
