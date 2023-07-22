@@ -1,18 +1,30 @@
 <template>
-  <router-view/>
+  <router-view />
   <ImportantPrompt v-if="updateExists">
     <template v-slot:title>
       <h2>Update verfügbar</h2>
     </template>
     <template v-slot:text>
-      <p>Es ist eine neue Version von <b><u>{{appName}}</u></b> verfügbar. Bitte laden Sie die Seite neu, um die neue Version zu installieren.</p>
+      <p>
+        Es ist eine neue Version von
+        <b
+          ><u>{{ appName }}</u></b
+        >
+        verfügbar. Bitte laden Sie die Seite neu, um die neue Version zu
+        installieren.
+      </p>
     </template>
     <template v-slot:buttons>
       <button @click="refreshApp">Neu laden</button>
     </template>
   </ImportantPrompt>
-  <Transition enter-active-class="animate__animated animate__zoomInUp" leave-active-class="animate__animated animate__zoomOutDown" mode="in-out"
-              v-if="false"> <!--hide (grund: stört und fällt auf)-->
+  <Transition
+    enter-active-class="animate__animated animate__zoomInUp"
+    leave-active-class="animate__animated animate__zoomOutDown"
+    mode="in-out"
+    v-if="false"
+  >
+    <!--hide (grund: stört und fällt auf)-->
     <div id="previewBadge" class="badge" v-if="beta">Preview</div>
   </Transition>
 </template>
@@ -25,19 +37,22 @@ import { ClientJS } from "clientjs";
 export default {
   name: "app",
   components: {
-    ImportantPrompt
+    ImportantPrompt,
   },
   data() {
     return {
       client: new ClientJS(),
-      appName: "Astro"
+      appName: "Astro",
     };
   },
   mixins: [update, defaults],
   created() {
     // Read the data from the session storage to restore the state of the app (because when refreshing the page, the state is lost)
     if (sessionStorage.getItem("store")) {
-      this.$store.replaceState({ ...this.$store.state, ...JSON.parse(sessionStorage.getItem("store")) });
+      this.$store.replaceState({
+        ...this.$store.state,
+        ...JSON.parse(sessionStorage.getItem("store")),
+      });
     }
     // Save the state of the app to the session storage before the page is unloaded
     window.addEventListener("beforeunload", () => {
@@ -76,7 +91,7 @@ export default {
       this.$store.state.client = out;
     },
   },
-}
+};
 </script>
 <style>
 /*specific*/
@@ -94,7 +109,8 @@ export default {
   transform: translate(1.4em, 0.2em) rotate(-45deg);
   transform-origin: bottom left;
 }
-.badge, .overlay {
+.badge,
+.overlay {
   z-index: 1000;
 }
 
@@ -105,7 +121,8 @@ export default {
   --text-color: #1b2831;
 
   /*font-family: Avenir, Helvetica, Arial, sans-serif;*/
-  font-family: "Kanit", "Impira", "Montserrat Alternates", "Roboto", "Helvetica", "Arial", sans-serif;
+  font-family: "Kanit", "Impira", "Montserrat Alternates", "Roboto", "Helvetica",
+    "Arial", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: var(--text-color);
@@ -118,7 +135,13 @@ export default {
   padding: 0;
   overflow: hidden;
 
-  background: linear-gradient(144deg, var(--bg-main-color), var(--bg-main-color), var(--bg-secondary-color)) no-repeat;
+  background: linear-gradient(
+      144deg,
+      var(--bg-main-color),
+      var(--bg-main-color),
+      var(--bg-secondary-color)
+    )
+    no-repeat;
   background-size: 600% 600%;
   --animation-time: 100s;
 
@@ -136,19 +159,37 @@ html[data-theme="dark"] #app {
 }
 
 @-webkit-keyframes backgroundAnimation {
-  0%{background-position:0% 58%}
-  50%{background-position:100% 43%}
-  100%{background-position:0% 58%}
+  0% {
+    background-position: 0% 58%;
+  }
+  50% {
+    background-position: 100% 43%;
+  }
+  100% {
+    background-position: 0% 58%;
+  }
 }
 @-moz-keyframes backgroundAnimation {
-  0%{background-position:0% 58%}
-  50%{background-position:100% 43%}
-  100%{background-position:0% 58%}
+  0% {
+    background-position: 0% 58%;
+  }
+  50% {
+    background-position: 100% 43%;
+  }
+  100% {
+    background-position: 0% 58%;
+  }
 }
 @keyframes backgroundAnimation {
-  0%{background-position:0% 58%}
-  50%{background-position:100% 43%}
-  100%{background-position:0% 58%}
+  0% {
+    background-position: 0% 58%;
+  }
+  50% {
+    background-position: 100% 43%;
+  }
+  100% {
+    background-position: 0% 58%;
+  }
 }
 html[data-theme="dark"] option {
   color: #e7e7e7;
@@ -174,7 +215,8 @@ hr {
   width: 10px;
   height: 10px;
 }
-::-webkit-scrollbar-track, ::-webkit-scrollbar-corner {
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
   background: rgba(0, 0, 0, 0.2);
 }
 ::-webkit-scrollbar-thumb {

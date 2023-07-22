@@ -1,11 +1,14 @@
 <template>
-  <ThemeSwitch only-logic/>
+  <ThemeSwitch only-logic />
   <main>
-    <h1 id="code">{{code}}</h1>
-    <h2 id="message">{{message}}</h2>
+    <h1 id="code">{{ code }}</h1>
+    <h2 id="message">{{ message }}</h2>
 
     <div v-if="code == 404">
-      <p>Sie werden in <span id="countdown">{{countdown}}</span> Sekunden auf die Startseite weitergeleitet.</p>
+      <p>
+        Sie werden in <span id="countdown">{{ countdown }}</span> Sekunden auf
+        die Startseite weitergeleitet.
+      </p>
     </div>
   </main>
 </template>
@@ -16,7 +19,7 @@ import ThemeSwitch from "@/components/themeSwitch.vue";
 export default {
   name: "NotFoundView",
   components: {
-    ThemeSwitch
+    ThemeSwitch,
   },
   data() {
     return {

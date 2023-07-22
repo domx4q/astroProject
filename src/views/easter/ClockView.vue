@@ -1,5 +1,5 @@
 <template>
-  <canvas v-if="mode==='fancy'" ref="fluid-canvas"></canvas>
+  <canvas v-if="mode === 'fancy'" ref="fluid-canvas"></canvas>
   <div class="clockHolder" :class="mode">
     <div class="clock">
       {{ timeString }}
@@ -18,12 +18,12 @@ export default {
       mode: "normal",
 
       alreadyMounted: false,
-    }
+    };
   },
   computed: {
     timeString() {
-      return this.time.toLocaleTimeString()
-    }
+      return this.time.toLocaleTimeString();
+    },
   },
   created() {
     const query = this.$route.query;
@@ -37,8 +37,8 @@ export default {
   mounted() {
     this.alreadyMounted = true;
     setInterval(() => {
-      this.time = new Date()
-    }, 100) // don't use 1000, because then the clock will only update every second which can skip a second
+      this.time = new Date();
+    }, 100); // don't use 1000, because then the clock will only update every second which can skip a second
 
     if (this.mode === "fancy") {
       this.initFluid();
@@ -47,9 +47,9 @@ export default {
   methods: {
     changeMode() {
       if (this.mode === "normal") {
-        this.mode = "fancy"
+        this.mode = "fancy";
       } else if (this.mode === "fancy") {
-        this.mode = "normal"
+        this.mode = "normal";
       }
     },
     initFluid() {
@@ -83,13 +83,14 @@ export default {
         SUNRAYS_RESOLUTION: 196,
         SUNRAYS_WEIGHT: 1.0,
       });
-    }
+    },
   },
-}
+};
 </script>
 
 <style scoped>
-.clockHolder, canvas {
+.clockHolder,
+canvas {
   position: absolute;
   left: 0;
   top: 0;

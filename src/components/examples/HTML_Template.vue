@@ -4,16 +4,23 @@
       Die Nachricht lautet: <b>{{ message }}</b>
     </p>
     <DynamicButton color="orange" text="Text ändern" @clicked="changeText()" />
-    <hr>
+    <hr />
     <p>Ein Element kann auch durch html Templates wiederholt werden.</p>
-    <span v-for="n in 5" :key="n">Wiederholung: {{ n }}<br></span>
-      <hr>
-      <p>Nun noch ein kleines Beispiel mit "v-model" und if statements<br>
-      Durch diese kann man nicht nur den Text ersetzen, wonach es hier eventuell aussieht, sondern ganze bereiche ersetzen.</p>
-      <input type="checkbox" v-model="ifTest" name="IF"/>
-      <label for="IF">Zum ändern der zu überprüfenden Variable</label><br>
-      <p style="color: #008200" v-if="ifTest">Dieser Text wird angezeigt, wenn die Checkbox <b><u>an</u></b> ist.</p>
-      <p style="color: #ff0000" v-else>Dieser Text wird angezeigt, wenn die Checkbox <b><u>aus</u></b> ist.</p>
+    <span v-for="n in 5" :key="n">Wiederholung: {{ n }}<br /></span>
+    <hr />
+    <p>
+      Nun noch ein kleines Beispiel mit "v-model" und if statements<br />
+      Durch diese kann man nicht nur den Text ersetzen, wonach es hier eventuell
+      aussieht, sondern ganze bereiche ersetzen.
+    </p>
+    <input type="checkbox" v-model="ifTest" name="IF" />
+    <label for="IF">Zum ändern der zu überprüfenden Variable</label><br />
+    <p style="color: #008200" v-if="ifTest">
+      Dieser Text wird angezeigt, wenn die Checkbox <b><u>an</u></b> ist.
+    </p>
+    <p style="color: #ff0000" v-else>
+      Dieser Text wird angezeigt, wenn die Checkbox <b><u>aus</u></b> ist.
+    </p>
   </div>
 </template>
 

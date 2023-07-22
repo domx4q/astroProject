@@ -25,19 +25,19 @@ export default {
   props: {
     dismissible: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
-      show: true
+      show: true,
     };
   },
   methods: {
     close() {
       this.show = false;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -104,7 +104,8 @@ html[data-theme="dark"] .important-prompt {
   font-weight: bold;
 }
 
-::v-slotted(button), button {
+::v-slotted(button),
+button {
   background-color: transparent;
   border: none;
   border-radius: 5px;
@@ -113,13 +114,26 @@ html[data-theme="dark"] .important-prompt {
   cursor: pointer;
   color: var(--text-color);
 }
-::v-slotted(button:hover), button:hover {
+::v-slotted(button:hover),
+button:hover {
   background-color: #e7e7e7;
 }
-html[data-theme="dark"] ::v-slotted(button:hover), html[data-theme="dark"] button:hover {
+html[data-theme="dark"] ::v-slotted(button:hover),
+html[data-theme="dark"] button:hover {
   background-color: #4f4f4f;
 }
-.content_title ::v-slotted(h1),.content_title h1, .content_title ::v-slotted(h2), .content_title h2, .content_title ::v-slotted(h3), .content_title h3, .content_title ::v-slotted(h4), .content_title h4, .content_title ::v-slotted(h5), .content_title h5, .content_title ::v-slotted(h6), .content_title h6 {
+.content_title ::v-slotted(h1),
+.content_title h1,
+.content_title ::v-slotted(h2),
+.content_title h2,
+.content_title ::v-slotted(h3),
+.content_title h3,
+.content_title ::v-slotted(h4),
+.content_title h4,
+.content_title ::v-slotted(h5),
+.content_title h5,
+.content_title ::v-slotted(h6),
+.content_title h6 {
   margin: 0;
   padding: 0;
 }

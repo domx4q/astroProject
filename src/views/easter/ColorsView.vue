@@ -1,5 +1,5 @@
 <template>
-  <canvas ref="fluid-canvas"/>
+  <canvas ref="fluid-canvas" />
 </template>
 
 <script>
@@ -42,10 +42,9 @@ export default {
         SUNRAYS_RESOLUTION: 196,
         SUNRAYS_WEIGHT: 1.0,
       });
-    }
-  }
-
-}
+    },
+  },
+};
 </script>
 
 <style scoped>

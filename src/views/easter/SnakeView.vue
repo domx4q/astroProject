@@ -1,15 +1,14 @@
 <template>
   <div class="snake-game">
     <div class="score">
-      Score: {{ score }}<br>
-      High Score: {{ highScore }}<br>
-      <i>Teleporting is <b>{{ teleport ? 'enabled' : 'disabled'}}</b></i>
+      Score: {{ score }}<br />
+      High Score: {{ highScore }}<br />
+      <i
+        >Teleporting is <b>{{ teleport ? "enabled" : "disabled" }}</b></i
+      >
     </div>
-    <div class="board" :class="{noBorder:!bordersEnabled, paused:paused}">
-      <div
-        v-for="(row, rowIndex) in board"
-        :key="rowIndex"
-        class="row">
+    <div class="board" :class="{ noBorder: !bordersEnabled, paused: paused }">
+      <div v-for="(row, rowIndex) in board" :key="rowIndex" class="row">
         <div
           v-for="(cell, cellIndex) in row"
           :key="cellIndex"
@@ -17,16 +16,20 @@
             cell: true,
             snake: cell === 1,
             food: cell === 2,
-            head: rowIndex === snakeHead.y && cellIndex === snakeHead.x
+            head: rowIndex === snakeHead.y && cellIndex === snakeHead.x,
           }"
-          :style="{width:tileSize, height:tileSize}"/>
+          :style="{ width: tileSize, height: tileSize }"
+        />
       </div>
     </div>
     <div class="controls">
       <ul>
         <li>Pause: <kbd>p</kbd></li>
         <li>Restart: <kbd>r</kbd> or <kbd>Esc</kbd></li>
-        <li v-if="!isMobile">Navigate: <kbd>↑</kbd><kbd>←</kbd><kbd>↓</kbd><kbd>→</kbd> or <kbd>w</kbd><kbd>a</kbd><kbd>s</kbd><kbd>d</kbd></li>
+        <li v-if="!isMobile">
+          Navigate: <kbd>↑</kbd><kbd>←</kbd><kbd>↓</kbd><kbd>→</kbd> or
+          <kbd>w</kbd><kbd>a</kbd><kbd>s</kbd><kbd>d</kbd>
+        </li>
         <li v-else>Navigate: Swipe</li>
         <li>Toggle Borders: <kbd>b</kbd></li>
         <li>Toggle Wall Teleport: <kbd>t</kbd></li>
@@ -49,7 +52,7 @@ export default {
       score: 0,
       highScore: 0,
       snake: [],
-      snakeHead: {x:0, y:0},
+      snakeHead: { x: 0, y: 0 },
       food: [],
       direction: "down",
       teleport: true,
@@ -58,7 +61,7 @@ export default {
 
       bordersEnabled: true,
       lastMovedDirection: "down",
-      lastTouchStart: {x:-1, y:-1},
+      lastTouchStart: { x: -1, y: -1 },
     };
   },
   created() {
@@ -75,12 +78,14 @@ export default {
       this.tick();
     }, 150);
 
-    this.cssTileSize = this.tileSize
+    this.cssTileSize = this.tileSize;
   },
   methods: {
     init() {
       // choose a random direction
-      this.direction = ["down", "down", "left", "right"][Math.floor(Math.random() * 4)];
+      this.direction = ["down", "down", "left", "right"][
+        Math.floor(Math.random() * 4)
+      ];
       this.board = [];
       this.score = 0;
       for (let i = 0; i < this.count; i++) {
@@ -92,9 +97,9 @@ export default {
       const startX = Math.floor(Math.random() * this.count);
       const startY = Math.floor(Math.random() * 18);
       this.snake = [
-        {x: startX, y: startY},
-        {x: startX, y: startY + 1},
-        {x: startX, y: startY + 2},
+        { x: startX, y: startY },
+        { x: startX, y: startY + 1 },
+        { x: startX, y: startY + 2 },
       ];
       try {
         this.snake.forEach((cell) => {
@@ -135,7 +140,9 @@ export default {
       // check if we can teleport
       if (this.teleport) {
         // check if step will teleport
-        if (this.isGameOver(newHead, false) !== this.isGameOver(newHead, true)) {
+        if (
+          this.isGameOver(newHead, false) !== this.isGameOver(newHead, true)
+        ) {
           // teleport
           // stay in array range, otherwise we will get an error
           if (newHead.x < 0) newHead.x = this.count - 1;
@@ -214,14 +221,14 @@ export default {
       }
     },
     handleTouchStart(e) {
-      e.preventDefault()
+      e.preventDefault();
       this.lastTouchStart = {
         x: e.touches[0].clientX,
         y: e.touches[0].clientY,
       };
     },
     handleTouchEnd(e) {
-      e.preventDefault()
+      e.preventDefault();
       const touchEnd = {
         x: e.changedTouches[0].clientX,
         y: e.changedTouches[0].clientY,
@@ -230,15 +237,23 @@ export default {
       const diffY = touchEnd.y - this.lastTouchStart.y;
       if (Math.abs(diffX) > Math.abs(diffY)) {
         if (diffX > 0) {
-          document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" }));
+          document.dispatchEvent(
+            new KeyboardEvent("keydown", { key: "ArrowRight" })
+          );
         } else {
-          document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft" }));
+          document.dispatchEvent(
+            new KeyboardEvent("keydown", { key: "ArrowLeft" })
+          );
         }
       } else {
         if (diffY > 0) {
-          document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown" }));
+          document.dispatchEvent(
+            new KeyboardEvent("keydown", { key: "ArrowDown" })
+          );
         } else {
-          document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
+          document.dispatchEvent(
+            new KeyboardEvent("keydown", { key: "ArrowUp" })
+          );
         }
       }
     },
@@ -247,7 +262,12 @@ export default {
     isGameOver() {
       return (newHead, onlySelf = false) => {
         if (!onlySelf) {
-          if (newHead.x < 0 || newHead.x > this.count - 1 || newHead.y < 0 || newHead.y > this.count - 1) {
+          if (
+            newHead.x < 0 ||
+            newHead.x > this.count - 1 ||
+            newHead.y < 0 ||
+            newHead.y > this.count - 1
+          ) {
             return true;
           }
         }
@@ -266,7 +286,11 @@ export default {
 
     tileSize() {
       let borderSize = this.bordersEnabled ? 2 : 0;
-      return ((Math.min(this.screenSize.width, this.screenSize.height) / this.count) -borderSize) + "px";
+      return (
+        Math.min(this.screenSize.width, this.screenSize.height) / this.count -
+        borderSize +
+        "px"
+      );
     },
   },
   watch: {
@@ -274,9 +298,9 @@ export default {
       if (this.score > this.highScore) {
         this.highScore = this.score;
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -330,7 +354,8 @@ export default {
 .board.paused {
   opacity: 0.5;
 }
-.board.paused .cell.snake, .board.paused .cell.food {
+.board.paused .cell.snake,
+.board.paused .cell.food {
   background-color: #6e6e6e;
 }
 

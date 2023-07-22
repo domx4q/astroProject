@@ -1,7 +1,9 @@
 <template>
   <div class="dropdown" v-auto-animate>
     <div class="title" @click="toggle" v-if="showTitle">
-      <h4 v-if="italic"><i>{{ title }}</i></h4>
+      <h4 v-if="italic">
+        <i>{{ title }}</i>
+      </h4>
       <h3 v-else>{{ title }}</h3>
     </div>
     <div class="content" v-if="open">
@@ -92,7 +94,8 @@ html[data-theme="dark"] .dropdown {
   background-color: var(--bg-color);
   cursor: pointer;
 }
-.dropdown .title h3, .dropdown .title h4 {
+.dropdown .title h3,
+.dropdown .title h4 {
   margin: 0;
   padding: 0;
   font-size: 1.2rem;
