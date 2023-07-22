@@ -5,7 +5,9 @@
         <h3>{{ title }}</h3>
       </div>
       <div class="message__header__close">
-        <span class="close" @click="closeMessage" style="padding: 3px">&times;</span>
+        <span class="close" @click="closeMessage" style="padding: 3px"
+          >&times;</span
+        >
       </div>
     </div>
     <div class="message__body" v-if="message !== ''">
@@ -49,7 +51,7 @@ export default {
       this.$emit("close");
     },
   },
-}
+};
 </script>
 
 <style scoped>
@@ -154,7 +156,8 @@ html[data-theme="dark"] .message {
 }
 </style>
 <style>
-.message.info {}
+.message.info {
+}
 .message.success .message__body__content {
   color: #3bff00;
 }

@@ -2,12 +2,10 @@
   <div class="switcher" :class="theme" v-if="!onlyLogic">
     <span class="title">Theme:</span>
     <div class="hittable" @click="switchTheme">
-      <Icon
-          class="switcher__icon"
-          :icon="themeIcon"/>
+      <Icon class="switcher__icon" :icon="themeIcon" />
       <span class="switcher__text">
-      {{ themeText }}
-    </span>
+        {{ themeText }}
+      </span>
     </div>
   </div>
 </template>
@@ -22,7 +20,7 @@ export default {
     onlyLogic: {
       type: Boolean,
       default: false,
-      required: false
+      required: false,
     },
     overrideTheme: {
       type: String,
@@ -96,14 +94,14 @@ export default {
       this.$store.state.theme = this.theme;
       this.$emit("theme", this.theme);
       document.documentElement.setAttribute("data-theme", this.theme);
-    }
+    },
   },
   watch: {
     theme() {
       this.update();
     },
   },
-}
+};
 </script>
 <style scoped>
 .switcher {
