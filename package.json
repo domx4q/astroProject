@@ -41,7 +41,7 @@
     "webgl-fluid": "^0.3.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.9",
+    "@babel/core": "^7.22.10",
     "@babel/eslint-parser": "^7.22.10",
     "@iconify/vue": "^4.1.0",
     "@vue/cli-plugin-babel": "~5.0.0",
