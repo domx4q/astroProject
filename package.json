@@ -24,7 +24,7 @@
   "dependencies": {
     "@formkit/addons": "^0.18.3",
     "@formkit/auto-animate": "^1.0.0-pre-alpha.3",
-    "@formkit/i18n": "^0.18.4",
+    "@formkit/i18n": "^0.19.0",
     "@formkit/inputs": "^0.18.3",
     "@formkit/pro": "^0.114.2",
     "@formkit/vue": "^0.18.3",
