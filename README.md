@@ -15,7 +15,7 @@ Dort stehen noch weitere Informationen zu dieser Projektarbeit zur Verfügung.
 
 | Link                                   | Beschreibung                                               |
 | -------------------------------------- | ---------------------------------------------------------- |
-| https://cloudster.online/              | (momentaner<sup>1</sup>) Zugang zur App                    |
+| https://cloudster.online/astro/        | (momentaner<sup>1</sup>) Zugang zur App                    |
 | https://astro-project-pi.vercel.app/   | Zugang zur App [(Vercel)](https://vercel.com/)             |
 | https://domx4q.github.io/astroProject/ | Zugang zur App [(GitHub Pages)](https://pages.github.com/) |
 
