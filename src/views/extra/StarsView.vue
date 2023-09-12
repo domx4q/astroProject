@@ -27,6 +27,7 @@
 
       <div class="content">
         <FormKit label="Aktuelle Zeit" type="button" @click="setCurrent" />
+        <FormKit label="Aktuell halten" type="checkbox" @click="keepCurrent = !keepCurrent" />
         <FormKit type="group">
           <FormKit v-model="time" :label="`Zeit (${timezone})`" type="time" />
           <FormKit v-model="date" label="Datum" type="date" />
@@ -129,6 +130,7 @@ export default {
     return {
       controlsCollapsed: true,
       everOpened: false,
+      keepCurrent: false,
 
       innerRotation: 0,
       outerRotation: 0,
@@ -161,6 +163,12 @@ export default {
     this.handleResize();
     window.addEventListener("resize", this.handleResize);
     this.setCurrent();
+
+    setInterval(() => {
+      if (this.keepCurrent) {
+        this.setCurrent();
+      }
+    }, 1000);
   },
   methods: {
     setCurrent() {
