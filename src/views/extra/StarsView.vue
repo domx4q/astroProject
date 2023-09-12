@@ -48,6 +48,8 @@
             label="Rotation sperren"
             type="checkbox"
           />
+          <FormKit type="slider" label="Animations Geschwindigkeit" v-model="transitionSpeed" :min="0.1" :max="5"
+                   :step="0.1" />
           <p>
             Um die Karte zu drehen, ziehen Sie mit der Maus über die Karte.<br />
             Wenn sie die obere Karte drehen möchten, drücken Sie die
@@ -152,6 +154,7 @@ export default {
       },
       enableTransitionDefault: true,
       enableTransition: true,
+      transitionSpeed: 1,
 
       fileInput: null,
     };
@@ -251,13 +254,13 @@ export default {
     },
 
     normalizeAngles() {
-      this.enableTransition = false;
+      if (!this.mouseDown) this.enableTransition = false;
 
       this.innerRotation = this.innerRotation % 360;
       this.outerRotation = this.outerRotation % 360;
       this.entireRotation = this.entireRotation % 360;
 
-      this.enableTransition = true;
+      if (!this.mouseDown) this.enableTransition = true;
     },
 
     // region handlers
@@ -530,7 +533,7 @@ html[data-theme="dark"] #stars {
 #stars.transition #outerDisc,
 #stars.transition #innerDisc,
 #stars.transition #entireDisc {
-  transition: transform 8s; /*todo remove when done developing; default: 1s*/
+  transition: transform v-bind(transitionSpeed + 's');
 }
 
 #marker {
