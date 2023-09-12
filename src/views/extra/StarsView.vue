@@ -210,15 +210,16 @@ export default {
     },
 
     getNearestDegree(current, target) {
-      const diff = Math.abs(target - current);
-      if (diff > 180) {
-        if (current > target) {
-          return current + (target + (360 - current));
-        } else {
-          return -(360 - target);
-        }
+      const rawRotationCurrent = current % 360;
+      const rawRotationTarget = target % 360;
+      const diff = rawRotationTarget - rawRotationCurrent;
+      if (Math.abs(diff) > 180) {
+        return rawRotationTarget > rawRotationCurrent
+          ? rawRotationCurrent - (360 - diff)
+          : rawRotationCurrent + (360 + diff);
+      } else {
+        return rawRotationTarget;
       }
-      return target;
     },
     uploadDiscs(event) {
       const files = event.target.files;
@@ -515,7 +516,7 @@ html[data-theme="dark"] #stars {
 #stars.transition #outerDisc,
 #stars.transition #innerDisc,
 #stars.transition #entireDisc {
-  transition: transform 1s;
+  transition: transform 8s;
 }
 
 #marker {
@@ -596,6 +597,7 @@ a {
   padding: 5px;
 }
 
+/*noinspection CssUnusedSymbol*/
 #controls.expanding {
   overflow-y: hidden;
 }
