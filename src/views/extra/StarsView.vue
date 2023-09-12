@@ -162,6 +162,7 @@ export default {
 
     this.handleResize();
     window.addEventListener("resize", this.handleResize);
+    this.normalizeAngles();
     this.setCurrent();
 
     setInterval(() => {
@@ -218,16 +219,8 @@ export default {
     },
 
     getNearestDegree(current, target) {
-      const rawRotationCurrent = current % 360;
-      const rawRotationTarget = target % 360;
-      const diff = rawRotationTarget - rawRotationCurrent;
-      if (Math.abs(diff) > 180) {
-        return rawRotationTarget > rawRotationCurrent
-          ? rawRotationCurrent - (360 - diff)
-          : rawRotationCurrent + (360 + diff);
-      } else {
-        return rawRotationTarget;
-      }
+      return target % 360;
+      // for the previous implementation, see commit 8169c73dd7fedd0b38f9d928ef7efdcf24d195a6
     },
     uploadDiscs(event) {
       const files = event.target.files;
@@ -255,6 +248,16 @@ export default {
         reader.readAsDataURL(file);
       }
       this.fileInput = {};
+    },
+
+    normalizeAngles() {
+      this.enableTransition = false;
+
+      this.innerRotation = this.innerRotation % 360;
+      this.outerRotation = this.outerRotation % 360;
+      this.entireRotation = this.entireRotation % 360;
+
+      this.enableTransition = true;
     },
 
     // region handlers
@@ -436,15 +439,18 @@ export default {
     },
 
     innerRotation(newValue, oldValue) {
+      this.normalizeAngles();
       this.finalRotation.inner = this.getNearestDegree(oldValue, newValue);
     },
     outerRotation(newValue, oldValue) {
+      this.normalizeAngles();
       if (this.orientationLocked) {
         this.setOrientation();
       }
       this.finalRotation.outer = this.getNearestDegree(oldValue, newValue);
     },
     entireRotation(newValue, oldValue) {
+      this.normalizeAngles();
       this.finalRotation.entire = this.getNearestDegree(oldValue, newValue);
     },
 
@@ -524,7 +530,7 @@ html[data-theme="dark"] #stars {
 #stars.transition #outerDisc,
 #stars.transition #innerDisc,
 #stars.transition #entireDisc {
-  transition: transform 8s;
+  transition: transform 8s; /*todo remove when done developing; default: 1s*/
 }
 
 #marker {
