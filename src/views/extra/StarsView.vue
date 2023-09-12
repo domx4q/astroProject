@@ -27,6 +27,7 @@
 
       <div class="content">
         <FormKit label="Aktuelle Zeit" type="button" @click="setCurrent" />
+        <FormKit label="Aktuell halten" type="checkbox" @click="keepCurrent = !keepCurrent" />
         <FormKit type="group">
           <FormKit v-model="time" :label="`Zeit (${timezone})`" type="time" />
           <FormKit v-model="date" label="Datum" type="date" />
@@ -47,6 +48,8 @@
             label="Rotation sperren"
             type="checkbox"
           />
+          <FormKit type="slider" label="Animations Geschwindigkeit" v-model="transitionSpeed" :min="0.1" :max="5"
+                   :step="0.1" />
           <p>
             Um die Karte zu drehen, ziehen Sie mit der Maus über die Karte.<br />
             Wenn sie die obere Karte drehen möchten, drücken Sie die
@@ -129,6 +132,7 @@ export default {
     return {
       controlsCollapsed: true,
       everOpened: false,
+      keepCurrent: false,
 
       innerRotation: 0,
       outerRotation: 0,
@@ -150,6 +154,7 @@ export default {
       },
       enableTransitionDefault: true,
       enableTransition: true,
+      transitionSpeed: 1,
 
       fileInput: null,
     };
@@ -160,7 +165,14 @@ export default {
 
     this.handleResize();
     window.addEventListener("resize", this.handleResize);
+    this.normalizeAngles();
     this.setCurrent();
+
+    setInterval(() => {
+      if (this.keepCurrent) {
+        this.setCurrent();
+      }
+    }, 1000);
   },
   methods: {
     setCurrent() {
@@ -210,16 +222,8 @@ export default {
     },
 
     getNearestDegree(current, target) {
-      const rawRotationCurrent = current % 360;
-      const rawRotationTarget = target % 360;
-      const diff = rawRotationTarget - rawRotationCurrent;
-      if (Math.abs(diff) > 180) {
-        return rawRotationTarget > rawRotationCurrent
-          ? rawRotationCurrent - (360 - diff)
-          : rawRotationCurrent + (360 + diff);
-      } else {
-        return rawRotationTarget;
-      }
+      return target % 360;
+      // for the previous implementation, see commit 8169c73dd7fedd0b38f9d928ef7efdcf24d195a6
     },
     uploadDiscs(event) {
       const files = event.target.files;
@@ -247,6 +251,16 @@ export default {
         reader.readAsDataURL(file);
       }
       this.fileInput = {};
+    },
+
+    normalizeAngles() {
+      if (!this.mouseDown) this.enableTransition = false;
+
+      this.innerRotation = this.innerRotation % 360;
+      this.outerRotation = this.outerRotation % 360;
+      this.entireRotation = this.entireRotation % 360;
+
+      if (!this.mouseDown) this.enableTransition = true;
     },
 
     // region handlers
@@ -428,15 +442,18 @@ export default {
     },
 
     innerRotation(newValue, oldValue) {
+      this.normalizeAngles();
       this.finalRotation.inner = this.getNearestDegree(oldValue, newValue);
     },
     outerRotation(newValue, oldValue) {
+      this.normalizeAngles();
       if (this.orientationLocked) {
         this.setOrientation();
       }
       this.finalRotation.outer = this.getNearestDegree(oldValue, newValue);
     },
     entireRotation(newValue, oldValue) {
+      this.normalizeAngles();
       this.finalRotation.entire = this.getNearestDegree(oldValue, newValue);
     },
 
@@ -516,7 +533,7 @@ html[data-theme="dark"] #stars {
 #stars.transition #outerDisc,
 #stars.transition #innerDisc,
 #stars.transition #entireDisc {
-  transition: transform 8s;
+  transition: transform v-bind(transitionSpeed + 's');
 }
 
 #marker {
