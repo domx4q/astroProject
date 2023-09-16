@@ -1,6 +1,6 @@
 <template>
   <div id="background">
-    <div id="text" v-html="formattedText">
+    <div id="text" v-html="formattedText"> <!--skipcq: JS-0693-->
     </div>
     <div v-if="showInput" id="inputContainer">
       <textarea id="input" v-model="text" ref="input"></textarea>
@@ -18,6 +18,7 @@ export default {
     raw_text: {
       type: String,
       required: false,
+      default: ""
     }
   },
   data() {
@@ -50,7 +51,6 @@ export default {
     },
   },
   mounted() {
-    console.log(this.raw_text)
     this.showInput = this.checkEmpty(this.raw_text)
     if (!this.showInput) {
       this.text = this.raw_text
