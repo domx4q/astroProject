@@ -1,6 +1,7 @@
 <template>
   <div id="background">
-    <div id="text" v-html="formattedText"> <!--skipcq: JS-0693-->
+    <!-- skipcq: JS-0693 -->
+    <div id="text" v-html="formattedText">
     </div>
     <div v-if="showInput" id="inputContainer">
       <textarea id="input" v-model="text" ref="input"></textarea>
