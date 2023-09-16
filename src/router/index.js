@@ -45,6 +45,14 @@ const routes = [
         name: "colors",
         component: () => import("../views/easter/ColorsView.vue"),
       },
+      {
+        path: "text",
+        name: "text",
+        component: () => import("../views/easter/LargeTextView.vue"),
+        props: (route) => ({
+          raw_text: route.query.text || route.query.t,
+        }),
+      }
     ],
   },
   {
