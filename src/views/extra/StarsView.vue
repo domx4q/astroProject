@@ -5,13 +5,12 @@
     @mousedown="handleMouseDown"
     @mouseleave="handleMouseUp"
     @mousemove="handleMouseMove"
-    @mouseup="handleMouseUp"
-  >
+    @mouseup="handleMouseUp">
+    <ThemeSwitch only-logic/> <!--otherwise, only if the settings are expanded, the Theme will work-->
     <div
       id="controls"
-      :class="{ 'collapsed fullyCollapsed': !showFullSidePanel }"
-      style="height: 843px; width: 200px"
-    >
+      :class="{ 'collapsed fullyCollapsed': !showFullSidePanel }"> <!--todo find a good way, to use auto animate and make it collapsable-->
+<!--      style="height: 843px; width: 200px">-->
       <div
         v-if="!showFullSidePanel"
         id="controlsCollapse"
@@ -20,17 +19,22 @@
         @click="
           controlsCollapsed = !controlsCollapsed;
           everOpened = true;
-        "
-      >
+        ">
         <Icon class="collapseIcon" icon="ph:caret-double-right-bold" />
       </div>
+      <div class="content" v-auto-animate>
+        <Details title="Zeit / Datum" :default_open="detailsConfig.Zeit" :negative-margin="30" @toggle="toggleDetails('Zeit')">
+          <FormKit label="Aktuelle Zeit" title="Setzt die Sternenkarte auf die aktuelle Zeit" type="button"
+                   @click="setCurrent"/>
+          <FormKit label="Aktuell halten" title="Hält die Sternenkarte auf der aktuellen Zeit, somit läuft die Karte mit." type="checkbox"
+                   @click="keepCurrent = !keepCurrent"/>
 
-      <div class="content">
-        <FormKit label="Aktuelle Zeit" type="button" @click="setCurrent" />
-        <FormKit label="Aktuell halten" type="checkbox" @click="keepCurrent = !keepCurrent" />
-        <FormKit type="group">
-          <FormKit v-model="time" :label="`Zeit (${timezone})`" type="time" />
-          <FormKit v-model="date" label="Datum" type="date" />
+          <Details :default_open="detailsConfig.Zeitpunkt" title="Zeitpunkt" @toggle="toggleDetails('Zeitpunkt')">
+            <FormKit v-model="time" :label="`Zeit (${timezone})`" type="time"/>
+            <FormKit v-model="date" label="Datum" type="date"/>
+          </Details>
+        </Details>
+        <Details title="Ausrichtung" :default_open="detailsConfig.Ausrichtung" @toggle="toggleDetails('Ausrichtung')">
           <FormKit
             v-model="orientation"
             :options="[
@@ -48,40 +52,39 @@
             label="Rotation sperren"
             type="checkbox"
           />
-          <FormKit type="slider" label="Animations Geschwindigkeit" v-model="transitionSpeed" :min="0.1" :max="5"
-                   :step="0.1" />
-          <p>
-            Um die Karte zu drehen, ziehen Sie mit der Maus über die Karte.<br />
-            Wenn sie die obere Karte drehen möchten, drücken Sie die
-            <b>Strg-Taste</b> und ziehen Sie mit der Maus.
-          </p>
-          <ThemeSwitch />
-          <div style="margin-bottom: 10px"></div>
-          <FormKit type="group">
-            <FormKit
+        </Details>
+        <Details title="Einstellungen" :default_open="detailsConfig.Einstellungen" @toggle="toggleDetails('Einstellungen')">
+          <FormKit
               v-model="fileInput"
               accept="image/*"
               help="Neue Sternkarte hochladen (1000x1000px)"
               label="Discs"
               type="file"
               @change="uploadDiscs"
-            />
-          </FormKit>
-        </FormKit>
-        <p style="margin-top: -5px">
-          Diese Anwendung wurde von <u>Dominik Fuchs</u> entwickelt.<br />Für
-          weitere Informationen besuchen Sie bitte
-          <a
-            href="https://github.com/domx4q/astroProject"
-            rel="noopener noreferrer"
-            target="_blank"
-            >GitHub</a
-          >
-        </p>
-        <p style="margin-top: -8px">
-          Grundlage der Sternkarte von <u>Dipl.-Phys. Torsten Rahn</u>, mit
-          freundlicher Genehmigung
-        </p>
+          />
+        <FormKit type="slider" label="Animations Geschwindigkeit" v-model="transitionSpeed" :min="0.1" :max="5"
+                   :step="0.1" />
+          <ThemeSwitch />
+        </Details>
+        <Details :default_open="detailsConfig.Informationen" title="Informationen"
+                 @toggle="toggleDetails('Informationen')">
+          <Details :default_open="detailsConfig.Anleitung" title="Anleitung" @toggle="toggleDetails('Anleitung')">
+            Um die Karte zu drehen, ziehen Sie mit der Maus über die Karte.<br/>
+            Wenn sie die obere Karte drehen möchten, drücken Sie die
+            <b>Strg-Taste</b> und ziehen Sie mit der Maus.
+          </Details>
+          <Details :default_open="detailsConfig.Author" title="Autor" @toggle="toggleDetails('Author')">
+            Diese Anwendung wurde von <u><nobr>Dominik Fuchs</nobr></u> entwickelt.<br/>
+            Für weitere Informationen besuchen Sie bitte
+            <a href="https://github.com/domx4q/astroProject"
+               rel="noopener noreferrer"
+               target="_blank">GitHub</a>
+          </Details>
+          <Details :default_open="detailsConfig.Grundlagen" title="Grundlagen" @toggle="toggleDetails('Grundlagen')">
+            Grundlage der Sternkarte von <u><nobr>Dipl.-Phys.</nobr> <nobr>Torsten Rahn</nobr></u>, mit
+            freundlicher Genehmigung
+          </Details>
+        </Details>
       </div>
     </div>
 
@@ -107,6 +110,7 @@
 
 <script>
 import ThemeSwitch from "@/components/themeSwitch.vue";
+import Details from "@/components/details.vue";
 import defaults from "@/mixins/defaults";
 
 function createDateAsUTC(date, offset = 0) {
@@ -127,6 +131,7 @@ export default {
   mixins: [defaults],
   components: {
     ThemeSwitch,
+    Details,
   },
   data() {
     return {
@@ -157,6 +162,17 @@ export default {
       transitionSpeed: 1,
 
       fileInput: null,
+
+      detailsConfig: {
+        Zeit: true,
+        Zeitpunkt: false,
+        Ausrichtung: false,
+        Einstellungen: false,
+        Informationen: true,
+        Anleitung: true,
+        Author: false,
+        Grundlagen: false,
+      }
     };
   },
   mounted() {
@@ -175,6 +191,10 @@ export default {
     }, 1000);
   },
   methods: {
+    toggleDetails(name) {
+      this.detailsConfig[name] = !this.detailsConfig[name];
+    },
+
     setCurrent() {
       this.date = this.convertDate(new Date());
 
@@ -417,6 +437,8 @@ export default {
   },
   watch: {
     controlsCollapsed(newVal) {
+      return; // disabled
+
       const controls = document.querySelector("#controls");
       const initialHeight = controls.clientHeight - 10; // because padding
       const initialWidth = controls.clientWidth - 10;
@@ -579,7 +601,8 @@ html[data-theme="dark"] #controls {
 }
 
 a {
-  color: #156dec;
+  color: #0c46d2;
+  font-weight: 700;
 }
 
 .iconHolder,
