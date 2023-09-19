@@ -27,7 +27,7 @@
           <FormKit label="Aktuelle Zeit" title="Setzt die Sternenkarte auf die aktuelle Zeit" type="button"
                    @click="setCurrent"/>
           <FormKit label="Aktuell halten" title="Hält die Sternenkarte auf der aktuellen Zeit, somit läuft die Karte mit." type="checkbox"
-                   @click="keepCurrent = !keepCurrent"/>
+                   v-model="keepCurrent"/>
 
           <Details :default_open="detailsConfig.Zeitpunkt" title="Zeitpunkt" @toggle="toggleDetails('Zeitpunkt')">
             <FormKit v-model="time" :label="`Zeit (${timezone})`" type="time"/>
