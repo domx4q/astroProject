@@ -4,10 +4,12 @@ import {
   createWebHashHistory,
 } from "vue-router";
 import HomeView from "../views/HomeView.vue";
+import isAdmin from "@/extra/authentification";
 
 const routes = [
   {
     path: "/",
+    alias: "/home",
     name: "home",
     component: HomeView,
   },
@@ -72,6 +74,7 @@ const routes = [
     children: [
       {
         path: "stars",
+        alias: ["/stars", "/stardisc", "/star", "/starmap"],
         name: "stars",
         component: () => import("../views/extra/StarsView.vue"),
       },
@@ -103,7 +106,19 @@ if (process.env.BASE_URL === "/astroProject/") {
       ? createWebHashHistory(process.env.BASE_URL)
       : createWebHistory(process.env.BASE_URL),
     routes,
+    scrollBehavior(to, from, savedPosition) {
+      return { top: 0 }; // always scroll to top
+    }
   });
 }
+
+router.beforeEach(async (to, from) => {
+  const adminSites = [""];
+  if (adminSites.includes(to.name)) {
+    if (!isAdmin()) {
+      return { name: from.name || "home" };
+    }
+  }
+})
 
 export default router;
