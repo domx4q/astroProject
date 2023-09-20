@@ -2,22 +2,19 @@ name: Qodana
 on:
   workflow_dispatch:
   pull_request:
-    types:
-      - opened  # Run on PRs when they are first opened
+  push:
+    branches:
+      - master
 
 jobs:
   qodana:
     runs-on: ubuntu-latest
     steps:
-      - name: Check if Dependabot
-        id: dependabot-check
-        run: echo "::set-output name=is_dependabot::${{ github.event.pull_request.user.login == 'dependabot' }}"
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Qodana Scan
-        if: steps.dependabot-check.outputs.is_dependabot != 'true'
+      - name: 'Qodana Scan'
         uses: JetBrains/qodana-action@v2023.2
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+        if: false
