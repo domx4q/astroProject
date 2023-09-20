@@ -9,8 +9,8 @@
     <ThemeSwitch only-logic/> <!--otherwise, only if the settings are expanded, the Theme will work-->
     <div
       id="controls"
-      :class="{ 'collapsed fullyCollapsed': !showFullSidePanel }"> <!--todo find a good way, to use auto animate and make it collapsable-->
-<!--      style="height: 843px; width: 200px">-->
+      :class="{ 'collapsed fullyCollapsed': !showFullSidePanel }"
+      style="width: 210px">
       <div
         v-if="!showFullSidePanel"
         id="controlsCollapse"
@@ -23,6 +23,7 @@
         <Icon class="collapseIcon" icon="ph:caret-double-right-bold" />
       </div>
       <div class="content" v-auto-animate>
+        <div style="width: 200px; height: 0; margin: 0; padding: 0"></div>
         <Details title="Zeit / Datum" :default_open="detailsConfig.Zeit" :negative-margin="30" @toggle="toggleDetails('Zeit')">
           <FormKit label="Aktuelle Zeit" title="Setzt die Sternenkarte auf die aktuelle Zeit" type="button"
                    @click="setCurrent"/>
@@ -437,8 +438,6 @@ export default {
   },
   watch: {
     controlsCollapsed(newVal) {
-      return; // disabled
-
       const controls = document.querySelector("#controls");
       const initialHeight = controls.clientHeight - 10; // because padding
       const initialWidth = controls.clientWidth - 10;
