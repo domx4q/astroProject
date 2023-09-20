@@ -55,7 +55,8 @@ if (module.hot) {
   });
 }
 
-if (process.env.IS_ELECTRON) {
+if (process.env.IS_ELECTRON && false) { // disable update check because now using electron-updater
+  // todo: remove this code if the other updater works
   import("../package.json").then((pkg) => {
     const currentVersion = pkg.version;
 

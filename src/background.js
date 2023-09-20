@@ -3,7 +3,10 @@
 import { app, protocol, BrowserWindow, Menu, MenuItem, shell } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS3_DEVTOOLS } from "electron-devtools-installer";
+import update_electron_app from "update-electron-app";
 const isDevelopment = process.env.NODE_ENV !== "production";
+
+update_electron_app();
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
