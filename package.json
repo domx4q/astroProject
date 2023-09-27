@@ -37,7 +37,7 @@
     "unity-webgl": "latest",
     "update-electron-app": "^2.0.1",
     "vue": "^3.3.4",
-    "vue-router": "^4.2.4",
+    "vue-router": "^4.2.5",
     "vuex": "^4.0.0",
     "webgl-fluid": "^0.3.3"
   },
