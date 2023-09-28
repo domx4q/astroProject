@@ -14,8 +14,7 @@
 // todo until 03.12.2022: FormKit PRO will be available, so then change the switcher to FormKit
 export default {
   name: "themeSwitch",
-  components: {},
-
+  emits: ["theme"],
   props: {
     onlyLogic: {
       type: Boolean,

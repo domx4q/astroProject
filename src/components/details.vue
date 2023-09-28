@@ -18,6 +18,7 @@ import {Icon} from "@iconify/vue";
 export default {
   name: 'details',
   components: {Icon},
+  emits: ['toggle'],
   data() {
     return {
       open: this.default_open

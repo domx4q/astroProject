@@ -32,6 +32,9 @@
 
           <Details :default_open="detailsConfig.Zeitpunkt" title="Zeitpunkt" @toggle="toggleDetails('Zeitpunkt')">
             <FormKit v-model="time" :label="`Zeit (${timezone})`" type="time"/>
+            <div id="mozContainer" title="Mittlere Ortszeit">
+              <span>MOZ:</span> <b>{{ mozTime }}</b>
+            </div>
             <FormKit v-model="date" label="Datum" type="date"/>
           </Details>
         </Details>
@@ -348,6 +351,28 @@ export default {
       this.enableTransition = this.enableTransitionDefault ? true : false; // to suppress reactivity
     },
     // endregion
+    manipulateTime(addHours=0, addMinutes=0, time=this.time) {
+      const time_c = time.split(":");
+      let hours = Number(time_c[0]) + addHours;
+      let minutes = Number(time_c[1]) + addMinutes;
+
+      // Calculate the total minutes after modification
+      const totalMinutes = hours * 60 + minutes;
+
+      // Calculate the new hours and minutes
+      hours = Math.floor(totalMinutes / 60);
+      minutes = totalMinutes % 60;
+
+      // Ensure the hours and minutes are in the valid range (0-23 for hours, 0-59 for minutes)
+      hours = (hours + 24) % 24;
+      minutes = (minutes + 60) % 60;
+
+      // Format the result as a string with leading zeros
+      const formattedHours = String(hours).padStart(2, "0");
+      const formattedMinutes = String(minutes).padStart(2, "0");
+
+      return `${formattedHours}:${formattedMinutes}`;
+    },
   },
   computed: {
     query() {
@@ -434,6 +459,19 @@ export default {
       }
       const timeNumber = hour * 60 + this.convertedTime.minutes;
       return +((timeNumber / 1440) * 360 + rotationsoffset);
+    },
+    mezTime() {
+      // Mitteleuropäische Zeit
+      if (this.timezone === "MESZ") { // Mitteleuropäische SommerZeit
+        // subtract 1 hour
+        return this.manipulateTime(-1);
+      }
+      return this.time;
+    },
+    mozTime() {
+      // Mittlere Ortszeit
+      // subtract 32 minutes
+      return this.manipulateTime(0, -32, this.mezTime);
     },
   },
   watch: {
@@ -674,5 +712,18 @@ a {
   100% {
     transform: scale(1);
   }
+}
+#mozContainer{
+  margin-top: -10px;
+  margin-bottom: 3px;
+  font-size: 0.9em;
+  background-color: hsla(0, 0%, 100%, 0.5);
+  border-radius: 5px;
+  width: min-content;
+  white-space: nowrap;
+  padding: 2px 5px;
+}
+html[data-theme="dark"] #mozContainer{
+  background-color: hsla(0, 0%, 0%, 0.5);
 }
 </style>

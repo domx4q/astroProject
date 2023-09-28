@@ -21,6 +21,7 @@
 <script>
 export default {
   name: "message",
+  emits: ["close"],
   props: {
     title: {
       type: String,
@@ -156,8 +157,6 @@ html[data-theme="dark"] .message {
 }
 </style>
 <style>
-.message.info {
-}
 .message.success .message__body__content {
   color: #3bff00;
 }
