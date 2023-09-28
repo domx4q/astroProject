@@ -9,6 +9,7 @@
 <script>
 export default {
   name: "DynamicButton",
+  emits: ["clicked"],
   props: {
     text: {
       type: String,

@@ -15,6 +15,7 @@
 <script>
 export default {
   name: "dropdown",
+  emits: ["open", "close"],
   props: {
     title: {
       type: String,
