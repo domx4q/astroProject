@@ -82,6 +82,14 @@ const routes = [
         name: "example",
         component: () => import("../views/extra/ExampleView.vue"),
       },
+      {
+        path: "download",
+        name: "download",
+        alias: ["/download", "/dl", "dl"],
+        beforeEnter() {
+          window.location.href = "https://github.com/domx4q/astroProject/releases/latest"
+        }
+      }
     ],
   },
 ];
