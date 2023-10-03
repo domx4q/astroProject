@@ -169,7 +169,7 @@ export default {
 
       detailsConfig: {
         Zeit: true,
-        Zeitpunkt: false || true,
+        Zeitpunkt: false,
         Ausrichtung: false,
         Einstellungen: false,
         Informationen: true,
