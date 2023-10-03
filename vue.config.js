@@ -67,7 +67,7 @@ module.exports = defineConfig({
   pluginOptions: {
     electronBuilder: {
       builderOptions: {
-        appId: "astroProjekt",
+        appId: "com.domx4q.astro",
         productName: "AstroProjekt",
         win: {
           icon: "./public/img/icons/favicon-256x256.png",

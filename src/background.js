@@ -3,10 +3,12 @@
 import { app, protocol, BrowserWindow, Menu, MenuItem, shell } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS3_DEVTOOLS } from "electron-devtools-installer";
-import update_electron_app from "update-electron-app";
+import { autoUpdater, AppUpdater } from "electron-updater";
+const isDev = require('electron-is-dev');
 const isDevelopment = process.env.NODE_ENV !== "production";
 
-update_electron_app();
+autoUpdater.autoDownload = false;
+autoUpdater.autoInstallOnAppQuit = true;
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -105,7 +107,40 @@ app.on("ready", async () => {
     }
   }
   createWindow();
+
+  if (!isDev) {
+    autoUpdater.checkForUpdates();
+  }
 });
+
+
+autoUpdater.on("update-available", (info) => {
+  console.log("Update available");
+  console.log(info);
+  let pth = autoUpdater.downloadUpdate();
+  console.log(pth);
+});
+
+autoUpdater.on("update-not-available", (info) => {
+  console.log("Update not available");
+  console.log(info);
+});
+
+autoUpdater.on("update-downloaded", (info) => {
+  console.log("Update downloaded");
+  console.log(info);
+
+  const dialog = confirm("Es ist ein Update verfügbar. Möchten Sie es jetzt installieren?");
+  if (dialog) {
+    autoUpdater.quitAndInstall();
+  }
+});
+
+autoUpdater.on("error", (err) => {
+  console.log("Update error");
+  console.log(err);
+});
+
 
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {
