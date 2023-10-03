@@ -73,10 +73,12 @@ module.exports = defineConfig({
           icon: "./public/img/icons/favicon-256x256.png",
         },
         mac: {
-          icon: "./public/img/icons/favicon-256x256.png",
+          icon: "./public/img/icons/favicon-512x512.png",
         },
         linux: {
           icon: "./public/img/icons/favicon-256x256.png",
+          // dont publish on snap store
+          publish: ["github"],
         },
         extraResources: [
           {
