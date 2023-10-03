@@ -169,7 +169,7 @@ export default {
 
       detailsConfig: {
         Zeit: true,
-        Zeitpunkt: false,
+        Zeitpunkt: false || true,
         Ausrichtung: false,
         Einstellungen: false,
         Informationen: true,
@@ -448,7 +448,7 @@ export default {
       return -((dayNumber / 365) * 360 - rotationsoffset);
     },
     timeRotation() {
-      const rotationsoffset = 75;
+      const rotationsoffset = 82.5;
       let hourOffset = 0;
       if (this.timezone === "MESZ") {
         hourOffset = -1;
