@@ -1,6 +1,6 @@
 "use strict";
 
-import { app, protocol, BrowserWindow, Menu, MenuItem, shell } from "electron";
+import { app, protocol, BrowserWindow, Menu, MenuItem, shell, dialog } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS3_DEVTOOLS } from "electron-devtools-installer";
 import { autoUpdater, AppUpdater } from "electron-updater";
@@ -130,10 +130,14 @@ autoUpdater.on("update-downloaded", (info) => {
   console.log("Update downloaded");
   console.log(info);
 
-  const dialog = confirm("Es ist ein Update verfügbar. Möchten Sie es jetzt installieren?");
-  if (dialog) {
-    autoUpdater.quitAndInstall();
-  }
+  const answer = dialog.showMessageBoxSync({
+    type: "question",
+    buttons: ["Ja", "Nein"],
+    title: "Update verfügbar",
+    message: "Ein Update ist verfügbar. Möchten Sie es jetzt installieren?",
+  });
+  if (answer === 1) return;
+  autoUpdater.quitAndInstall();
 });
 
 autoUpdater.on("error", (err) => {

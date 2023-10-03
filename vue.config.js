@@ -85,6 +85,10 @@ module.exports = defineConfig({
             filter: ["**/*"],
           },
         ],
+        publish: {
+          provider: "github",
+          releaseType: "release",
+        }
       },
     },
   },
