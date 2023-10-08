@@ -107,6 +107,12 @@
           alt="Inner Disc"
           src="@/assets/extra/images/sternenscheibe_inner.png"
         />
+        <div id="rektaszensionOffset" :style="rektaszensionOffsetStyle">
+          <img
+            ref="rektaszension" id="rektaszension"
+            src="@/assets/extra/images/sternenscheibe_rektaszension.png"
+            alt="Rektaszension">
+        </div>
       </div>
     </div>
   </div>
@@ -151,6 +157,8 @@ export default {
         outer: 0,
         entire: 0,
       },
+      rektaszensionOffset: -99.8, // 18:46 Uhr (ca.)
+
 
       date: "2023-01-01",
       time: "00:00",
@@ -392,10 +400,16 @@ export default {
         screenSize.height - heightOffset
       );
 
-      return Math.min(DEFAULT_SIZE, smallerSide);
+      return Math.min(DEFAULT_SIZE, smallerSide) - 90; // because of the extra space for the rektaszension
+    },
+    adaptedRektaszensionSize() {
+      return this.adaptedSize * (1090/1000); // 1090 is the size (in px) of the rektaszension disc
     },
     adaptedSizeStyle() {
       return `${this.adaptedSize}px`;
+    },
+    adaptedRektaszensionSizeStyle() {
+      return `${this.adaptedRektaszensionSize}px`;
     },
     showFullSidePanel() {
       return this.screenSize.width - this.adaptedSize > 480;
@@ -435,6 +449,11 @@ export default {
     entireDiscStyle() {
       return {
         transform: `rotate(${this.finalRotation.entire}deg)`,
+      };
+    },
+    rektaszensionOffsetStyle() {
+      return {
+        transform: `rotate(${this.rektaszensionOffset}deg)`,
       };
     },
 
@@ -569,6 +588,22 @@ html[data-theme="dark"] #stars {
   left: 50%;
   transform: translate(-50%, -50%);
 }
+#rektaszension {
+  width: v-bind(adaptedRektaszensionSizeStyle) !important;
+  height: v-bind(adaptedRektaszensionSizeStyle) !important;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: transparent;
+  z-index: 3;
+}
+#rektaszensionOffset {
+  /*keep everything from parent*/
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
 
 #entireDisc {
   pointer-events: none;
@@ -602,7 +637,7 @@ html[data-theme="dark"] #stars {
   position: absolute;
   top: 50%;
   left: calc(
-    50% + ((var(--adaptedSize) - (60px * (var(--adaptedSizeRaw) / 1000))) / 2)
+    50% + ((var(--adaptedSize) - (60px * (var(--adaptedSizeRaw) / (1000 - 90)))) / 2)
   );
   width: calc(30px * (var(--adaptedSizeRaw) / 1000));
   height: calc(5px * (var(--adaptedSizeRaw) / 1000));
@@ -713,7 +748,7 @@ a {
     transform: scale(1);
   }
 }
-#mozContainer{
+#mozContainer{ /*mittlere Ortszeit*/
   margin-top: -10px;
   margin-bottom: 3px;
   font-size: 0.9em;
