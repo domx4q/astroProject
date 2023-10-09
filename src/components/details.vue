@@ -1,57 +1,61 @@
 <template>
-  <div v-auto-animate :class="{open: open, disabled: disabled}" class="details">
+  <div
+    v-auto-animate
+    :class="{ open: open, disabled: disabled }"
+    class="details"
+  >
     <div class="header" @click="toggle">
       <div class="icon">
-        <Icon icon="formkit:caretright"/>
+        <Icon icon="formkit:caretright" />
       </div>
       <div class="title">{{ title }}</div>
     </div>
     <div v-if="open" class="content">
-        <slot></slot>
+      <slot></slot>
     </div>
   </div>
 </template>
 
 <script>
-import {Icon} from "@iconify/vue";
+import { Icon } from "@iconify/vue";
 
 export default {
-  name: 'details',
-  components: {Icon},
-  emits: ['toggle'],
+  name: "details",
+  components: { Icon },
+  emits: ["toggle"],
   data() {
     return {
-      open: this.default_open
-    }
+      open: this.default_open,
+    };
   },
   props: {
     title: {
       type: String,
-      default: 'Details'
+      default: "Details",
     },
     default_open: {
       type: Boolean,
-      default: false
+      default: false,
     },
     disabled: {
       type: Boolean,
-      default: false
+      default: false,
     },
   },
   methods: {
     toggle() {
-      this.open = !this.open
-      this.$emit('toggle', this.open)
-    }
+      this.open = !this.open;
+      this.$emit("toggle", this.open);
+    },
   },
   computed: {},
-  watch: {}
-}
+  watch: {},
+};
 </script>
 
 <style scoped>
 .details {
-  --negativeMargin: v-bind(negativeMargin + 'px');
+  --negativeMargin: v-bind(negativeMargin + "px");
 
   --bgc: hsla(0, 0%, 20%, 0.2);
   --bgca: hsla(0, 0%, 20%, 0.4);
@@ -97,7 +101,8 @@ export default {
     padding: 5px;
   }
 }
-.details.open > .header > .icon { /* cascaded selector doesnt work, if a parent Details Component is opened */
+.details.open > .header > .icon {
+  /* cascaded selector doesnt work, if a parent Details Component is opened */
   transform: rotate(90deg);
 }
 
@@ -106,5 +111,4 @@ html[data-theme="dark"] .details {
   --bgc: hsla(0, 0%, 90%, 0.2);
   --bgca: hsla(0, 0%, 90%, 0.4);
 }
-
 </style>
