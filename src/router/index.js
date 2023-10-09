@@ -83,6 +83,17 @@ const routes = [
         component: () => import("../views/extra/ExampleView.vue"),
       },
       {
+        path: "test", // only for development
+        name: "test",
+        component: () => import("../views/extra/TestView.vue"),
+        beforeEnter() {
+          // check if in development mode
+          if (process.env.NODE_ENV !== "development") {
+            router.push({ name: "home" });
+          }
+        }
+      },
+      {
         path: "download",
         name: "download",
         alias: ["/download", "/dl", "dl"],

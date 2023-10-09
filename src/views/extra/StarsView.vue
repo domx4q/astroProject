@@ -194,8 +194,6 @@ export default {
   },
   data() {
     return {
-      controlsCollapsed: true,
-      everOpened: false,
       keepCurrent: false,
 
       innerRotation: 0,
@@ -431,6 +429,7 @@ export default {
   },
   computed: {
     query() {
+      // noinspection JSUnresolvedReference
       return this.$route.query;
     },
     scale() {
@@ -452,7 +451,7 @@ export default {
     adaptedSizeStyle() {
       return `${this.adaptedSize}px`;
     },
-    showFullSidePanel() {
+    showFullSidePanel() { // todo reuse because of new component
       return this.screenSize.width - this.adaptedSize > 480;
     },
 
@@ -531,31 +530,6 @@ export default {
     },
   },
   watch: {
-    controlsCollapsed(newVal) {
-      const controls = document.querySelector("#controls");
-      const initialHeight = controls.clientHeight - 10; // because padding
-      const initialWidth = controls.clientWidth - 10;
-      if (newVal) {
-        this.controlsInitWidth = initialWidth;
-        controls.classList.add("collapsed"); // need to be all done here because if using :class, it will be overwritten by vue
-        controls.style.height = `${initialHeight}px`;
-        controls.style.width = `${initialWidth}px`;
-        setTimeout(() => {
-          controls.classList.add("fullyCollapsed");
-        }, 400);
-      } else {
-        controls.style.height = "auto";
-        controls.style.width = this.controlsInitWidth + "px";
-        controls.classList.remove("collapsed");
-        controls.classList.remove("fullyCollapsed");
-        controls.classList.add("expanding");
-        setTimeout(() => {
-          controls.classList.remove("expanding");
-          controls.style.width = "auto";
-        }, 400);
-      }
-    },
-
     innerRotation(newValue, oldValue) {
       this.normalizeAngles();
       this.finalRotation.inner = this.getNearestDegree(oldValue, newValue);
@@ -669,7 +643,7 @@ html[data-theme="dark"] #stars {
   border-bottom-left-radius: 100%;
 }
 
-#controls {
+#controls { /*todo maybe remove*/
   position: absolute;
   top: 5px;
   left: 5px;
@@ -698,79 +672,6 @@ a {
   font-weight: 700;
 }
 
-.iconHolder,
-#controlsCollapse {
-  position: absolute;
-  top: 5px;
-  right: 2px;
-  cursor: pointer;
-  margin: 4px;
-  width: 20px;
-  height: 20px;
-  z-index: 100;
-
-  transition:
-    transform 0.4s ease-in-out,
-    filter 0.2s ease-in-out;
-}
-
-.iconHolder:hover,
-#controlsCollapse:hover {
-  filter: brightness(5);
-}
-
-.iconHolder {
-  transform: rotate(180deg);
-}
-
-#controls.collapsed .iconHolder {
-  transform: rotate(0);
-}
-
-#controls.collapsed {
-  width: 0;
-  padding: 5px;
-}
-
-/*noinspection CssUnusedSymbol*/
-#controls.expanding {
-  overflow-y: hidden;
-}
-
-#controls.fullyCollapsed {
-  width: 0 !important;
-  padding: 15px !important;
-}
-
-#controls .content {
-  opacity: 1;
-  transition: opacity 0.4s ease-in-out;
-}
-
-#controls.collapsed .content,
-#controls.expanding .content {
-  opacity: 0;
-}
-
-#controls.fullyCollapsed .content {
-  display: none;
-}
-
-.pulse {
-  animation: pulse 1s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.2);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
 #mozContainer {
   margin-top: -10px;
   margin-bottom: 3px;
