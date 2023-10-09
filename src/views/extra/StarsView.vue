@@ -5,12 +5,15 @@
     @mousedown="handleMouseDown"
     @mouseleave="handleMouseUp"
     @mousemove="handleMouseMove"
-    @mouseup="handleMouseUp">
-    <ThemeSwitch only-logic/> <!--otherwise, only if the settings are expanded, the Theme will work-->
+    @mouseup="handleMouseUp"
+  >
+    <ThemeSwitch only-logic />
+    <!--otherwise, only if the settings are expanded, the Theme will work-->
     <div
       id="controls"
       :class="{ 'collapsed fullyCollapsed': !showFullSidePanel }"
-      style="width: 210px">
+      style="width: 210px"
+    >
       <div
         v-if="!showFullSidePanel"
         id="controlsCollapse"
@@ -19,26 +22,48 @@
         @click="
           controlsCollapsed = !controlsCollapsed;
           everOpened = true;
-        ">
+        "
+      >
         <Icon class="collapseIcon" icon="ph:caret-double-right-bold" />
       </div>
       <div class="content" v-auto-animate>
         <div style="width: 200px; height: 0; margin: 0; padding: 0"></div>
-        <Details title="Zeit / Datum" :default_open="detailsConfig.Zeit" :negative-margin="30" @toggle="toggleDetails('Zeit')">
-          <FormKit label="Aktuelle Zeit" title="Setzt die Sternenkarte auf die aktuelle Zeit" type="button"
-                   @click="setCurrent"/>
-          <FormKit label="Aktuell halten" title="Hält die Sternenkarte auf der aktuellen Zeit, somit läuft die Karte mit." type="checkbox"
-                   v-model="keepCurrent"/>
+        <Details
+          title="Zeit / Datum"
+          :default_open="detailsConfig.Zeit"
+          :negative-margin="30"
+          @toggle="toggleDetails('Zeit')"
+        >
+          <FormKit
+            label="Aktuelle Zeit"
+            title="Setzt die Sternenkarte auf die aktuelle Zeit"
+            type="button"
+            @click="setCurrent"
+          />
+          <FormKit
+            label="Aktuell halten"
+            title="Hält die Sternenkarte auf der aktuellen Zeit, somit läuft die Karte mit."
+            type="checkbox"
+            v-model="keepCurrent"
+          />
 
-          <Details :default_open="detailsConfig.Zeitpunkt" title="Zeitpunkt" @toggle="toggleDetails('Zeitpunkt')">
-            <FormKit v-model="time" :label="`Zeit (${timezone})`" type="time"/>
+          <Details
+            :default_open="detailsConfig.Zeitpunkt"
+            title="Zeitpunkt"
+            @toggle="toggleDetails('Zeitpunkt')"
+          >
+            <FormKit v-model="time" :label="`Zeit (${timezone})`" type="time" />
             <div id="mozContainer" title="Mittlere Ortszeit">
               <span>MOZ:</span> <b>{{ mozTime }}</b>
             </div>
-            <FormKit v-model="date" label="Datum" type="date"/>
+            <FormKit v-model="date" label="Datum" type="date" />
           </Details>
         </Details>
-        <Details title="Ausrichtung" :default_open="detailsConfig.Ausrichtung" @toggle="toggleDetails('Ausrichtung')">
+        <Details
+          title="Ausrichtung"
+          :default_open="detailsConfig.Ausrichtung"
+          @toggle="toggleDetails('Ausrichtung')"
+        >
           <FormKit
             v-model="orientation"
             :options="[
@@ -57,36 +82,66 @@
             type="checkbox"
           />
         </Details>
-        <Details title="Einstellungen" :default_open="detailsConfig.Einstellungen" @toggle="toggleDetails('Einstellungen')">
+        <Details
+          title="Einstellungen"
+          :default_open="detailsConfig.Einstellungen"
+          @toggle="toggleDetails('Einstellungen')"
+        >
           <FormKit
-              v-model="fileInput"
-              accept="image/*"
-              help="Neue Sternkarte hochladen (1000x1000px)"
-              label="Discs"
-              type="file"
-              @change="uploadDiscs"
+            v-model="fileInput"
+            accept="image/*"
+            help="Neue Sternkarte hochladen (1000x1000px)"
+            label="Discs"
+            type="file"
+            @change="uploadDiscs"
           />
-        <FormKit type="slider" label="Animations Geschwindigkeit" v-model="transitionSpeed" :min="0.1" :max="5"
-                   :step="0.1" />
+          <FormKit
+            type="slider"
+            label="Animations Geschwindigkeit"
+            v-model="transitionSpeed"
+            :min="0.1"
+            :max="5"
+            :step="0.1"
+          />
           <ThemeSwitch />
         </Details>
-        <Details :default_open="detailsConfig.Informationen" title="Informationen"
-                 @toggle="toggleDetails('Informationen')">
-          <Details :default_open="detailsConfig.Anleitung" title="Anleitung" @toggle="toggleDetails('Anleitung')">
-            Um die Karte zu drehen, ziehen Sie mit der Maus über die Karte.<br/>
+        <Details
+          :default_open="detailsConfig.Informationen"
+          title="Informationen"
+          @toggle="toggleDetails('Informationen')"
+        >
+          <Details
+            :default_open="detailsConfig.Anleitung"
+            title="Anleitung"
+            @toggle="toggleDetails('Anleitung')"
+          >
+            Um die Karte zu drehen, ziehen Sie mit der Maus über die Karte.<br />
             Wenn sie die obere Karte drehen möchten, drücken Sie die
             <b>Strg-Taste</b> und ziehen Sie mit der Maus.
           </Details>
-          <Details :default_open="detailsConfig.Author" title="Autor" @toggle="toggleDetails('Author')">
-            Diese Anwendung wurde von <u><nobr>Dominik Fuchs</nobr></u> entwickelt.<br/>
+          <Details
+            :default_open="detailsConfig.Author"
+            title="Autor"
+            @toggle="toggleDetails('Author')"
+          >
+            Diese Anwendung wurde von
+            <u><nobr>Dominik Fuchs</nobr></u> entwickelt.<br />
             Für weitere Informationen besuchen Sie bitte
-            <a href="https://github.com/domx4q/astroProject"
-               rel="noopener noreferrer"
-               target="_blank">GitHub</a>
+            <a
+              href="https://github.com/domx4q/astroProject"
+              rel="noopener noreferrer"
+              target="_blank"
+              >GitHub</a
+            >
           </Details>
-          <Details :default_open="detailsConfig.Grundlagen" title="Grundlagen" @toggle="toggleDetails('Grundlagen')">
-            Grundlage der Sternkarte von <u><nobr>Dipl.-Phys.</nobr> <nobr>Torsten Rahn</nobr></u>, mit
-            freundlicher Genehmigung
+          <Details
+            :default_open="detailsConfig.Grundlagen"
+            title="Grundlagen"
+            @toggle="toggleDetails('Grundlagen')"
+          >
+            Grundlage der Sternkarte von
+            <u><nobr>Dipl.-Phys.</nobr> <nobr>Torsten Rahn</nobr></u
+            >, mit freundlicher Genehmigung
           </Details>
         </Details>
       </div>
@@ -125,8 +180,8 @@ function createDateAsUTC(date, offset = 0) {
       date.getDate(),
       date.getHours() - offset,
       date.getMinutes(),
-      date.getSeconds()
-    )
+      date.getSeconds(),
+    ),
   );
 }
 
@@ -176,7 +231,7 @@ export default {
         Anleitung: true,
         Author: false,
         Grundlagen: false,
-      }
+      },
     };
   },
   mounted() {
@@ -258,7 +313,7 @@ export default {
           let key = "innerDisc";
           let userInput = prompt(
             "Welche Scheibe soll ersetzt werden? (inner/outer)",
-            "inner"
+            "inner",
           );
           switch (userInput) {
             case "inner": {
@@ -329,13 +384,13 @@ export default {
       if (!event.ctrlKey) {
         rotation = this.getNearestDegree(
           this.innerRotation,
-          rotation - startAngle + this.lastAngleInner
+          rotation - startAngle + this.lastAngleInner,
         );
         this.innerRotation = rotation;
       } else {
         rotation = this.getNearestDegree(
           this.outerRotation,
-          rotation - startAngle + this.lastAngleOuter
+          rotation - startAngle + this.lastAngleOuter,
         );
         this.outerRotation = rotation;
       }
@@ -351,7 +406,7 @@ export default {
       this.enableTransition = this.enableTransitionDefault ? true : false; // to suppress reactivity
     },
     // endregion
-    manipulateTime(addHours=0, addMinutes=0, time=this.time) {
+    manipulateTime(addHours = 0, addMinutes = 0, time = this.time) {
       const time_c = time.split(":");
       let hours = Number(time_c[0]) + addHours;
       let minutes = Number(time_c[1]) + addMinutes;
@@ -389,7 +444,7 @@ export default {
       const screenSize = this.screenSize;
       const smallerSide = Math.min(
         screenSize.width - widthOffset,
-        screenSize.height - heightOffset
+        screenSize.height - heightOffset,
       );
 
       return Math.min(DEFAULT_SIZE, smallerSide);
@@ -410,7 +465,7 @@ export default {
         {
           hours: undefined,
           minutes: undefined,
-        }
+        },
       );
     },
     convertedDate() {
@@ -443,7 +498,7 @@ export default {
       const dayNumber = Math.floor(
         (new Date(this.convertedDate) -
           new Date(this.convertedDate.getFullYear(), 0, 0)) /
-          (1000 * 60 * 60 * 24)
+          (1000 * 60 * 60 * 24),
       );
       return -((dayNumber / 365) * 360 - rotationsoffset);
     },
@@ -462,7 +517,8 @@ export default {
     },
     mezTime() {
       // Mitteleuropäische Zeit
-      if (this.timezone === "MESZ") { // Mitteleuropäische SommerZeit
+      if (this.timezone === "MESZ") {
+        // Mitteleuropäische SommerZeit
         // subtract 1 hour
         return this.manipulateTime(-1);
       }
@@ -592,7 +648,7 @@ html[data-theme="dark"] #stars {
 #stars.transition #outerDisc,
 #stars.transition #innerDisc,
 #stars.transition #entireDisc {
-  transition: transform v-bind(transitionSpeed + 's');
+  transition: transform v-bind(transitionSpeed + "s");
 }
 
 #marker {
@@ -653,7 +709,9 @@ a {
   height: 20px;
   z-index: 100;
 
-  transition: transform 0.4s ease-in-out, filter 0.2s ease-in-out;
+  transition:
+    transform 0.4s ease-in-out,
+    filter 0.2s ease-in-out;
 }
 
 .iconHolder:hover,
@@ -713,7 +771,7 @@ a {
     transform: scale(1);
   }
 }
-#mozContainer{
+#mozContainer {
   margin-top: -10px;
   margin-bottom: 3px;
   font-size: 0.9em;
@@ -723,7 +781,7 @@ a {
   white-space: nowrap;
   padding: 2px 5px;
 }
-html[data-theme="dark"] #mozContainer{
+html[data-theme="dark"] #mozContainer {
   background-color: hsla(0, 0%, 0%, 0.5);
 }
 </style>
