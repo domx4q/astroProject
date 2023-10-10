@@ -2,8 +2,9 @@
   <div style="background-color: #fff; width: 100%; height: 100vh">
     <ThemeSwitch only-logic />
     <button id="normal" @click="normal = !normal;">Normal?</button>
-    <CollapsableContainer disable-filler use-pulse :use-as-normal-container="normal">
+    <CollapsableContainer use-pulse :use-as-normal-container="normal" :approximate-content-height="129">
       <h1>Hallo</h1>
+      <h2>Welt</h2>
     </CollapsableContainer>
   </div>
 </template>

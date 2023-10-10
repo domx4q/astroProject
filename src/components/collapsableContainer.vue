@@ -2,8 +2,7 @@
   <div>
     <div
       id="container"
-      :class="{ 'collapsed fullyCollapsed': !useAsNormalContainer }"
-      style="width: 210px"
+      :class="{ collapsed: collapsed && !useAsNormalContainer, mirror: mirror }"
     >
       <div
         v-if="!useAsNormalContainer"
@@ -15,14 +14,20 @@
           everOpened = true;
         "
       >
-        <Icon class="collapseIcon" icon="ph:caret-double-right-bold" />
+        <Icon v-if="mirror" class="collapseIcon" icon="ph:caret-double-left-bold" />
+        <Icon v-else class="collapseIcon" icon="ph:caret-double-right-bold" />
       </div>
-      <div v-auto-animate class="content">
-        <div
-          v-if="!disableFiller"
-          style="width: 200px; height: 0; margin: 0; padding: 0"
-        />
-        <slot></slot>
+      <div v-auto-animate id="contentWrapper">
+        <div class="content" v-if="!collapsed || useAsNormalContainer">
+          <div
+            v-if="!disableFiller"
+            :style="'width: ' + fillerWidth"
+            style="height: 0; margin: 0; padding: 0"
+          />
+          <slot id="slot" ref="slot">
+            Es gab ein Problem beim Laden des Inhalts.
+          </slot>
+        </div>
       </div>
     </div>
   </div>
@@ -42,7 +47,14 @@ export default {
   props: {
     disableFiller: {
       type: Boolean,
+      description:
+        "By default there will be inserted a filler div on the top with 0 height but a width of 200px. With this you can disable it.",
       default: true,
+    },
+    fillerWidth: {
+      type: String,
+      description: "The width of the filler div. Default is 200px.",
+      default: "200px",
     },
     usePulse: {
       type: Boolean,
@@ -55,39 +67,47 @@ export default {
         "Helpful for specific screen sizes.",
       default: false,
     },
+    mirror: {
+      type: Boolean,
+      description:
+        "This can be useful if the container is placed on the right screen side. The Content won't be mirrored.",
+      default: false,
+    },
+    minWidth: {
+      type: String,
+      description:
+        "The minimum width of the container. Default is 20px. This is useful if you want to use the container as a normal container.",
+      default: "20px",
+    },
+    minHeight: {
+      type: String,
+      description:
+        "The minimum height of the container. Default is 20px. This is useful if you want to use the container as a normal container.",
+      default: "20px",
+    },
+    approximateContentHeight: {
+      type: Number,
+      description:
+        "Pass this for a smoother transition. If it matsches the real size, it only expands to the side and not to the bottom. When this property is used, the minHeight property is ignored. The default is 0.",
+      default: 0,
+    },
   },
   methods: {},
-  computed: {},
-  watch: {
-    collapsed(newVal) {
-      const controls = document.querySelector("#container");
-      const initialHeight = controls.clientHeight - 10; // because padding
-      const initialWidth = controls.clientWidth - 10;
-      if (newVal) {
-        this.controlsInitWidth = initialWidth;
-        controls.classList.add("collapsed"); // need to be all done here because if using :class, it will be overwritten by vue
-        controls.style.height = `${initialHeight}px`;
-        controls.style.width = `${initialWidth}px`;
-        setTimeout(() => {
-          controls.classList.add("fullyCollapsed");
-        }, 400);
+  computed: {
+    minHeightStyle() {
+      if (this.approximateContentHeight !== 0) {
+        return Number(this.approximateContentHeight) + 10 + "px"; // +10 for the padding
       } else {
-        controls.style.height = "auto";
-        controls.style.width = this.controlsInitWidth + "px";
-        controls.classList.remove("collapsed");
-        controls.classList.remove("fullyCollapsed");
-        controls.classList.add("expanding");
-        setTimeout(() => {
-          controls.classList.remove("expanding");
-          controls.style.width = "auto";
-        }, 400);
+        return this.minHeight;
       }
     },
-    "useAsNormalContainer"(newVal){
-      if(newVal){
+  },
+  watch: {
+    useAsNormalContainer(newVal) {
+      if (newVal) {
         this.collapsed = false;
       }
-    }
+    },
   },
 };
 </script>
@@ -106,6 +126,9 @@ export default {
   border-radius: 5px;
   padding: 5px;
 
+  min-width: v-bind(minWidth);
+  min-height: v-bind(minHeightStyle);
+
   overflow-y: auto;
   overflow-x: hidden;
   max-height: 100vh;
@@ -117,20 +140,26 @@ html[data-theme="dark"] #container {
   background-color: black;
 }
 
-.iconHolder,
-#controlsCollapse {
+.iconHolder {
   position: absolute;
-  top: 5px;
+  top: 2px;
   right: 2px;
   cursor: pointer;
   margin: 4px;
-  width: 20px;
-  height: 20px;
   z-index: 100;
 
   transition:
-      transform 0.4s ease-in-out,
-      filter 0.2s ease-in-out;
+    transform 0.25s ease-in-out,
+    filter 0.2s ease-in-out;
+}
+#container.mirror .iconHolder {
+  left: 2px;
+  right: unset;
+}
+
+#container.mirror {
+  right: 5px;
+  left: unset;
 }
 
 .iconHolder:hover,
@@ -146,48 +175,19 @@ html[data-theme="dark"] #container {
   transform: rotate(0);
 }
 
-#container.collapsed {
-  width: 0;
-  padding: 5px;
-}
-
-/*noinspection CssUnusedSymbol*/
-#container.expanding {
-  overflow-y: hidden;
-}
-
-#container.fullyCollapsed {
-  width: 0 !important;
-  padding: 15px !important;
-}
-
-#container .content {
-  opacity: 1;
-  transition: opacity 0.4s ease-in-out;
-}
-
-#container.collapsed .content,
-#container.expanding .content {
-  opacity: 0;
-}
-
-#container.fullyCollapsed .content {
-  display: none;
-}
-
 .pulse {
   animation: pulse 1s infinite;
 }
 
 @keyframes pulse {
   0% {
-    transform: scale(1);
+    scale: 1;
   }
   50% {
-    transform: scale(1.2);
+    scale: 1.2;
   }
   100% {
-    transform: scale(1);
+    scale: 1;
   }
 }
 </style>
