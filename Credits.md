@@ -40,9 +40,17 @@ Callisto ![Callisto](public/textures/2k_callisto.jpg)
 Ceres ![Ceres](public/textures/4k_ceres.jpg)
 Pluto ![Pluto](public/textures/6k_pluto.jpg)
 
+## Planet Photos
+
+### [Wikipedia](https://de.wikipedia.org)
+Mars ![Mars](src/assets/extra/images/planets/OSIRIS_Mars_true_color.jpeg)
+Uranus ![Uranus](src/assets/extra/images/planets/Uranus2.jpeg)
+
+
 # Usage Rights / License
 
 - [Solarsystemscope](https://www.solarsystemscope.com/textures/): CC BY-NC-SA 4.0
 - [Nasa - visible earth](https://visibleearth.nasa.gov/): Public Domain
 - [Nasa - 3d resources](https://github.com/nasa/NASA-3D-Resources): Public Domain
 - [Nasa - Photojournal](https://photojournal.jpl.nasa.gov/): Public Domain
+- - [Wikipedia / Wikimedia](https://de.wikipedia.org): Public Domain / Creative Commons

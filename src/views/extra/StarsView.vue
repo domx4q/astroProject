@@ -9,8 +9,7 @@
   >
     <ThemeSwitch only-logic />
     <!--otherwise, only if the settings are expanded, the Theme will work-->
-    <CollapsableContainer use-pulse :approximate-content-height="672" :use-as-normal-container="showFullSidePanel">
-
+    <CollapsableContainer ref="controls" id="controls" use-pulse :approximate-content-height="672" :use-as-normal-container="showFullSidePanel">
       <Details
           title="Zeit / Datum"
           :default_open="detailsConfig.Zeit"
@@ -129,6 +128,32 @@
       </Details>
     </CollapsableContainer>
 
+    <CollapsableContainer
+        id="placePlanets"
+        ref="placePlanets"
+        :approximate-content-height="0"
+        use-as-normal-container
+        disable-filler
+        mirror>
+<!-- todo remove the use as normal flag after development      -->
+      <Details
+          title="Benutzung"
+          :default_open="detailsConfig.pl_Benutzung"
+          @toggle="toggleDetails('pl_Benutzung')">
+        Über dieses Menü, können Planeten auf der Karte platziert werden.<br style="margin-bottom: 3px">Die unten dargestellten Planeten, können durch einfaches
+        <b>ziehen</b>, auf der Karte angebracht werden.
+      </Details>
+      <Details
+        title="Planeten"
+        :default_open="detailsConfig.pl_Planeten"
+        @toggle="toggleDetails('pl_Planeten')">
+        <div id="planetGrid">
+          <Planet :img-src="planetImages.mars" alt-text="Mars"/>
+          <Planet :img-src="planetImages.uranus" alt-text="Uranus"/>
+        </div>
+      </Details>
+    </CollapsableContainer>
+
     <div id="entireDisc" ref="entireDisc" :style="entireDiscStyle">
       <div id="marker" ref="marker" />
       <div id="outerDisc" :style="outerDiscStyle">
@@ -154,6 +179,7 @@ import ThemeSwitch from "@/components/themeSwitch.vue";
 import Details from "@/components/details.vue";
 import defaults from "@/mixins/defaults";
 import CollapsableContainer from "@/components/collapsableContainer.vue";
+import StarDiscPlanet from "@/components/StarDiscPlanet.vue";
 
 function createDateAsUTC(date, offset = 0) {
   return new Date(
@@ -172,6 +198,7 @@ export default {
   name: "StarsView",
   mixins: [defaults],
   components: {
+    Planet: StarDiscPlanet,
     CollapsableContainer,
     ThemeSwitch,
     Details,
@@ -213,7 +240,15 @@ export default {
         Anleitung: true,
         Author: false,
         Grundlagen: false,
+
+        pl_Benutzung: true && false, // todo only in dev
+        pl_Planeten: false || true, // todo only in dev
       },
+
+      planetImages: {
+        mars: require("@/assets/extra/images/planets/OSIRIS_Mars_true_color_DOWNSIZED.png"),
+        uranus: require("@/assets/extra/images/planets/Uranus2_DOWNSIZED.png"),
+      }
     };
   },
   mounted() {
@@ -644,5 +679,17 @@ a {
 }
 html[data-theme="dark"] #mozContainer {
   background-color: hsla(0, 0%, 0%, 0.5);
+}
+
+#planetGrid {
+  display: grid;
+  /*2 per row*/
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  padding: 10px;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 </style>

@@ -67,6 +67,10 @@ export default {
   margin: 2px 0 10px;
   gap: 5px;
 
+  &:last-child {
+    margin-bottom: 2px;
+  }
+
   .header {
     display: flex;
     align-items: center;
