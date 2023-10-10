@@ -42,6 +42,8 @@ export default {
     return {
       collapsed: true,
       everOpened: false,
+
+      oldCollapsedState: true,
     };
   },
   props: {
@@ -95,6 +97,9 @@ export default {
   methods: {},
   computed: {
     minHeightStyle() {
+      if (!this.collapsed || this.useAsNormalContainer) {
+        return this.minHeight;
+      }
       if (this.approximateContentHeight !== 0) {
         return Number(this.approximateContentHeight) + 10 + "px"; // +10 for the padding
       } else {
@@ -105,7 +110,11 @@ export default {
   watch: {
     useAsNormalContainer(newVal) {
       if (newVal) {
+        this.oldCollapsedState = this.collapsed;
         this.collapsed = false;
+      }
+      else {
+        this.collapsed = this.oldCollapsedState;
       }
     },
   },

@@ -9,62 +9,45 @@
   >
     <ThemeSwitch only-logic />
     <!--otherwise, only if the settings are expanded, the Theme will work-->
-    <div
-      id="controls"
-      :class="{ 'collapsed fullyCollapsed': !showFullSidePanel }"
-      style="width: 210px"
-    >
-      <div
-        v-if="!showFullSidePanel"
-        id="controlsCollapse"
-        :class="{ pulse: everOpened === false }"
-        class="iconHolder"
-        @click="
-          controlsCollapsed = !controlsCollapsed;
-          everOpened = true;
-        "
-      >
-        <Icon class="collapseIcon" icon="ph:caret-double-right-bold" />
-      </div>
-      <div class="content" v-auto-animate>
-        <div style="width: 200px; height: 0; margin: 0; padding: 0"></div>
-        <Details
+    <CollapsableContainer use-pulse :approximate-content-height="672" :use-as-normal-container="showFullSidePanel">
+
+      <Details
           title="Zeit / Datum"
           :default_open="detailsConfig.Zeit"
           :negative-margin="30"
           @toggle="toggleDetails('Zeit')"
-        >
-          <FormKit
+      >
+        <FormKit
             label="Aktuelle Zeit"
             title="Setzt die Sternenkarte auf die aktuelle Zeit"
             type="button"
             @click="setCurrent"
-          />
-          <FormKit
+        />
+        <FormKit
             label="Aktuell halten"
             title="Hält die Sternenkarte auf der aktuellen Zeit, somit läuft die Karte mit."
             type="checkbox"
             v-model="keepCurrent"
-          />
+        />
 
-          <Details
+        <Details
             :default_open="detailsConfig.Zeitpunkt"
             title="Zeitpunkt"
             @toggle="toggleDetails('Zeitpunkt')"
-          >
-            <FormKit v-model="time" :label="`Zeit (${timezone})`" type="time" />
-            <div id="mozContainer" title="Mittlere Ortszeit">
-              <span>MOZ:</span> <b>{{ mozTime }}</b>
-            </div>
-            <FormKit v-model="date" label="Datum" type="date" />
-          </Details>
+        >
+          <FormKit v-model="time" :label="`Zeit (${timezone})`" type="time" />
+          <div id="mozContainer" title="Mittlere Ortszeit">
+            <span>MOZ:</span> <b>{{ mozTime }}</b>
+          </div>
+          <FormKit v-model="date" label="Datum" type="date" />
         </Details>
-        <Details
+      </Details>
+      <Details
           title="Ausrichtung"
           :default_open="detailsConfig.Ausrichtung"
           @toggle="toggleDetails('Ausrichtung')"
-        >
-          <FormKit
+      >
+        <FormKit
             v-model="orientation"
             :options="[
               { value: 'none', label: 'Keine' },
@@ -75,77 +58,76 @@
             ]"
             label="Himmelsrichtung"
             type="select"
-          />
-          <FormKit
+        />
+        <FormKit
             v-model="orientationLocked"
             label="Rotation sperren"
             type="checkbox"
-          />
-        </Details>
-        <Details
+        />
+      </Details>
+      <Details
           title="Einstellungen"
           :default_open="detailsConfig.Einstellungen"
           @toggle="toggleDetails('Einstellungen')"
-        >
-          <FormKit
+      >
+        <FormKit
             v-model="fileInput"
             accept="image/*"
             help="Neue Sternkarte hochladen (1000x1000px)"
             label="Discs"
             type="file"
             @change="uploadDiscs"
-          />
-          <FormKit
+        />
+        <FormKit
             type="slider"
             label="Animations Geschwindigkeit"
             v-model="transitionSpeed"
             :min="0.1"
             :max="5"
             :step="0.1"
-          />
-          <ThemeSwitch />
-        </Details>
-        <Details
+        />
+        <ThemeSwitch />
+      </Details>
+      <Details
           :default_open="detailsConfig.Informationen"
           title="Informationen"
           @toggle="toggleDetails('Informationen')"
-        >
-          <Details
+      >
+        <Details
             :default_open="detailsConfig.Anleitung"
             title="Anleitung"
             @toggle="toggleDetails('Anleitung')"
-          >
-            Um die Karte zu drehen, ziehen Sie mit der Maus über die Karte.<br />
-            Wenn sie die obere Karte drehen möchten, drücken Sie die
-            <b>Strg-Taste</b> und ziehen Sie mit der Maus.
-          </Details>
-          <Details
+        >
+          Um die Karte zu drehen, ziehen Sie mit der Maus über die Karte.<br />
+          Wenn sie die obere Karte drehen möchten, drücken Sie die
+          <b>Strg-Taste</b> und ziehen Sie mit der Maus.
+        </Details>
+        <Details
             :default_open="detailsConfig.Author"
             title="Autor"
             @toggle="toggleDetails('Author')"
-          >
-            Diese Anwendung wurde von
-            <u><nobr>Dominik Fuchs</nobr></u> entwickelt.<br />
-            Für weitere Informationen besuchen Sie bitte
-            <a
+        >
+          Diese Anwendung wurde von
+          <u><nobr>Dominik Fuchs</nobr></u> entwickelt.<br />
+          Für weitere Informationen besuchen Sie bitte
+          <a
               href="https://github.com/domx4q/astroProject"
               rel="noopener noreferrer"
               target="_blank"
-              >GitHub</a
-            >
-          </Details>
-          <Details
+          >GitHub</a
+          >
+        </Details>
+        <Details
             :default_open="detailsConfig.Grundlagen"
             title="Grundlagen"
             @toggle="toggleDetails('Grundlagen')"
-          >
-            Grundlage der Sternkarte von
-            <u><nobr>Dipl.-Phys.</nobr> <nobr>Torsten Rahn</nobr></u
-            >, mit freundlicher Genehmigung
-          </Details>
+        >
+          Grundlage der Sternkarte von
+          <u><nobr>Dipl.-Phys.</nobr> <nobr>Torsten Rahn</nobr></u
+          >, mit freundlicher Genehmigung
         </Details>
-      </div>
-    </div>
+      </Details>
+    </CollapsableContainer>
 
     <div id="entireDisc" ref="entireDisc" :style="entireDiscStyle">
       <div id="marker" ref="marker" />
@@ -171,6 +153,7 @@
 import ThemeSwitch from "@/components/themeSwitch.vue";
 import Details from "@/components/details.vue";
 import defaults from "@/mixins/defaults";
+import CollapsableContainer from "@/components/collapsableContainer.vue";
 
 function createDateAsUTC(date, offset = 0) {
   return new Date(
@@ -189,6 +172,7 @@ export default {
   name: "StarsView",
   mixins: [defaults],
   components: {
+    CollapsableContainer,
     ThemeSwitch,
     Details,
   },
@@ -451,7 +435,7 @@ export default {
     adaptedSizeStyle() {
       return `${this.adaptedSize}px`;
     },
-    showFullSidePanel() { // todo reuse because of new component
+    showFullSidePanel() {
       return this.screenSize.width - this.adaptedSize > 480;
     },
 
@@ -641,30 +625,6 @@ html[data-theme="dark"] #stars {
 
   border-top-left-radius: 100%;
   border-bottom-left-radius: 100%;
-}
-
-#controls { /*todo maybe remove*/
-  position: absolute;
-  top: 5px;
-  left: 5px;
-  width: auto;
-  display: flex;
-  flex-direction: column;
-  z-index: 5;
-  max-width: 200px;
-  background-color: white;
-  border-radius: 5px;
-  padding: 5px;
-
-  overflow-y: auto;
-  overflow-x: hidden;
-  max-height: 100vh;
-
-  transition: width 0.4s ease-in-out;
-}
-
-html[data-theme="dark"] #controls {
-  background-color: black;
 }
 
 a {
