@@ -59,6 +59,10 @@
         </Details>
         <Details title="Einstellungen" :default_open="detailsConfig.Einstellungen" @toggle="toggleDetails('Einstellungen')">
           <FormKit
+            v-model="showRektaszension"
+            label="Rektaszension einblenden"
+            type="checkbox"/>
+          <FormKit
               v-model="fileInput"
               accept="image/*"
               help="Neue Sternkarte hochladen (1000x1000px)"
@@ -107,7 +111,7 @@
           alt="Inner Disc"
           src="@/assets/extra/images/sternenscheibe_inner.png"
         />
-        <div id="rektaszensionOffset" :style="rektaszensionOffsetStyle">
+        <div id="rektaszensionOffset" :style="rektaszensionOffsetStyle" v-if="showRektaszension">
           <img
             ref="rektaszension" id="rektaszension"
             src="@/assets/extra/images/sternenscheibe_rektaszension.png"
@@ -172,6 +176,7 @@ export default {
       enableTransitionDefault: true,
       enableTransition: true,
       transitionSpeed: 1,
+      showRektaszension: true,
 
       fileInput: null,
 
@@ -399,8 +404,11 @@ export default {
         screenSize.width - widthOffset,
         screenSize.height - heightOffset
       );
-
-      return Math.min(DEFAULT_SIZE, smallerSide) - 90; // because of the extra space for the rektaszension
+      const result = Math.min(DEFAULT_SIZE, smallerSide);
+      if (this.showRektaszension) {
+        return result - 90; // the rektaszension disc is 90px wider than the inner disc
+      }
+      return result;
     },
     adaptedRektaszensionSize() {
       return this.adaptedSize * (1090/1000); // 1090 is the size (in px) of the rektaszension disc
