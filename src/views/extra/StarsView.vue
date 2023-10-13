@@ -9,150 +9,171 @@
   >
     <ThemeSwitch only-logic />
     <!--otherwise, only if the settings are expanded, the Theme will work-->
-    <CollapsableContainer ref="controls" id="controls" use-pulse :approximate-content-height="672" :use-as-normal-container="showFullSidePanel">
-      <Details
-          title="Zeit / Datum"
-          :default_open="detailsConfig.Zeit"
-          :negative-margin="30"
-          @toggle="toggleDetails('Zeit')"
-      >
-        <FormKit
-            label="Aktuelle Zeit"
-            title="Setzt die Sternenkarte auf die aktuelle Zeit"
-            type="button"
-            @click="setCurrent"
-        />
-        <FormKit
-            label="Aktuell halten"
-            title="Hält die Sternenkarte auf der aktuellen Zeit, somit läuft die Karte mit."
-            type="checkbox"
-            v-model="keepCurrent"
-        />
-
+    <Teleport to="#app">
+      <CollapsableContainer ref="controls" id="controls" use-pulse :approximate-content-height="672"
+                            :use-as-normal-container="showFullSidePanel">
         <Details
-            :default_open="detailsConfig.Zeitpunkt"
-            title="Zeitpunkt"
-            @toggle="toggleDetails('Zeitpunkt')"
+            title="Zeit / Datum"
+            :default_open="detailsConfig.Zeit"
+            :negative-margin="30"
+            @toggle="toggleDetails('Zeit')"
         >
-          <FormKit v-model="time" :label="`Zeit (${timezone})`" type="time" />
-          <div id="mozContainer" title="Mittlere Ortszeit">
-            <span>MOZ:</span> <b>{{ mozTime }}</b>
-          </div>
-          <FormKit v-model="date" label="Datum" type="date" />
+          <FormKit
+              label="Aktuelle Zeit"
+              title="Setzt die Sternenkarte auf die aktuelle Zeit"
+              type="button"
+              @click="setCurrent"
+          />
+          <FormKit
+              label="Aktuell halten"
+              title="Hält die Sternenkarte auf der aktuellen Zeit, somit läuft die Karte mit."
+              type="checkbox"
+              v-model="keepCurrent"
+          />
+
+          <Details
+              :default_open="detailsConfig.Zeitpunkt"
+              title="Zeitpunkt"
+              @toggle="toggleDetails('Zeitpunkt')"
+          >
+            <FormKit v-model="time" :label="`Zeit (${timezone})`" type="time"/>
+            <div id="mozContainer" title="Mittlere Ortszeit">
+              <span>MOZ:</span> <b>{{ mozTime }}</b>
+            </div>
+            <FormKit v-model="date" label="Datum" type="date"/>
+          </Details>
         </Details>
-      </Details>
-      <Details
-          title="Ausrichtung"
-          :default_open="detailsConfig.Ausrichtung"
-          @toggle="toggleDetails('Ausrichtung')"
-      >
-        <FormKit
-            v-model="orientation"
-            :options="[
+        <Details
+            title="Ausrichtung"
+            :default_open="detailsConfig.Ausrichtung"
+            @toggle="toggleDetails('Ausrichtung')"
+        >
+          <FormKit
+              v-model="orientation"
+              :options="[
               { value: 'none', label: 'Keine' },
               { value: 'N', label: 'Norden' },
               { value: 'S', label: 'Süden' },
               { value: 'E', label: 'Osten' },
               { value: 'W', label: 'Westen' },
             ]"
-            label="Himmelsrichtung"
-            type="select"
-        />
-        <FormKit
-            v-model="orientationLocked"
-            label="Rotation sperren"
-            type="checkbox"
-        />
-      </Details>
-      <Details
-          title="Einstellungen"
-          :default_open="detailsConfig.Einstellungen"
-          @toggle="toggleDetails('Einstellungen')"
-      >
-        <FormKit
-            v-model="fileInput"
-            accept="image/*"
-            help="Neue Sternkarte hochladen (1000x1000px)"
-            label="Discs"
-            type="file"
-            @change="uploadDiscs"
-        />
-        <FormKit
-            type="slider"
-            label="Animations Geschwindigkeit"
-            v-model="transitionSpeed"
-            :min="0.1"
-            :max="5"
-            :step="0.1"
-        />
-        <ThemeSwitch />
-      </Details>
-      <Details
-          :default_open="detailsConfig.Informationen"
-          title="Informationen"
-          @toggle="toggleDetails('Informationen')"
-      >
-        <Details
-            :default_open="detailsConfig.Anleitung"
-            title="Anleitung"
-            @toggle="toggleDetails('Anleitung')"
-        >
-          Um die Karte zu drehen, ziehen Sie mit der Maus über die Karte.<br />
-          Wenn sie die obere Karte drehen möchten, drücken Sie die
-          <b>Strg-Taste</b> und ziehen Sie mit der Maus.
+              label="Himmelsrichtung"
+              type="select"
+          />
+          <FormKit
+              v-model="orientationLocked"
+              label="Rotation sperren"
+              type="checkbox"
+          />
         </Details>
         <Details
-            :default_open="detailsConfig.Author"
-            title="Autor"
-            @toggle="toggleDetails('Author')"
+            title="Einstellungen"
+            :default_open="detailsConfig.Einstellungen"
+            @toggle="toggleDetails('Einstellungen')"
         >
-          Diese Anwendung wurde von
-          <u><nobr>Dominik Fuchs</nobr></u> entwickelt.<br />
-          Für weitere Informationen besuchen Sie bitte
-          <a
-              href="https://github.com/domx4q/astroProject"
-              rel="noopener noreferrer"
-              target="_blank"
-          >GitHub</a
+          <FormKit
+              v-model="fileInput"
+              accept="image/*"
+              help="Neue Sternkarte hochladen (1000x1000px)"
+              label="Discs"
+              type="file"
+              @change="uploadDiscs"
+          />
+          <FormKit
+              type="slider"
+              label="Animations Geschwindigkeit"
+              v-model="transitionSpeed"
+              :min="0.1"
+              :max="5"
+              :step="0.1"
+          />
+          <ThemeSwitch/>
+        </Details>
+        <Details
+            :default_open="detailsConfig.Informationen"
+            title="Informationen"
+            @toggle="toggleDetails('Informationen')"
+        >
+          <Details
+              :default_open="detailsConfig.Anleitung"
+              title="Anleitung"
+              @toggle="toggleDetails('Anleitung')"
           >
+            Um die Karte zu drehen, ziehen Sie mit der Maus über die Karte.<br/>
+            Wenn sie die obere Karte drehen möchten, drücken Sie die
+            <b>Strg-Taste</b> und ziehen Sie mit der Maus.
+          </Details>
+          <Details
+              :default_open="detailsConfig.Author"
+              title="Autor"
+              @toggle="toggleDetails('Author')"
+          >
+            Diese Anwendung wurde von
+            <u>
+              <nobr>Dominik Fuchs</nobr>
+            </u> entwickelt.<br/>
+            Für weitere Informationen besuchen Sie bitte
+            <a
+                href="https://github.com/domx4q/astroProject"
+                rel="noopener noreferrer"
+                target="_blank"
+            >GitHub</a
+            >
+          </Details>
+          <Details
+              :default_open="detailsConfig.Grundlagen"
+              title="Grundlagen"
+              @toggle="toggleDetails('Grundlagen')"
+          >
+            Grundlage der Sternkarte von
+            <u>
+              <nobr>Dipl.-Phys.</nobr>
+              <nobr>Torsten Rahn</nobr>
+            </u
+            >, mit freundlicher Genehmigung
+          </Details>
+        </Details>
+      </CollapsableContainer>
+    </Teleport>
+
+    <Teleport to="#app">
+      <CollapsableContainer
+          id="placePlanets"
+          ref="placePlanets"
+          :approximate-content-height="0"
+          disable-filler
+          mirror
+          use-as-normal-container>
+        <!-- todo remove the use as normal flag after development      -->
+        <Details
+            :default_open="detailsConfig.pl_Benutzung"
+            title="Benutzung"
+            @toggle="toggleDetails('pl_Benutzung')">
+          Über dieses Menü, können Planeten auf der Karte platziert werden.<br style="margin-bottom: 3px">Die unten
+          dargestellten Planeten, können durch einfaches
+          <b>ziehen</b>, auf der Karte angebracht werden.
         </Details>
         <Details
-            :default_open="detailsConfig.Grundlagen"
-            title="Grundlagen"
-            @toggle="toggleDetails('Grundlagen')"
-        >
-          Grundlage der Sternkarte von
-          <u><nobr>Dipl.-Phys.</nobr> <nobr>Torsten Rahn</nobr></u
-          >, mit freundlicher Genehmigung
+            :default_open="detailsConfig.pl_Planeten"
+            title="Planeten"
+            @toggle="toggleDetails('pl_Planeten')">
+          <div id="planetGrid">
+            <Planet v-for="planet in planets" :key="planet.id"
+                    :alt-text="planet.altText" :img-src="planet.src" :item-id="planet.id" :placed="planet.placed"
+                    @dragend="planetDragEnd" @dragstart="planetDragStart"
+            />
+          </div>
         </Details>
-      </Details>
-    </CollapsableContainer>
+      </CollapsableContainer>
+    </Teleport>
 
-    <CollapsableContainer
-        id="placePlanets"
-        ref="placePlanets"
-        :approximate-content-height="0"
-        use-as-normal-container
-        disable-filler
-        mirror>
-<!-- todo remove the use as normal flag after development      -->
-      <Details
-          title="Benutzung"
-          :default_open="detailsConfig.pl_Benutzung"
-          @toggle="toggleDetails('pl_Benutzung')">
-        Über dieses Menü, können Planeten auf der Karte platziert werden.<br style="margin-bottom: 3px">Die unten dargestellten Planeten, können durch einfaches
-        <b>ziehen</b>, auf der Karte angebracht werden.
-      </Details>
-      <Details
-        title="Planeten"
-        :default_open="detailsConfig.pl_Planeten"
-        @toggle="toggleDetails('pl_Planeten')">
-        <div id="planetGrid">
-          <Planet :img-src="planetImages.mars" alt-text="Mars"/>
-          <Planet :img-src="planetImages.uranus" alt-text="Uranus"/>
-        </div>
-      </Details>
-    </CollapsableContainer>
+    <Teleport to="#app">
+      <div v-if="placingPlanet" id="dropContainer" class="dropZone"
+           @drop="dropPlanet"
+           @dragover.prevent
+           @dragenter.prevent/>
+    </Teleport>
+
 
     <div id="entireDisc" ref="entireDisc" :style="entireDiscStyle">
       <div id="marker" ref="marker" />
@@ -164,6 +185,10 @@
         />
       </div>
       <div id="innerDisc" :style="innerDiscStyle">
+        <div id="planetHolder">
+          <Planet v-for="planet in placedPlanets" :key="planet.id"
+                  :alt-text="planet.altText" :img-src="planet.src" :item-id="planet.id" :placed="true" :position="planet.position"/>
+        </div>
         <img
           ref="innerDisc"
           alt="Inner Disc"
@@ -180,6 +205,7 @@ import Details from "@/components/details.vue";
 import defaults from "@/mixins/defaults";
 import CollapsableContainer from "@/components/collapsableContainer.vue";
 import StarDiscPlanet from "@/components/StarDiscPlanet.vue";
+import StarsExtra from "@/mixins/StarsExtra";
 
 function createDateAsUTC(date, offset = 0) {
   return new Date(
@@ -196,7 +222,7 @@ function createDateAsUTC(date, offset = 0) {
 
 export default {
   name: "StarsView",
-  mixins: [defaults],
+  mixins: [defaults, StarsExtra],
   components: {
     Planet: StarDiscPlanet,
     CollapsableContainer,
@@ -206,6 +232,7 @@ export default {
   data() {
     return {
       keepCurrent: false,
+      placingPlanet: false,
 
       innerRotation: 0,
       outerRotation: 0,
@@ -244,11 +271,6 @@ export default {
         pl_Benutzung: true && false, // todo only in dev
         pl_Planeten: false || true, // todo only in dev
       },
-
-      planetImages: {
-        mars: require("@/assets/extra/images/planets/OSIRIS_Mars_true_color_DOWNSIZED.png"),
-        uranus: require("@/assets/extra/images/planets/Uranus2_DOWNSIZED.png"),
-      }
     };
   },
   mounted() {
@@ -445,6 +467,40 @@ export default {
 
       return `${formattedHours}:${formattedMinutes}`;
     },
+
+    planetDragStart(event, planet) {
+      this.placingPlanet = true;
+    },
+    planetDragEnd(event, planet){
+      this.placingPlanet = false;
+    },
+    dropPlanet(event) {
+      const itemID = event.dataTransfer.getData("itemID");
+      const planet = this.planets.find((p) => p.id === itemID);
+      if (planet) {
+        planet.placed = true;
+      }
+      planet.position = this.calculateOffsetByRotation({
+        x: Number(event.layerX) - Number(event.dataTransfer.getData("startLayerX")),
+        y: Number(event.layerY) - Number(event.dataTransfer.getData("startLayerY")),
+      });
+    },
+    calculateOffsetByRotation(position) { // todo doesn't work
+      const x = position.x - this.center.x;
+      const y = position.y - this.center.y;
+
+      const radians = (this.innerRotation * Math.PI) / 180;
+      const cos = Math.cos(-radians);
+      const sin = Math.sin(-radians);
+      const adjustedXRotated = x * cos - y * sin;
+      const adjustedYRotated = x * sin + y * cos;
+
+      // round to px
+      return {
+        x: Math.round(adjustedXRotated / 2),
+        y: Math.round(adjustedYRotated / 2),
+      };
+    }
   },
   computed: {
     query() {
@@ -602,7 +658,7 @@ html[data-theme="dark"] #stars {
 }
 
 #outerDisc {
-  z-index: 2;
+  z-index: 3;
 }
 
 #innerDisc {
@@ -610,13 +666,24 @@ html[data-theme="dark"] #stars {
 }
 
 #innerDisc img,
-#outerDisc img {
+#outerDisc img,
+#dropContainer,
+#planetHolder {
   width: v-bind(adaptedSizeStyle);
   height: v-bind(adaptedSizeStyle);
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+#planetHolder {
+  pointer-events: none;
+  z-index: 2;
+
+  /*place elements in the center*/
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #entireDisc {
