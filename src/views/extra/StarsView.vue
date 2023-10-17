@@ -472,10 +472,10 @@ export default {
 
       return `${formattedHours}:${formattedMinutes}`;
     },
-    planetDragStart(event, planet) {
+    planetDragStart() {
       this.placingPlanet = true;
     },
-    planetDragEnd(event, planet){
+    planetDragEnd(){
       this.placingPlanet = false;
     },
     dropPlanet(event) {

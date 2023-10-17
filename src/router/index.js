@@ -89,7 +89,7 @@ const routes = [
         beforeEnter() {
           // check if in development mode
           if (process.env.NODE_ENV !== "development") {
-            router.push({ name: "home" });
+            router.push({ name: "home" }); // skipcq: JS-0129
           }
         }
       },

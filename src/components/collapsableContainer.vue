@@ -101,7 +101,7 @@ export default {
         return this.minHeight;
       }
       if (this.approximateContentHeight !== 0) {
-        return Number(this.approximateContentHeight) + 10 + "px"; // +10 for the padding
+        return `${Number(this.approximateContentHeight) + 10}px`; // +10 for the padding
       } else {
         return this.minHeight;
       }
