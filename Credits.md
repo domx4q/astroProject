@@ -43,9 +43,15 @@ Pluto ![Pluto](public/textures/6k_pluto.jpg)
 ## Planet Photos
 
 ### [Wikipedia](https://de.wikipedia.org)
+Venus ![Venus](src/assets/extra/images/planets/Venus_Earth_Comparison.png)
 Mars ![Mars](src/assets/extra/images/planets/OSIRIS_Mars_true_color.jpeg)
 Uranus ![Uranus](src/assets/extra/images/planets/Uranus2.jpeg)
 
+### Nasa
+Merkur ![Merkur](src/assets/extra/images/planets/mercury-from-messenger-pia15160-1920x640-1.jpg)
+Saturn ![Saturn](src/assets/extra/images/planets/heic1917a.jpg)
+Neptun ![Neptun](src/assets/extra/images/planets/neptunex.gif)
+Pluto ![Pluto](src/assets/extra/images/planets/PlutoEnhancedHiRes_NewHorizons_5000.jpg)
 
 # Usage Rights / License
 

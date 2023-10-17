@@ -736,9 +736,8 @@ html[data-theme="dark"] #mozContainer {
 }
 
 #planetGrid {
-  display: grid;
-  /*2 per row*/
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   padding: 10px;
   width: 100%;
