@@ -142,9 +142,7 @@
           ref="placePlanets"
           :approximate-content-height="0"
           disable-filler
-          mirror
-          use-as-normal-container>
-        <!-- todo remove the use as normal flag after development      -->
+          mirror>
         <Details
             :default_open="detailsConfig.pl_Benutzung"
             title="Benutzung"
@@ -169,6 +167,7 @@
 
     <Teleport to="#app">
       <div v-if="placingPlanet" id="dropContainer" class="dropZone"
+           :style="dropZoneStyle"
            @drop="dropPlanet"
            @dragover.prevent
            @dragenter.prevent/>
@@ -268,8 +267,8 @@ export default {
         Author: false,
         Grundlagen: false,
 
-        pl_Benutzung: true && false, // todo only in dev
-        pl_Planeten: false || true, // todo only in dev
+        pl_Benutzung: true,
+        pl_Planeten: false,
       },
     };
   },
@@ -467,7 +466,6 @@ export default {
 
       return `${formattedHours}:${formattedMinutes}`;
     },
-
     planetDragStart(event, planet) {
       this.placingPlanet = true;
     },
@@ -480,27 +478,11 @@ export default {
       if (planet) {
         planet.placed = true;
       }
-      planet.position = this.calculateOffsetByRotation({
+      planet.position = {
         x: Number(event.layerX) - Number(event.dataTransfer.getData("startLayerX")),
         y: Number(event.layerY) - Number(event.dataTransfer.getData("startLayerY")),
-      });
-    },
-    calculateOffsetByRotation(position) { // todo doesn't work
-      const x = position.x - this.center.x;
-      const y = position.y - this.center.y;
-
-      const radians = (this.innerRotation * Math.PI) / 180;
-      const cos = Math.cos(-radians);
-      const sin = Math.sin(-radians);
-      const adjustedXRotated = x * cos - y * sin;
-      const adjustedYRotated = x * sin + y * cos;
-
-      // round to px
-      return {
-        x: Math.round(adjustedXRotated / 2),
-        y: Math.round(adjustedYRotated / 2),
       };
-    }
+    },
   },
   computed: {
     query() {
@@ -554,6 +536,11 @@ export default {
     innerDiscStyle() {
       return {
         transform: `rotate(${this.finalRotation.inner}deg)`,
+      };
+    },
+    dropZoneStyle() {
+      return { // translate middle + rotate
+        transform: `translate(-50%, -50%) rotate(${this.finalRotation.inner}deg)`,
       };
     },
     outerDiscStyle() {

@@ -66,7 +66,7 @@ export default {
       return `${this.position.x}px`
     },
     positionYStyle() {
-      return `${-this.position.y}px`
+      return `${this.position.y}px`
     },
     showPosition() {
       return this.position.x !== 0 && this.position.y !== 0
@@ -95,12 +95,9 @@ export default {
   --positionYStyle: v-bind(positionYStyle);
 
   position: absolute;
-  //left: var(--positionXStyle);
-  //top: var(--positionYStyle);
-  left: 50%;
-  top: 50%;
+  left: var(--positionXStyle);
+  top: var(--positionYStyle);
   filter: none !important;
-  transform: translate(calc(-50% + var(--positionXStyle)), calc(-50% + var(--positionYStyle)));
 }
 
 #image {
