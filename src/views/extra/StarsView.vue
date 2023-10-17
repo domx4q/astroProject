@@ -158,6 +158,7 @@
           <div id="planetGrid">
             <Planet v-for="planet in planets" :key="planet.id"
                     :alt-text="planet.altText" :img-src="planet.src" :item-id="planet.id" :placed="planet.placed"
+                    :inner-disc-rotation="this.innerRotation"
                     @dragend="planetDragEnd" @dragstart="planetDragStart"
             />
           </div>
@@ -186,7 +187,9 @@
       <div id="innerDisc" :style="innerDiscStyle">
         <div id="planetHolder">
           <Planet v-for="planet in placedPlanets" :key="planet.id"
-                  :alt-text="planet.altText" :img-src="planet.src" :item-id="planet.id" :placed="true" :position="planet.position"/>
+                  :alt-text="planet.altText" :img-src="planet.src" :item-id="planet.id" :placed="true" :position="planet.position"
+                  :inner-disc-rotation="innerRotation"
+          />
         </div>
         <img
           ref="innerDisc"

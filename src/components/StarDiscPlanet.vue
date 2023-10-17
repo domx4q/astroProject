@@ -1,8 +1,8 @@
 <template>
-  <div id="planet" v-if="!placed" draggable="true" @dragstart="dragStart" @dragend="dragEnd">
+  <div id="planet" v-if="!placed" draggable="false" @dragstart="dragStart" @dragend="dragEnd" :class="{otherRotation:showRotation}">
     <img id="image" :alt="altText" :src="imgSrc" :title="altText" draggable="true">
   </div>
-  <div v-else id="planet" class="placed" :class="{position : showPosition}" draggable="false">
+  <div v-else id="planet" class="placed" :class="{position : showPosition, rotation:showRotation}" draggable="false">
     <img id="image" :alt="altText" :src="imgSrc" :title="altText" draggable="false">
   </div>
 </template>
@@ -46,6 +46,11 @@ export default {
         };
       },
     },
+    innerDiscRotation: {
+      type: Number,
+      default: 0,
+      required: false,
+    },
   },
   methods: {
     dragStart(event) {
@@ -68,9 +73,18 @@ export default {
     positionYStyle() {
       return `${this.position.y}px`
     },
+    rotationStyle() {
+      return `rotate(${-this.innerDiscRotation}deg)`
+    },
+    otherRotationStyle() {
+      return `rotate(${this.innerDiscRotation}deg)`
+    },
     showPosition() {
       return this.position.x !== 0 && this.position.y !== 0
     },
+    showRotation() {
+      return this.innerDiscRotation !== 0
+    }
   },
   watch: {},
 }
@@ -86,7 +100,7 @@ export default {
   transition: filter 0.3s ease-in-out;
 
   &.placed {
-    filter: grayscale(80%);
+    filter: grayscale(80%) brightness(80%);
   }
 }
 
@@ -98,6 +112,12 @@ export default {
   left: var(--positionXStyle);
   top: var(--positionYStyle);
   filter: none !important;
+}
+#planet.rotation {
+  transform: v-bind(rotationStyle)
+}
+#planet.otherRotation > #image {
+  transform: v-bind(otherRotationStyle)
 }
 
 #image {
