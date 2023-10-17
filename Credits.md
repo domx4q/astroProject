@@ -40,9 +40,23 @@ Callisto ![Callisto](public/textures/2k_callisto.jpg)
 Ceres ![Ceres](public/textures/4k_ceres.jpg)
 Pluto ![Pluto](public/textures/6k_pluto.jpg)
 
+## Planet Photos
+
+### [Wikipedia](https://de.wikipedia.org)
+Venus ![Venus](src/assets/extra/images/planets/Venus_Earth_Comparison.png)
+Mars ![Mars](src/assets/extra/images/planets/OSIRIS_Mars_true_color.jpeg)
+Uranus ![Uranus](src/assets/extra/images/planets/Uranus2.jpeg)
+
+### Nasa
+Merkur ![Merkur](src/assets/extra/images/planets/mercury-from-messenger-pia15160-1920x640-1.jpg)
+Saturn ![Saturn](src/assets/extra/images/planets/heic1917a.jpg)
+Neptun ![Neptun](src/assets/extra/images/planets/neptunex.gif)
+Pluto ![Pluto](src/assets/extra/images/planets/PlutoEnhancedHiRes_NewHorizons_5000.jpg)
+
 # Usage Rights / License
 
 - [Solarsystemscope](https://www.solarsystemscope.com/textures/): CC BY-NC-SA 4.0
 - [Nasa - visible earth](https://visibleearth.nasa.gov/): Public Domain
 - [Nasa - 3d resources](https://github.com/nasa/NASA-3D-Resources): Public Domain
 - [Nasa - Photojournal](https://photojournal.jpl.nasa.gov/): Public Domain
+- - [Wikipedia / Wikimedia](https://de.wikipedia.org): Public Domain / Creative Commons
