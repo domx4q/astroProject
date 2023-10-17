@@ -1,8 +1,12 @@
 <template>
-  <div id="planet" v-if="!placed" draggable="false" @dragstart="dragStart" @dragend="dragEnd" :class="{otherRotation:showRotation}">
+  <div v-if="!placed" id="planet" :class="{otherRotation:showRotation}" draggable="false" @dragend="dragEnd"
+       @dragstart="dragStart">
     <img id="image" :alt="altText" :src="imgSrc" :title="altText" draggable="true">
   </div>
-  <div v-else id="planet" class="placed" :class="{position : showPosition, rotation:showRotation}" draggable="false">
+  <div v-else id="planet"
+       :class="{position : showPosition, rotation: showPosition && showRotation, otherRotation:showRotation && !showPosition}"
+       class="placed" draggable="false"
+       @dblclick="remove">
     <img id="image" :alt="altText" :src="imgSrc" :title="altText" draggable="false">
   </div>
 </template>
@@ -11,7 +15,7 @@
 export default {
   name: "StarDiscPlanet",
   components: {},
-  emits: ["dragstart", "dragend"],
+  emits: ["dragstart", "dragend", "remove"],
   data() {
     return {
       size: 50,
@@ -65,6 +69,9 @@ export default {
     dragEnd(event) {
       this.$emit("dragend", event, this);
     },
+    remove() {
+      this.$emit("remove", this);
+    },
   },
   computed: {
     positionXStyle() {
@@ -92,7 +99,7 @@ export default {
 
 <style scoped>
 #planet {
-  --size: v-bind(size + 'px');
+  --size: v-bind(size+ 'px');
 
   width: var(--size);
   height: var(--size);
@@ -113,9 +120,11 @@ export default {
   top: var(--positionYStyle);
   filter: none !important;
 }
+
 #planet.rotation {
-  transform: v-bind(rotationStyle)
+  transform: v-bind(rotationStyle) !important;
 }
+
 #planet.otherRotation > #image {
   transform: v-bind(otherRotationStyle)
 }

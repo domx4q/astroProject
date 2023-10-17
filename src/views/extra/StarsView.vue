@@ -149,18 +149,21 @@
             @toggle="toggleDetails('pl_Benutzung')">
           Über dieses Menü, können Planeten auf der Karte platziert werden.<br style="margin-bottom: 3px">Die unten
           dargestellten Planeten, können durch einfaches
-          <b>ziehen</b>, auf der Karte angebracht werden.
+          <b>ziehen</b>, auf der Karte angebracht werden.<br style="margin-bottom: 3px">Um einen Planeten wieder zu <b>löschen</b>, reicht ein
+          <b>doppelklick</b> auf den Planeten (im unteren Menü).
         </Details>
         <Details
             :default_open="detailsConfig.pl_Planeten"
             title="Planeten"
             @toggle="toggleDetails('pl_Planeten')">
-          <div id="planetGrid">
-            <Planet v-for="planet in planets" :key="planet.id"
-                    :alt-text="planet.altText" :img-src="planet.src" :item-id="planet.id" :placed="planet.placed"
-                    :inner-disc-rotation="this.innerRotation"
-                    @dragend="planetDragEnd" @dragstart="planetDragStart"
-            />
+          <div id="planetWrapper">
+            <div id="planetGrid">
+              <Planet v-for="planet in planets" :key="planet.id"
+                      :alt-text="planet.altText" :img-src="planet.src" :item-id="planet.id" :placed="planet.placed"
+                      :inner-disc-rotation="this.innerRotation"
+                      @dragend="planetDragEnd" @dragstart="planetDragStart" @remove="planet.placed = false"/>
+            </div>
+            <button type="reset" @click="removeAllPlanets" id="removeAllPlanets">Alle löschen</button>
           </div>
         </Details>
       </CollapsableContainer>
@@ -486,6 +489,9 @@ export default {
         y: Number(event.layerY) - Number(event.dataTransfer.getData("startLayerY")),
       };
     },
+    removeAllPlanets() {
+      this.planets.forEach((p) => (p.placed = false));
+    },
   },
   computed: {
     query() {
@@ -747,5 +753,26 @@ html[data-theme="dark"] #mozContainer {
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
+}
+#removeAllPlanets {
+  margin: 10px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  background-color: hsl(0, 100%, 50%);
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+#removeAllPlanets:hover {
+  background-color: hsl(0, 100%, 40%);
+}
+#removeAllPlanets:active {
+  background-color: hsl(0, 100%, 30%);
+}
+#planetWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 </style>
