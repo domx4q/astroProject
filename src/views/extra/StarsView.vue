@@ -10,7 +10,7 @@
     <ThemeSwitch only-logic />
     <!--otherwise, only if the settings are expanded, the Theme will work-->
     <Teleport to="#app">
-      <CollapsableContainer ref="controls" id="controls" use-pulse :approximate-content-height="672"
+      <CollapsableContainer ref="controls" id="controls" use-pulse :approximate-content-height="652"
                             :use-as-normal-container="showFullSidePanel">
         <Details
             title="Zeit / Datum"
