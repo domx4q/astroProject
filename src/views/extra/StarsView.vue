@@ -140,7 +140,7 @@
       <CollapsableContainer
           id="placePlanets"
           ref="placePlanets"
-          :approximate-content-height="0"
+          :approximate-content-height="330"
           disable-filler
           mirror>
         <Details
