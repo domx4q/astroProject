@@ -140,13 +140,14 @@
       <CollapsableContainer
           id="placePlanets"
           ref="placePlanets"
-          :approximate-content-height="330"
+          :approximate-content-height="440"
           disable-filler
           mirror>
         <Details
             :default_open="detailsConfig.pl_Benutzung"
             title="Benutzung"
             @toggle="toggleDetails('pl_Benutzung')">
+          <div class="warn"><b>Warnung:</b> Momentan funktioniert diese Funktion nur im <u style="white-space: nowrap">Mozilla Firefox</u>.</div>
           Über dieses Menü, können Planeten auf der Karte platziert werden.<br style="margin-bottom: 3px">Die unten
           dargestellten Planeten, können durch einfaches
           <b>ziehen</b>, auf der Karte angebracht werden.<br style="margin-bottom: 3px">Um einen Planeten wieder zu <b>löschen</b>, reicht ein
@@ -774,5 +775,10 @@ html[data-theme="dark"] #mozContainer {
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+.warn {
+  background-color: hsl(30, 100%, 50%);
+  border-radius: 5px;
+  padding: 5px;
 }
 </style>
