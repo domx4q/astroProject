@@ -56,7 +56,7 @@
     "@vue/test-utils": "^2.4.1",
     "@vue/vue3-jest": "^27.0.0-alpha.1",
     "babel-jest": "^27.0.6",
-    "electron": "^27.0.1",
+    "electron": "^27.0.2",
     "electron-devtools-installer": "^3.1.0",
     "eslint": "^8.51.0",
     "eslint-plugin-vue": "^9.17.0",
