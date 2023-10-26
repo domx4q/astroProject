@@ -25,6 +25,9 @@ export default {
     isMobile() {
       return this.$store.state.client.isMobile;
     },
+    isFirefox() {
+      return this.$store.state.client.browser === "Firefox";
+    },
     theme() {
       return this.$store.state.theme;
     },
