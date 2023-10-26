@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!placed" id="planet" :class="{otherRotation:showRotation}" draggable="false" @dragend="dragEnd"
+  <div v-if="!placed" id="planet" :class="{otherRotation:showRotation, dragging:dragging}" draggable="false" @dragend="dragEnd"
        @dragstart="dragStart">
     <img id="image" :alt="altText" :src="imgSrc" :title="altText" draggable="true">
   </div>
@@ -19,6 +19,7 @@ export default {
   data() {
     return {
       size: 50,
+      dragging: false,
     };
   },
   props: {
@@ -61,15 +62,17 @@ export default {
       event.dataTransfer.dropEffect = "move";
       event.dataTransfer.effectAllowed = "move";
       event.dataTransfer.setData("itemID", this.itemId);
-      event.dataTransfer.setData("startLayerX", event.layerX);
-      event.dataTransfer.setData("startLayerY", event.layerY);
+      event.dataTransfer.setData("startOffsetX", event.offsetX);
+      event.dataTransfer.setData("startOffsetY", event.offsetY);
 
       this.$emit("dragstart", event, this);
     },
     dragEnd(event) {
+      this.dragging = false;
       this.$emit("dragend", event, this);
     },
     remove() {
+      this.dragging = false;
       this.$emit("remove", this);
     },
   },
@@ -134,10 +137,12 @@ export default {
   height: 100%;
   object-fit: cover;
   border-radius: 50%;
+  cursor: move;
+
+  /*transition: transform 0.3s ease-in-out;*/
 }
 
-
-img {
+.placed #image {
   -webkit-user-drag: none;
   -khtml-user-drag: none;
   -moz-user-drag: none;

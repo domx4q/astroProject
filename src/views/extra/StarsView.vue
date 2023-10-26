@@ -147,7 +147,8 @@
             :default_open="detailsConfig.pl_Benutzung"
             title="Benutzung"
             @toggle="toggleDetails('pl_Benutzung')">
-          <div class="warn"><b>Warnung:</b> Momentan funktioniert diese Funktion nur im <u style="white-space: nowrap">Mozilla Firefox</u>.</div>
+          <div class="warn" v-if="!isFirefox"><b>Warnung:</b> Sie befinden sich momentan nicht im Firefox. Diese Funktion klappt im <u style="white-space: nowrap">Mozilla Firefox</u>
+            am besten. In anderen Browsern kann es zu Problemen kommen. Wodurch die Funktionen nicht oder nur eingeschränkt vorhanden sind.</div>
           Über dieses Menü, können Planeten auf der Karte platziert werden.<br style="margin-bottom: 3px">Die unten
           dargestellten Planeten, können durch einfaches
           <b>ziehen</b>, auf der Karte angebracht werden.<br style="margin-bottom: 3px">Um einen Planeten wieder zu <b>löschen</b>, reicht ein
@@ -486,8 +487,8 @@ export default {
         planet.placed = true;
       }
       planet.position = {
-        x: Number(event.layerX) - Number(event.dataTransfer.getData("startLayerX")),
-        y: Number(event.layerY) - Number(event.dataTransfer.getData("startLayerY")),
+        x: Number(event.offsetX) - Number(event.dataTransfer.getData("startOffsetX")),
+        y: Number(event.offsetY) - Number(event.dataTransfer.getData("startOffsetY")),
       };
     },
     removeAllPlanets() {
@@ -780,5 +781,6 @@ html[data-theme="dark"] #mozContainer {
   background-color: hsl(30, 100%, 50%);
   border-radius: 5px;
   padding: 5px;
+  margin-bottom: 2px;
 }
 </style>
