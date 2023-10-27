@@ -56,6 +56,11 @@ export default {
       default: 0,
       required: false,
     },
+    entireRotation: {
+      type: Number,
+      default: 0,
+      required: false,
+    },
   },
   methods: {
     dragStart(event) {
@@ -83,11 +88,11 @@ export default {
     positionYStyle() {
       return `${this.position.y}px`
     },
-    rotationStyle() {
-      return `rotate(${-this.innerDiscRotation}deg)`
+    rotationStyle() { // will be used when the planet is placed
+      return `rotate(${-(this.innerDiscRotation + this.entireRotation)}deg)`
     },
-    otherRotationStyle() {
-      return `rotate(${this.innerDiscRotation}deg)`
+    otherRotationStyle() { // used when the planet is not placed to match the grabbed position with the disc rotation
+      return `rotate(${this.innerDiscRotation + this.entireRotation}deg)`
     },
     showPosition() {
       return this.position.x !== 0 && this.position.y !== 0
@@ -138,8 +143,6 @@ export default {
   object-fit: cover;
   border-radius: 50%;
   cursor: move;
-
-  /*transition: transform 0.3s ease-in-out;*/
 }
 
 .placed #image {
