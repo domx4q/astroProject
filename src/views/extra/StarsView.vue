@@ -162,7 +162,7 @@
             <div id="planetGrid">
               <Planet v-for="planet in planets" :key="planet.id"
                       :alt-text="planet.altText" :img-src="planet.src" :item-id="planet.id" :placed="planet.placed"
-                      :inner-disc-rotation="this.innerRotation"
+                      :inner-disc-rotation="innerRotation" :entire-rotation="entireRotation"
                       @dragend="planetDragEnd" @dragstart="planetDragStart" @remove="planet.placed = false"/>
             </div>
             <button type="reset" @click="removeAllPlanets" id="removeAllPlanets">Alle löschen</button>
@@ -193,7 +193,8 @@
         <div id="planetHolder">
           <Planet v-for="planet in placedPlanets" :key="planet.id"
                   :alt-text="planet.altText" :img-src="planet.src" :item-id="planet.id" :placed="true" :position="planet.position"
-                  :inner-disc-rotation="innerRotation"
+                  :inner-disc-rotation="innerRotation" :entire-rotation="entireRotation"
+                  :enable-transition="enableTransitionReactive" :transition-speed="transitionSpeed"
           />
         </div>
         <img
@@ -551,7 +552,7 @@ export default {
     },
     dropZoneStyle() {
       return { // translate middle + rotate
-        transform: `translate(-50%, -50%) rotate(${this.finalRotation.inner}deg)`,
+        transform: `translate(-50%, -50%) rotate(${this.finalRotation.inner + this.finalRotation.entire}deg)`,
       };
     },
     outerDiscStyle() {
