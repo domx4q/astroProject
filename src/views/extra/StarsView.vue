@@ -194,7 +194,6 @@
           <Planet v-for="planet in placedPlanets" :key="planet.id"
                   :alt-text="planet.altText" :img-src="planet.src" :item-id="planet.id" :placed="true" :position="planet.position"
                   :inner-disc-rotation="innerRotation" :entire-rotation="entireRotation"
-                  :enable-transition="enableTransitionReactive" :transition-speed="transitionSpeed"
           />
         </div>
         <img
@@ -397,6 +396,18 @@ export default {
         x: this.$refs["entireDisc"].offsetWidth / 2,
         y: this.$refs["entireDisc"].offsetHeight / 2,
       };
+      this.reevaluatePositions();
+    },
+    reevaluatePositions() {
+      this.planets.forEach((p) => {
+        if (!this.checkEmpty(p.adaptedSize)) {
+          p.position = {
+            x: p.position.x * (this.adaptedSize / p.adaptedSize),
+            y: p.position.y * (this.adaptedSize / p.adaptedSize),
+          };
+          p.adaptedSize = Math.max(this.adaptedSize, 0);
+        }
+      });
     },
     handleMouseDown(event) {
       this.mouseDown = true;
@@ -491,6 +502,8 @@ export default {
         x: Number(event.offsetX) - Number(event.dataTransfer.getData("startOffsetX")),
         y: Number(event.offsetY) - Number(event.dataTransfer.getData("startOffsetY")),
       };
+      // to suppress reactivity
+      planet.adaptedSize = Math.max(this.adaptedSize, 0);
     },
     removeAllPlanets() {
       this.planets.forEach((p) => (p.placed = false));

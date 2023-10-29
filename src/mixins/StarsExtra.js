@@ -43,7 +43,7 @@ export default {
       }
     ];
     return {
-      planets: planets.map(planet => ({ ...planet, placed: false })),
+      planets: planets.map(planet => ({ ...planet, placed: false, position: { x: 0, y: 0,adaptedSize: null}})),
     }
   },
   computed: {
