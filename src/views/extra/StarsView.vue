@@ -72,6 +72,10 @@
             @toggle="toggleDetails('Einstellungen')"
         >
           <FormKit
+            v-model="showRektaszension"
+            label="Rektaszension einblenden"
+            type="checkbox"/>
+          <FormKit
               v-model="fileInput"
               accept="image/*"
               help="Neue Sternkarte hochladen (1000x1000px)"
@@ -201,6 +205,12 @@
           alt="Inner Disc"
           src="@/assets/extra/images/sternenscheibe_inner.png"
         />
+        <div id="rektaszensionOffset" :style="rektaszensionOffsetStyle" v-if="showRektaszension">
+          <img
+            ref="rektaszension" id="rektaszension"
+            src="@/assets/extra/images/sternenscheibe_rektaszension.png"
+            alt="Rektaszension">
+        </div>
       </div>
     </div>
   </div>
@@ -222,8 +232,8 @@ function createDateAsUTC(date, offset = 0) {
       date.getDate(),
       date.getHours() - offset,
       date.getMinutes(),
-      date.getSeconds(),
-    ),
+      date.getSeconds()
+    )
   );
 }
 
@@ -249,6 +259,8 @@ export default {
         outer: 0,
         entire: 0,
       },
+      rektaszensionOffset: -99.8, // 18:46 Uhr (ca.)
+
 
       date: "2023-01-01",
       time: "00:00",
@@ -262,6 +274,7 @@ export default {
       enableTransitionDefault: true,
       enableTransition: true,
       transitionSpeed: 1,
+      showRektaszension: true,
 
       fileInput: null,
 
@@ -359,7 +372,7 @@ export default {
           let key = "innerDisc";
           let userInput = prompt(
             "Welche Scheibe soll ersetzt werden? (inner/outer)",
-            "inner",
+            "inner"
           );
           switch (userInput) {
             case "inner": {
@@ -442,13 +455,13 @@ export default {
       if (!event.ctrlKey) {
         rotation = this.getNearestDegree(
           this.innerRotation,
-          rotation - startAngle + this.lastAngleInner,
+          rotation - startAngle + this.lastAngleInner
         );
         this.innerRotation = rotation;
       } else {
         rotation = this.getNearestDegree(
           this.outerRotation,
-          rotation - startAngle + this.lastAngleOuter,
+          rotation - startAngle + this.lastAngleOuter
         );
         this.outerRotation = rotation;
       }
@@ -525,13 +538,22 @@ export default {
       const screenSize = this.screenSize;
       const smallerSide = Math.min(
         screenSize.width - widthOffset,
-        screenSize.height - heightOffset,
+        screenSize.height - heightOffset
       );
-
-      return Math.min(DEFAULT_SIZE, smallerSide);
+      const result = Math.min(DEFAULT_SIZE, smallerSide);
+      if (this.showRektaszension) {
+        return result - 90; // the rektaszension disc is 90px wider than the inner disc
+      }
+      return result;
+    },
+    adaptedRektaszensionSize() {
+      return this.adaptedSize * (1090/1000); // 1090 is the size (in px) of the rektaszension disc
     },
     adaptedSizeStyle() {
       return `${this.adaptedSize}px`;
+    },
+    adaptedRektaszensionSizeStyle() {
+      return `${this.adaptedRektaszensionSize}px`;
     },
     showFullSidePanel() {
       return this.screenSize.width - this.adaptedSize > 480;
@@ -546,7 +568,7 @@ export default {
         {
           hours: undefined,
           minutes: undefined,
-        },
+        }
       );
     },
     convertedDate() {
@@ -578,13 +600,18 @@ export default {
         transform: `rotate(${this.finalRotation.entire}deg)`,
       };
     },
+    rektaszensionOffsetStyle() {
+      return {
+        transform: `rotate(${this.rektaszensionOffset}deg)`,
+      };
+    },
 
     dateRotation() {
       const rotationsoffset = 171;
       const dayNumber = Math.floor(
         (new Date(this.convertedDate) -
           new Date(this.convertedDate.getFullYear(), 0, 0)) /
-          (1000 * 60 * 60 * 24),
+          (1000 * 60 * 60 * 24)
       );
       return -((dayNumber / 365) * 360 - rotationsoffset);
     },
@@ -603,8 +630,7 @@ export default {
     },
     mezTime() {
       // Mitteleuropäische Zeit
-      if (this.timezone === "MESZ") {
-        // Mitteleuropäische SommerZeit
+      if (this.timezone === "MESZ") { // Mitteleuropäische SommerZeit
         // subtract 1 hour
         return this.manipulateTime(-1);
       }
@@ -697,6 +723,22 @@ html[data-theme="dark"] #stars {
   justify-content: center;
   align-items: center;
 }
+#rektaszension {
+  width: v-bind(adaptedRektaszensionSizeStyle) !important;
+  height: v-bind(adaptedRektaszensionSizeStyle) !important;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: transparent;
+  z-index: 3;
+}
+#rektaszensionOffset {
+  /*keep everything from parent*/
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
 
 #entireDisc {
   pointer-events: none;
@@ -730,7 +772,7 @@ html[data-theme="dark"] #stars {
   position: absolute;
   top: 50%;
   left: calc(
-    50% + ((var(--adaptedSize) - (60px * (var(--adaptedSizeRaw) / 1000))) / 2)
+    50% + ((var(--adaptedSize) - (60px * (var(--adaptedSizeRaw) / (1000 - 90)))) / 2)
   );
   width: calc(30px * (var(--adaptedSizeRaw) / 1000));
   height: calc(5px * (var(--adaptedSizeRaw) / 1000));
