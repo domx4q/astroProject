@@ -468,12 +468,6 @@ export default {
           rotation - startAngle + this.lastAngleInner
         );
         this.innerRotation = rotation;
-      } else {
-        rotation = this.getNearestDegree(
-            this.outerRotation,
-            rotation - startAngle + this.lastAngleOuter
-        );
-        this.outerRotation = rotation;
       } else if (event.altKey) {
         rotation = this.getNearestDegree(
             this.deklinationRotation,
