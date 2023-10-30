@@ -213,6 +213,13 @@
         </div>
       </div>
     </div>
+    <div id="deklination" ref="deklination" :style="deklinationStyle">
+      <img
+        ref="deklinationDisc"
+        alt="Deklination"
+        src="@/assets/extra/images/deklination.png"
+      />
+    </div>
   </div>
 </template>
 
@@ -254,10 +261,12 @@ export default {
       innerRotation: 0,
       outerRotation: 0,
       entireRotation: 0,
+      deklinationRotation: 0,
       finalRotation: {
         inner: 0,
         outer: 0,
         entire: 0,
+        deklination: 0,
       },
       rektaszensionOffset: -99.8, // 18:46 Uhr (ca.)
 
@@ -432,6 +441,7 @@ export default {
       };
       this.lastAngleInner = this.innerRotation;
       this.lastAngleOuter = this.outerRotation;
+      this.lastAngleDeklination = this.deklinationRotation;
 
       this.enableTransition = false;
     },
@@ -460,10 +470,22 @@ export default {
         this.innerRotation = rotation;
       } else {
         rotation = this.getNearestDegree(
-          this.outerRotation,
-          rotation - startAngle + this.lastAngleOuter
+            this.outerRotation,
+            rotation - startAngle + this.lastAngleOuter
         );
         this.outerRotation = rotation;
+      } else if (event.altKey) {
+        rotation = this.getNearestDegree(
+            this.deklinationRotation,
+            rotation - startAngle + this.lastAngleDeklination,
+        );
+        this.deklinationRotation = rotation;
+      } else {
+        rotation = this.getNearestDegree(
+            this.innerRotation,
+            rotation - startAngle + this.lastAngleInner,
+        );
+        this.innerRotation = rotation;
       }
     },
     handleMouseUp(event) {
@@ -600,6 +622,11 @@ export default {
         transform: `rotate(${this.finalRotation.entire}deg)`,
       };
     },
+    deklinationStyle() {
+      return {
+        transform: `rotate(${this.finalRotation.deklination}deg)`,
+      };
+    },
     rektaszensionOffsetStyle() {
       return {
         transform: `rotate(${this.rektaszensionOffset}deg)`,
@@ -658,6 +685,10 @@ export default {
       this.normalizeAngles();
       this.finalRotation.entire = this.getNearestDegree(oldValue, newValue);
     },
+    deklinationRotation(newValue, oldValue) {
+      this.normalizeAngles();
+      this.finalRotation.deklination = this.getNearestDegree(oldValue, newValue);
+    },
 
     time() {
       this.setTime();
@@ -705,6 +736,7 @@ html[data-theme="dark"] #stars {
 
 #innerDisc img,
 #outerDisc img,
+#deklination img,
 #dropContainer,
 #planetHolder {
   width: v-bind(adaptedSizeStyle);
@@ -740,7 +772,7 @@ html[data-theme="dark"] #stars {
   position: absolute;
 }
 
-#entireDisc {
+#entireDisc, #deklination {
   pointer-events: none;
   width: 100%;
   height: 100%;
@@ -748,20 +780,22 @@ html[data-theme="dark"] #stars {
 
 #outerDisc,
 #innerDisc,
-#entireDisc {
+#entireDisc,
+#deklination {
   width: 100%;
   height: 100%;
   position: absolute;
   color: transparent; /*hide alt text*/
 }
 
-#entireDisc {
+#entireDisc, #deklination {
   scale: v-bind(scale);
 }
 
 #stars.transition #outerDisc,
 #stars.transition #innerDisc,
-#stars.transition #entireDisc {
+#stars.transition #entireDisc,
+#stars.transition #deklination {
   transition: transform v-bind(transitionSpeed + "s");
 }
 
