@@ -462,12 +462,12 @@ export default {
 
       const startAngle = getDegree(this.startPosition);
 
-      if (!event.ctrlKey) {
+      if (event.ctrlKey) {
         rotation = this.getNearestDegree(
-          this.innerRotation,
-          rotation - startAngle + this.lastAngleInner
+          this.outerRotation,
+          rotation - startAngle + this.lastAngleOuter
         );
-        this.innerRotation = rotation;
+        this.outerRotation = rotation;
       } else if (event.altKey) {
         rotation = this.getNearestDegree(
             this.deklinationRotation,
