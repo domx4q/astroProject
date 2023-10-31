@@ -76,6 +76,10 @@
             label="Rektaszension einblenden"
             type="checkbox"/>
           <FormKit
+            v-model="showDeklination"
+            label="Deklinationszeiger einblenden"
+            type="checkbox"/>
+          <FormKit
               v-model="fileInput"
               accept="image/*"
               help="Neue Sternkarte hochladen (1000x1000px)"
@@ -103,9 +107,22 @@
               title="Anleitung"
               @toggle="toggleDetails('Anleitung')"
           >
-            Um die Karte zu drehen, ziehen Sie mit der Maus über die Karte.<br/>
-            Wenn sie die obere Karte drehen möchten, drücken Sie die
-            <b>Strg-Taste</b> und ziehen Sie mit der Maus.
+            Um die Karte zu drehen, halten Sie einfach die Karte an einer Stelle fest und ziehen Sie diese.<br/>
+            Um die entsprechenden Ebenen zu kontrollieren, finden sie hier eine Auflistung an Tasten pro Ebene. Diese Taste vor dem drehen bis zum Ende gedrückt halten.<br/>
+            <table id="controlTable">
+              <tr>
+                <td>Innen (Datum)</td>
+                <td><i>Keine</i></td>
+              </tr>
+              <tr>
+                <td>Außen (Zeit)</td>
+                <td><kbd>Strg</kbd></td>
+              </tr>
+              <tr>
+                <td>Deklinationszeiger</td>
+                <td><kbd>Alt</kbd></td>
+              </tr>
+            </table>
           </Details>
           <Details
               :default_open="detailsConfig.Author"
@@ -131,8 +148,8 @@
           >
             Grundlage der Sternkarte von
             <u>
-              <nobr>Dipl.-Phys.</nobr>
-              <nobr>Torsten Rahn</nobr>
+              <span class="nowrap">Dipl.-Phys.</span>
+              <span class="nowrap">Torsten Rahn</span>
             </u
             >, mit freundlicher Genehmigung
           </Details>
@@ -151,7 +168,7 @@
             :default_open="detailsConfig.pl_Benutzung"
             title="Benutzung"
             @toggle="toggleDetails('pl_Benutzung')">
-          <div class="warn" v-if="!isFirefox"><b>Warnung:</b> Sie befinden sich momentan nicht im Firefox. Diese Funktion klappt im <u style="white-space: nowrap">Mozilla Firefox</u>
+          <div class="warn" v-if="!isFirefox"><b>Warnung:</b> Sie befinden sich momentan nicht im Firefox. Diese Funktion klappt im <u class="nowrap">Mozilla Firefox</u>
             am besten. In anderen Browsern kann es zu Problemen kommen. Wodurch die Funktionen nicht oder nur eingeschränkt vorhanden sind.</div>
           Über dieses Menü, können Planeten auf der Karte platziert werden.<br style="margin-bottom: 3px">Die unten
           dargestellten Planeten, können durch einfaches
@@ -213,7 +230,7 @@
         </div>
       </div>
     </div>
-    <div id="deklination" ref="deklination" :style="deklinationStyle">
+    <div id="deklination" ref="deklination" :style="deklinationStyle" v-if="showDeklination">
       <img
         ref="deklinationDisc"
         alt="Deklination"
@@ -283,7 +300,8 @@ export default {
       enableTransitionDefault: true,
       enableTransition: true,
       transitionSpeed: 1,
-      showRektaszension: true,
+      showRektaszension: false,
+      showDeklination: false,
 
       fileInput: null,
 
@@ -866,5 +884,21 @@ html[data-theme="dark"] #mozContainer {
   border-radius: 5px;
   padding: 5px;
   margin-bottom: 2px;
+}
+.nowrap {
+  white-space: nowrap;
+}
+#controlTable {
+  margin: 5px 0;
+  text-align: center;
+  border-collapse: collapse;
+  font-size: .89em;
+}
+#controlTable td {
+  padding: 5px;
+  border: 1px solid #000000;
+}
+#controlTable td:first-child {
+  text-align: left;
 }
 </style>
