@@ -1,6 +1,6 @@
 {
   "name": "astro",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "private": false,
   "description": "This repo contains the source code for the Astro website. It's a App to visualize planet maps and get information about them.",
   "author": {
