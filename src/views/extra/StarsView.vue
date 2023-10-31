@@ -76,6 +76,10 @@
             label="Rektaszension einblenden"
             type="checkbox"/>
           <FormKit
+            v-model="showDeklination"
+            label="Deklinationszeiger einblenden"
+            type="checkbox"/>
+          <FormKit
               v-model="fileInput"
               accept="image/*"
               help="Neue Sternkarte hochladen (1000x1000px)"
@@ -213,7 +217,7 @@
         </div>
       </div>
     </div>
-    <div id="deklination" ref="deklination" :style="deklinationStyle">
+    <div id="deklination" ref="deklination" :style="deklinationStyle" v-if="showDeklination">
       <img
         ref="deklinationDisc"
         alt="Deklination"
@@ -283,7 +287,8 @@ export default {
       enableTransitionDefault: true,
       enableTransition: true,
       transitionSpeed: 1,
-      showRektaszension: true,
+      showRektaszension: false,
+      showDeklination: false,
 
       fileInput: null,
 
