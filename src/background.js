@@ -7,8 +7,12 @@ import { autoUpdater, AppUpdater } from "electron-updater";
 const isDev = require('electron-is-dev');
 const isDevelopment = process.env.NODE_ENV !== "production";
 
-autoUpdater.autoDownload = false;
-autoUpdater.autoInstallOnAppQuit = true;
+const USE_AUTO_UPDATER = false;
+
+if (USE_AUTO_UPDATER) {
+  autoUpdater.autoDownload = false;
+  autoUpdater.autoInstallOnAppQuit = true;
+}
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -108,43 +112,44 @@ app.on("ready", async () => {
   }
   createWindow();
 
-  if (!isDev) {
+  if (!isDev && USE_AUTO_UPDATER) {
     autoUpdater.checkForUpdates();
   }
 });
 
 
-autoUpdater.on("update-available", (info) => {
-  console.log("Update available");
-  console.log(info);
-  let pth = autoUpdater.downloadUpdate();
-  console.log(pth);
-});
-
-autoUpdater.on("update-not-available", (info) => {
-  console.log("Update not available");
-  console.log(info);
-});
-
-autoUpdater.on("update-downloaded", (info) => {
-  console.log("Update downloaded");
-  console.log(info);
-
-  const answer = dialog.showMessageBoxSync({
-    type: "question",
-    buttons: ["Ja", "Nein"],
-    title: "Update verfügbar",
-    message: "Ein Update ist verfügbar. Möchten Sie es jetzt installieren?",
+if (USE_AUTO_UPDATER) {
+  autoUpdater.on("update-available", (info) => {
+    console.log("Update available");
+    console.log(info);
+    let pth = autoUpdater.downloadUpdate();
+    console.log(pth);
   });
-  if (answer === 1) return;
-  autoUpdater.quitAndInstall();
-});
 
-autoUpdater.on("error", (err) => {
-  console.log("Update error");
-  console.log(err);
-});
+  autoUpdater.on("update-not-available", (info) => {
+    console.log("Update not available");
+    console.log(info);
+  });
 
+  autoUpdater.on("update-downloaded", (info) => {
+    console.log("Update downloaded");
+    console.log(info);
+
+    const answer = dialog.showMessageBoxSync({
+      type: "question",
+      buttons: ["Ja", "Nein"],
+      title: "Update verfügbar",
+      message: "Ein Update ist verfügbar. Möchten Sie es jetzt installieren?",
+    });
+    if (answer === 1) return;
+    autoUpdater.quitAndInstall();
+  });
+
+  autoUpdater.on("error", (err) => {
+    console.log("Update error");
+    console.log(err);
+  });
+}
 
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {

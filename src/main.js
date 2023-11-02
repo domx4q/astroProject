@@ -38,6 +38,7 @@ app.use(store);
 app.use(router);
 app.use(autoAnimatePlugin);
 app.use(plugin, formkitConfig);
+// eslint-disable-next-line vue/multi-word-component-names
 app.component("Icon", Icon);
 
 function prepareHotReload() {
@@ -53,6 +54,43 @@ if (module.hot) {
   module.hot.addStatusHandler((status) => {
     if (status === "prepare") prepareHotReload();
   });
+}
+
+if (process.env.IS_ELECTRON || true) {
+    import("../package.json").then((pkg) => {
+        const currentVersion = pkg.version;
+
+        axios.get("https://api.github.com/repos/domx4q/astroProject/releases/latest")
+            .then((r) => {
+                const tag = r.data.tag_name;
+                if (tag !== currentVersion) {
+                    let version = tag;
+                    if (tag.startsWith("v")) {
+                        version = tag.substring(1);
+                    }
+                    const [major, minor, patch] = version.split(".");
+                    const [currentMajor, currentMinor, currentPatch] =
+                        currentVersion.split(".");
+
+                    if (major > currentMajor) {
+                        router.push({name: "update", params: {version: tag}});
+                    } else if (major === currentMajor && minor > currentMinor) {
+                        router.push({name: "update", params: {version: tag}});
+                    } else if (
+                        major === currentMajor &&
+                        minor === currentMinor &&
+                        patch > currentPatch
+                    ) {
+                        router.push({name: "update", params: {version: tag}});
+                    } else {
+                        console.log("No update available");
+                    }
+                }
+            })
+            .catch((e) => {
+                console.info("Failed to check for updates", e)
+            });
+    });
 }
 
 app.mount("#app");
