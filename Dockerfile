@@ -1,4 +1,4 @@
-FROM ubuntu:lunar-20231004 as base
+FROM ubuntu:mantic-20231011 as base
 EXPOSE 3000
 
 WORKDIR /opt
