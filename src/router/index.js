@@ -83,6 +83,12 @@ const routes = [
         component: () => import("../views/extra/ExampleView.vue"),
       },
       {
+        path: "update/:version",
+        alias: ["/update/:version", "/update"],
+        name: "update",
+        component: () => import("../views/extra/UpdateView.vue"),
+      },
+      {
         path: "test", // only for development
         name: "test",
         component: () => import("../views/extra/TestView.vue"),
