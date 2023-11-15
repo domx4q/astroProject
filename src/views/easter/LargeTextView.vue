@@ -1,8 +1,7 @@
 <template>
   <div id="background">
     <!-- skipcq: JS-0693 -->
-    <div id="text" v-html="formattedText">
-    </div>
+    <div id="text" v-html="formattedText"></div>
     <div v-if="showInput" id="inputContainer">
       <textarea id="input" v-model="text" ref="input"></textarea>
     </div>
@@ -13,26 +12,25 @@
 import defaults from "@/mixins/defaults";
 
 export default {
-  name: 'LargeTextView',
+  name: "LargeTextView",
   mixins: [defaults],
   props: {
     raw_text: {
       type: String,
       required: false,
-      default: ""
-    }
+      default: "",
+    },
   },
   data() {
     return {
       text: "",
       showInput: false,
-    }
+    };
   },
-  methods: {
-  },
+  methods: {},
   computed: {
     formattedText() {
-      return this.text.replace(/\r\n|\r|\n/g, '<br>');
+      return this.text.replace(/\r\n|\r|\n/g, "<br>");
     },
     calculatedFontSize() {
       if (this.text.length === 0) {
@@ -43,22 +41,28 @@ export default {
       const padding = 100; // Adjust this value as needed
 
       const lines = this.text.split(/\r\n|\r|\n/);
-      const longestLine = lines.reduce((a, b) => a.length > b.length ? a : b, '');
+      const longestLine = lines.reduce(
+        (a, b) => (a.length > b.length ? a : b),
+        "",
+      );
       const longestLineWidth = longestLine.length;
 
       // Calculate the font size based on the smaller dimension (width or height)
-      const widthCalc = (viewportWidth - padding) / longestLineWidth * 2
-      return Math.min(widthCalc, (viewportHeight - padding) / (lines.length + 1.2));
+      const widthCalc = ((viewportWidth - padding) / longestLineWidth) * 2;
+      return Math.min(
+        widthCalc,
+        (viewportHeight - padding) / (lines.length + 1.2),
+      );
     },
   },
   mounted() {
-    this.showInput = this.checkEmpty(this.raw_text)
+    this.showInput = this.checkEmpty(this.raw_text);
     if (!this.showInput) {
-      this.text = this.raw_text
+      this.text = this.raw_text;
     }
   },
-  watch: {}
-}
+  watch: {},
+};
 </script>
 
 <style scoped>
@@ -80,7 +84,7 @@ export default {
 }
 
 * {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 #text {
@@ -89,8 +93,9 @@ export default {
   color: white;
 }
 
-#text, #input {
-  font-size: v-bind(calculatedFontSize+ 'px');
+#text,
+#input {
+  font-size: v-bind(calculatedFontSize + "px");
 }
 
 #input {

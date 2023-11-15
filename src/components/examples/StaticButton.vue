@@ -9,7 +9,7 @@
 <script>
 export default {
   name: "StaticButton",
-  emits: ['clicked'],
+  emits: ["clicked"],
 };
 </script>
 

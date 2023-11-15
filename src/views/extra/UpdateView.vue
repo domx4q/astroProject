@@ -1,8 +1,10 @@
 <template>
-  <ThemeSwitch only-logic/>
+  <ThemeSwitch only-logic />
   <main>
     <h1>Update Verfügbar ({{ version }})</h1>
-    <p>Bitte aktualisieren Sie die Anwendung um die neuesten Funktionen zu erhalten.<br>
+    <p>
+      Bitte aktualisieren Sie die Anwendung um die neuesten Funktionen zu
+      erhalten.<br />
       Besuchen sie dazu die
       <a :href="url" target="_blank" rel="noopener noreferrer">Releases</a>
       Seite auf GitHub. Und laden Sie die neueste Version herunter.
@@ -15,7 +17,7 @@ import ThemeSwitch from "@/components/themeSwitch.vue";
 
 export default {
   name: "UpdateView",
-  components: {ThemeSwitch},
+  components: { ThemeSwitch },
   data() {
     return {};
   },
@@ -25,12 +27,13 @@ export default {
       return this.$route.params.version;
     },
     url() {
-      return "https://github.com/domx4q/astroProject/releases/tag/" + this.version;
+      return (
+        "https://github.com/domx4q/astroProject/releases/tag/" + this.version
+      );
     },
   },
   watch: {},
-  mounted() {
-  },
+  mounted() {},
 };
 </script>
 
@@ -46,7 +49,8 @@ main {
   scale: 120%;
 }
 
-a, a:visited {
+a,
+a:visited {
   color: #007bff;
 }
 

@@ -238,21 +238,21 @@ export default {
       if (Math.abs(diffX) > Math.abs(diffY)) {
         if (diffX > 0) {
           document.dispatchEvent(
-            new KeyboardEvent("keydown", { key: "ArrowRight" })
+            new KeyboardEvent("keydown", { key: "ArrowRight" }),
           );
         } else {
           document.dispatchEvent(
-            new KeyboardEvent("keydown", { key: "ArrowLeft" })
+            new KeyboardEvent("keydown", { key: "ArrowLeft" }),
           );
         }
       } else {
         if (diffY > 0) {
           document.dispatchEvent(
-            new KeyboardEvent("keydown", { key: "ArrowDown" })
+            new KeyboardEvent("keydown", { key: "ArrowDown" }),
           );
         } else {
           document.dispatchEvent(
-            new KeyboardEvent("keydown", { key: "ArrowUp" })
+            new KeyboardEvent("keydown", { key: "ArrowUp" }),
           );
         }
       }

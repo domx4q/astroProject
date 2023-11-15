@@ -41,7 +41,7 @@ export class Hotspot {
     this.position = new Vector3D(
       data.position.x,
       data.position.y,
-      data.position.z
+      data.position.z,
     );
     this.normal = new Vector3D(data.normal.x, data.normal.y, data.normal.z);
     this.description = data.description;

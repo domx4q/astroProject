@@ -1,13 +1,39 @@
 <template>
-  <div v-if="!placed" id="planet" :class="{otherRotation:showRotation, dragging:dragging}" draggable="false" @dragend="dragEnd"
-       @dragstart="dragStart">
-    <img id="image" :alt="altText" :src="imgSrc" :title="altText" draggable="true">
+  <div
+    v-if="!placed"
+    id="planet"
+    :class="{ otherRotation: showRotation, dragging: dragging }"
+    draggable="false"
+    @dragend="dragEnd"
+    @dragstart="dragStart"
+  >
+    <img
+      id="image"
+      :alt="altText"
+      :src="imgSrc"
+      :title="altText"
+      draggable="true"
+    />
   </div>
-  <div v-else id="planet"
-       :class="{position : showPosition, rotation: showPosition && showRotation, otherRotation:showRotation && !showPosition}"
-       class="placed" draggable="false"
-       @dblclick="remove">
-    <img id="image" :alt="altText" :src="imgSrc" :title="altText" draggable="false">
+  <div
+    v-else
+    id="planet"
+    :class="{
+      position: showPosition,
+      rotation: showPosition && showRotation,
+      otherRotation: showRotation && !showPosition,
+    }"
+    class="placed"
+    draggable="false"
+    @dblclick="remove"
+  >
+    <img
+      id="image"
+      :alt="altText"
+      :src="imgSrc"
+      :title="altText"
+      draggable="false"
+    />
   </div>
 </template>
 
@@ -83,31 +109,33 @@ export default {
   },
   computed: {
     positionXStyle() {
-      return `${this.position.x}px`
+      return `${this.position.x}px`;
     },
     positionYStyle() {
-      return `${this.position.y}px`
+      return `${this.position.y}px`;
     },
-    rotationStyle() { // will be used when the planet is placed
-      return `rotate(${-(this.innerDiscRotation + this.entireRotation)}deg)`
+    rotationStyle() {
+      // will be used when the planet is placed
+      return `rotate(${-(this.innerDiscRotation + this.entireRotation)}deg)`;
     },
-    otherRotationStyle() { // used when the planet is not placed to match the grabbed position with the disc rotation
-      return `rotate(${this.innerDiscRotation + this.entireRotation}deg)`
+    otherRotationStyle() {
+      // used when the planet is not placed to match the grabbed position with the disc rotation
+      return `rotate(${this.innerDiscRotation + this.entireRotation}deg)`;
     },
     showPosition() {
-      return this.position.x !== 0 && this.position.y !== 0
+      return this.position.x !== 0 && this.position.y !== 0;
     },
     showRotation() {
-      return this.innerDiscRotation !== 0
-    }
+      return this.innerDiscRotation !== 0;
+    },
   },
   watch: {},
-}
+};
 </script>
 
 <style scoped>
 #planet {
-  --size: v-bind(size+ 'px');
+  --size: v-bind(size + "px");
 
   width: var(--size);
   height: var(--size);
@@ -134,7 +162,7 @@ export default {
 }
 
 #planet.otherRotation > #image {
-  transform: v-bind(otherRotationStyle)
+  transform: v-bind(otherRotationStyle);
 }
 
 #image {

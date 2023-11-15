@@ -7,7 +7,11 @@ import store from "./store";
 import { autoAnimatePlugin } from "@formkit/auto-animate/vue";
 import { plugin, defaultConfig } from "@formkit/vue";
 import { createProPlugin, inputs } from "@formkit/pro";
-import { createAutoAnimatePlugin, createFloatingLabelsPlugin, createAutoHeightTextareaPlugin } from "@formkit/addons";
+import {
+  createAutoAnimatePlugin,
+  createFloatingLabelsPlugin,
+  createAutoHeightTextareaPlugin,
+} from "@formkit/addons";
 import { de } from "@formkit/i18n";
 import "@formkit/pro/genesis";
 
@@ -57,40 +61,41 @@ if (module.hot) {
 }
 
 if (process.env.IS_ELECTRON) {
-    import("../package.json").then((pkg) => {
-        const currentVersion = pkg.version;
+  import("../package.json").then((pkg) => {
+    const currentVersion = pkg.version;
 
-        axios.get("https://api.github.com/repos/domx4q/astroProject/releases/latest")
-            .then((r) => {
-                const tag = r.data.tag_name;
-                if (tag !== currentVersion) {
-                    let version = tag;
-                    if (tag.startsWith("v")) {
-                        version = tag.substring(1);
-                    }
-                    const [major, minor, patch] = version.split(".");
-                    const [currentMajor, currentMinor, currentPatch] =
-                        currentVersion.split(".");
+    axios
+      .get("https://api.github.com/repos/domx4q/astroProject/releases/latest")
+      .then((r) => {
+        const tag = r.data.tag_name;
+        if (tag !== currentVersion) {
+          let version = tag;
+          if (tag.startsWith("v")) {
+            version = tag.substring(1);
+          }
+          const [major, minor, patch] = version.split(".");
+          const [currentMajor, currentMinor, currentPatch] =
+            currentVersion.split(".");
 
-                    if (major > currentMajor) {
-                        router.push({name: "update", params: {version: tag}});
-                    } else if (major === currentMajor && minor > currentMinor) {
-                        router.push({name: "update", params: {version: tag}});
-                    } else if (
-                        major === currentMajor &&
-                        minor === currentMinor &&
-                        patch > currentPatch
-                    ) {
-                        router.push({name: "update", params: {version: tag}});
-                    } else {
-                        console.log("No update available");
-                    }
-                }
-            })
-            .catch((e) => {
-                console.info("Failed to check for updates", e)
-            });
-    });
+          if (major > currentMajor) {
+            router.push({ name: "update", params: { version: tag } });
+          } else if (major === currentMajor && minor > currentMinor) {
+            router.push({ name: "update", params: { version: tag } });
+          } else if (
+            major === currentMajor &&
+            minor === currentMinor &&
+            patch > currentPatch
+          ) {
+            router.push({ name: "update", params: { version: tag } });
+          } else {
+            console.log("No update available");
+          }
+        }
+      })
+      .catch((e) => {
+        console.info("Failed to check for updates", e);
+      });
+  });
 }
 
 app.mount("#app");

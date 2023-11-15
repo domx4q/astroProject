@@ -14,7 +14,11 @@
           everOpened = true;
         "
       >
-        <Icon v-if="mirror" class="collapseIcon" icon="ph:caret-double-left-bold" />
+        <Icon
+          v-if="mirror"
+          class="collapseIcon"
+          icon="ph:caret-double-left-bold"
+        />
         <Icon v-else class="collapseIcon" icon="ph:caret-double-right-bold" />
       </div>
       <div v-auto-animate id="contentWrapper">
@@ -112,8 +116,7 @@ export default {
       if (newVal) {
         this.oldCollapsedState = this.collapsed;
         this.collapsed = false;
-      }
-      else {
+      } else {
         this.collapsed = this.oldCollapsedState;
       }
     },

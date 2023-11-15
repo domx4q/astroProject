@@ -1403,7 +1403,10 @@ input.formkit-input[type="radio"] ~ .formkit-decorator::before {
   height: 1.28571428em;
   border: 0 solid transparent;
   border-radius: 1.28571428em;
-  transition: width 0.25s, border 0.25s, margin-right 0.25s;
+  transition:
+    width 0.25s,
+    border 0.25s,
+    margin-right 0.25s;
 }
 [data-type="submit"] .formkit-input:hover {
   background: var(--fk-bg-submit-hover);

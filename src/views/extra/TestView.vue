@@ -1,6 +1,6 @@
 <template>
   <div id="main">
-    <ThemeSwitch only-logic/>
+    <ThemeSwitch only-logic />
   </div>
 </template>
 
@@ -9,7 +9,7 @@ import ThemeSwitch from "@/components/themeSwitch.vue";
 
 export default {
   name: "TestView",
-  components: {ThemeSwitch},
+  components: { ThemeSwitch },
   emits: [],
   data() {
     return {};
@@ -23,6 +23,6 @@ export default {
 #main {
   background-color: #fff;
   width: 100%;
-  height: 100vh
+  height: 100vh;
 }
 </style>

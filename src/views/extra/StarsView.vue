@@ -10,105 +10,115 @@
     <ThemeSwitch only-logic />
     <!--otherwise, only if the settings are expanded, the Theme will work-->
     <Teleport to="#app">
-      <CollapsableContainer ref="controls" id="controls" use-pulse :approximate-content-height="652"
-                            :use-as-normal-container="showFullSidePanel">
+      <CollapsableContainer
+        ref="controls"
+        id="controls"
+        use-pulse
+        :approximate-content-height="652"
+        :use-as-normal-container="showFullSidePanel"
+      >
         <Details
-            title="Zeit / Datum"
-            :default_open="detailsConfig.Zeit"
-            :negative-margin="30"
-            @toggle="toggleDetails('Zeit')"
+          title="Zeit / Datum"
+          :default_open="detailsConfig.Zeit"
+          :negative-margin="30"
+          @toggle="toggleDetails('Zeit')"
         >
           <FormKit
-              label="Aktuelle Zeit"
-              title="Setzt die Sternenkarte auf die aktuelle Zeit"
-              type="button"
-              @click="setCurrent"
+            label="Aktuelle Zeit"
+            title="Setzt die Sternenkarte auf die aktuelle Zeit"
+            type="button"
+            @click="setCurrent"
           />
           <FormKit
-              label="Aktuell halten"
-              title="Hält die Sternenkarte auf der aktuellen Zeit, somit läuft die Karte mit."
-              type="checkbox"
-              v-model="keepCurrent"
+            label="Aktuell halten"
+            title="Hält die Sternenkarte auf der aktuellen Zeit, somit läuft die Karte mit."
+            type="checkbox"
+            v-model="keepCurrent"
           />
 
           <Details
-              :default_open="detailsConfig.Zeitpunkt"
-              title="Zeitpunkt"
-              @toggle="toggleDetails('Zeitpunkt')"
+            :default_open="detailsConfig.Zeitpunkt"
+            title="Zeitpunkt"
+            @toggle="toggleDetails('Zeitpunkt')"
           >
-            <FormKit v-model="time" :label="`Zeit (${timezone})`" type="time"/>
+            <FormKit v-model="time" :label="`Zeit (${timezone})`" type="time" />
             <div id="mozContainer" title="Mittlere Ortszeit">
               <span>MOZ:</span> <b>{{ mozTime }}</b>
             </div>
-            <FormKit v-model="date" label="Datum" type="date"/>
+            <FormKit v-model="date" label="Datum" type="date" />
           </Details>
         </Details>
         <Details
-            title="Ausrichtung"
-            :default_open="detailsConfig.Ausrichtung"
-            @toggle="toggleDetails('Ausrichtung')"
+          title="Ausrichtung"
+          :default_open="detailsConfig.Ausrichtung"
+          @toggle="toggleDetails('Ausrichtung')"
         >
           <FormKit
-              v-model="orientation"
-              :options="[
+            v-model="orientation"
+            :options="[
               { value: 'none', label: 'Keine' },
               { value: 'N', label: 'Norden' },
               { value: 'S', label: 'Süden' },
               { value: 'E', label: 'Osten' },
               { value: 'W', label: 'Westen' },
             ]"
-              label="Himmelsrichtung"
-              type="select"
+            label="Himmelsrichtung"
+            type="select"
           />
           <FormKit
-              v-model="orientationLocked"
-              label="Rotation sperren"
-              type="checkbox"
+            v-model="orientationLocked"
+            label="Rotation sperren"
+            type="checkbox"
           />
         </Details>
         <Details
-            title="Einstellungen"
-            :default_open="detailsConfig.Einstellungen"
-            @toggle="toggleDetails('Einstellungen')"
+          title="Einstellungen"
+          :default_open="detailsConfig.Einstellungen"
+          @toggle="toggleDetails('Einstellungen')"
         >
           <FormKit
             v-model="showRektaszension"
             label="Rektaszension einblenden"
-            type="checkbox"/>
+            type="checkbox"
+          />
           <FormKit
             v-model="showDeklination"
             label="Deklinationszeiger einblenden"
-            type="checkbox"/>
-          <FormKit
-              v-model="fileInput"
-              accept="image/*"
-              help="Neue Sternkarte hochladen (1000x1000px)"
-              label="Discs"
-              type="file"
-              @change="uploadDiscs"
+            type="checkbox"
           />
           <FormKit
-              type="slider"
-              label="Animations Geschwindigkeit"
-              v-model="transitionSpeed"
-              :min="0.1"
-              :max="5"
-              :step="0.1"
+            v-model="fileInput"
+            accept="image/*"
+            help="Neue Sternkarte hochladen (1000x1000px)"
+            label="Discs"
+            type="file"
+            @change="uploadDiscs"
           />
-          <ThemeSwitch/>
+          <FormKit
+            type="slider"
+            label="Animations Geschwindigkeit"
+            v-model="transitionSpeed"
+            :min="0.1"
+            :max="5"
+            :step="0.1"
+          />
+          <ThemeSwitch />
         </Details>
         <Details
-            :default_open="detailsConfig.Informationen"
-            title="Informationen"
-            @toggle="toggleDetails('Informationen')"
+          :default_open="detailsConfig.Informationen"
+          title="Informationen"
+          @toggle="toggleDetails('Informationen')"
         >
           <Details
-              :default_open="detailsConfig.Anleitung"
-              title="Anleitung"
-              @toggle="toggleDetails('Anleitung')"
+            :default_open="detailsConfig.Anleitung"
+            title="Anleitung"
+            @toggle="toggleDetails('Anleitung')"
           >
-            Um die Karte zu drehen, halten Sie einfach die Karte an einer Stelle fest und ziehen Sie diese.<br/>
-            Um die entsprechenden Ebenen zu kontrollieren, finden sie hier eine Auflistung an Tasten pro Ebene. Diese Taste vor dem drehen bis zum Ende gedrückt halten.<br/>
+            Um die Karte zu drehen, halten Sie einfach die Karte an einer Stelle
+            fest und ziehen Sie diese.<br />
+            Um die entsprechenden Ebenen zu kontrollieren, finden sie hier eine
+            Auflistung an Tasten pro Ebene. Diese Taste vor dem drehen bis zum
+            Ende gedrückt halten.<br />
             <table id="controlTable">
               <tr>
                 <td>Innen (Datum)</td>
@@ -125,32 +135,32 @@
             </table>
           </Details>
           <Details
-              :default_open="detailsConfig.Author"
-              title="Autor"
-              @toggle="toggleDetails('Author')"
+            :default_open="detailsConfig.Author"
+            title="Autor"
+            @toggle="toggleDetails('Author')"
           >
             Diese Anwendung wurde von
             <u>
               <nobr>Dominik Fuchs</nobr>
-            </u> entwickelt.<br/>
+            </u>
+            entwickelt.<br />
             Für weitere Informationen besuchen Sie bitte
             <a
-                href="https://github.com/domx4q/astroProject"
-                rel="noopener noreferrer"
-                target="_blank"
-            >GitHub</a
+              href="https://github.com/domx4q/astroProject"
+              rel="noopener noreferrer"
+              target="_blank"
+              >GitHub</a
             >
           </Details>
           <Details
-              :default_open="detailsConfig.Grundlagen"
-              title="Grundlagen"
-              @toggle="toggleDetails('Grundlagen')"
+            :default_open="detailsConfig.Grundlagen"
+            title="Grundlagen"
+            @toggle="toggleDetails('Grundlagen')"
           >
             Grundlage der Sternkarte von
             <u>
               <span class="nowrap">Dipl.-Phys.</span>
-              <span class="nowrap">Torsten Rahn</span>
-            </u
+              <span class="nowrap">Torsten Rahn</span> </u
             >, mit freundlicher Genehmigung
           </Details>
         </Details>
@@ -159,47 +169,75 @@
 
     <Teleport to="#app">
       <CollapsableContainer
-          id="placePlanets"
-          ref="placePlanets"
-          :approximate-content-height="440"
-          disable-filler
-          mirror>
+        id="placePlanets"
+        ref="placePlanets"
+        :approximate-content-height="440"
+        disable-filler
+        mirror
+      >
         <Details
-            :default_open="detailsConfig.pl_Benutzung"
-            title="Benutzung"
-            @toggle="toggleDetails('pl_Benutzung')">
-          <div class="warn" v-if="!isFirefox"><b>Warnung:</b> Sie befinden sich momentan nicht im Firefox. Diese Funktion klappt im <u class="nowrap">Mozilla Firefox</u>
-            am besten. In anderen Browsern kann es zu Problemen kommen. Wodurch die Funktionen nicht oder nur eingeschränkt vorhanden sind.</div>
-          Über dieses Menü, können Planeten auf der Karte platziert werden.<br style="margin-bottom: 3px">Die unten
-          dargestellten Planeten, können durch einfaches
-          <b>ziehen</b>, auf der Karte angebracht werden.<br style="margin-bottom: 3px">Um einen Planeten wieder zu <b>löschen</b>, reicht ein
+          :default_open="detailsConfig.pl_Benutzung"
+          title="Benutzung"
+          @toggle="toggleDetails('pl_Benutzung')"
+        >
+          <div class="warn" v-if="!isFirefox">
+            <b>Warnung:</b> Sie befinden sich momentan nicht im Firefox. Diese
+            Funktion klappt im <u class="nowrap">Mozilla Firefox</u> am besten.
+            In anderen Browsern kann es zu Problemen kommen. Wodurch die
+            Funktionen nicht oder nur eingeschränkt vorhanden sind.
+          </div>
+          Über dieses Menü, können Planeten auf der Karte platziert werden.<br
+            style="margin-bottom: 3px"
+          />Die unten dargestellten Planeten, können durch einfaches
+          <b>ziehen</b>, auf der Karte angebracht werden.<br
+            style="margin-bottom: 3px"
+          />Um einen Planeten wieder zu <b>löschen</b>, reicht ein
           <b>doppelklick</b> auf den Planeten (im unteren Menü).
         </Details>
         <Details
-            :default_open="detailsConfig.pl_Planeten"
-            title="Planeten"
-            @toggle="toggleDetails('pl_Planeten')">
+          :default_open="detailsConfig.pl_Planeten"
+          title="Planeten"
+          @toggle="toggleDetails('pl_Planeten')"
+        >
           <div id="planetWrapper">
             <div id="planetGrid">
-              <Planet v-for="planet in planets" :key="planet.id"
-                      :alt-text="planet.altText" :img-src="planet.src" :item-id="planet.id" :placed="planet.placed"
-                      :inner-disc-rotation="innerRotation" :entire-rotation="entireRotation"
-                      @dragend="planetDragEnd" @dragstart="planetDragStart" @remove="planet.placed = false"/>
+              <Planet
+                v-for="planet in planets"
+                :key="planet.id"
+                :alt-text="planet.altText"
+                :img-src="planet.src"
+                :item-id="planet.id"
+                :placed="planet.placed"
+                :inner-disc-rotation="innerRotation"
+                :entire-rotation="entireRotation"
+                @dragend="planetDragEnd"
+                @dragstart="planetDragStart"
+                @remove="planet.placed = false"
+              />
             </div>
-            <button type="reset" @click="removeAllPlanets" id="removeAllPlanets">Alle löschen</button>
+            <button
+              type="reset"
+              @click="removeAllPlanets"
+              id="removeAllPlanets"
+            >
+              Alle löschen
+            </button>
           </div>
         </Details>
       </CollapsableContainer>
     </Teleport>
 
     <Teleport to="#app">
-      <div v-if="placingPlanet" id="dropContainer" class="dropZone"
-           :style="dropZoneStyle"
-           @drop="dropPlanet"
-           @dragover.prevent
-           @dragenter.prevent/>
+      <div
+        v-if="placingPlanet"
+        id="dropContainer"
+        class="dropZone"
+        :style="dropZoneStyle"
+        @drop="dropPlanet"
+        @dragover.prevent
+        @dragenter.prevent
+      />
     </Teleport>
-
 
     <div id="entireDisc" ref="entireDisc" :style="entireDiscStyle">
       <div id="marker" ref="marker" />
@@ -212,9 +250,16 @@
       </div>
       <div id="innerDisc" :style="innerDiscStyle">
         <div id="planetHolder">
-          <Planet v-for="planet in placedPlanets" :key="planet.id"
-                  :alt-text="planet.altText" :img-src="planet.src" :item-id="planet.id" :placed="true" :position="planet.position"
-                  :inner-disc-rotation="innerRotation" :entire-rotation="entireRotation"
+          <Planet
+            v-for="planet in placedPlanets"
+            :key="planet.id"
+            :alt-text="planet.altText"
+            :img-src="planet.src"
+            :item-id="planet.id"
+            :placed="true"
+            :position="planet.position"
+            :inner-disc-rotation="innerRotation"
+            :entire-rotation="entireRotation"
           />
         </div>
         <img
@@ -222,15 +267,26 @@
           alt="Inner Disc"
           src="@/assets/extra/images/sternenscheibe_inner.png"
         />
-        <div id="rektaszensionOffset" :style="rektaszensionOffsetStyle" v-if="showRektaszension">
+        <div
+          id="rektaszensionOffset"
+          :style="rektaszensionOffsetStyle"
+          v-if="showRektaszension"
+        >
           <img
-            ref="rektaszension" id="rektaszension"
+            ref="rektaszension"
+            id="rektaszension"
             src="@/assets/extra/images/sternenscheibe_rektaszension.png"
-            alt="Rektaszension">
+            alt="Rektaszension"
+          />
         </div>
       </div>
     </div>
-    <div id="deklination" ref="deklination" :style="deklinationStyle" v-if="showDeklination">
+    <div
+      id="deklination"
+      ref="deklination"
+      :style="deklinationStyle"
+      v-if="showDeklination"
+    >
       <img
         ref="deklinationDisc"
         alt="Deklination"
@@ -256,8 +312,8 @@ function createDateAsUTC(date, offset = 0) {
       date.getDate(),
       date.getHours() - offset,
       date.getMinutes(),
-      date.getSeconds()
-    )
+      date.getSeconds(),
+    ),
   );
 }
 
@@ -286,7 +342,6 @@ export default {
         deklination: 0,
       },
       rektaszensionOffset: -99.8, // 18:46 Uhr (ca.)
-
 
       date: "2023-01-01",
       time: "00:00",
@@ -399,7 +454,7 @@ export default {
           let key = "innerDisc";
           let userInput = prompt(
             "Welche Scheibe soll ersetzt werden? (inner/outer)",
-            "inner"
+            "inner",
           );
           switch (userInput) {
             case "inner": {
@@ -483,19 +538,19 @@ export default {
       if (event.ctrlKey) {
         rotation = this.getNearestDegree(
           this.outerRotation,
-          rotation - startAngle + this.lastAngleOuter
+          rotation - startAngle + this.lastAngleOuter,
         );
         this.outerRotation = rotation;
       } else if (event.altKey) {
         rotation = this.getNearestDegree(
-            this.deklinationRotation,
-            rotation - startAngle + this.lastAngleDeklination,
+          this.deklinationRotation,
+          rotation - startAngle + this.lastAngleDeklination,
         );
         this.deklinationRotation = rotation;
       } else {
         rotation = this.getNearestDegree(
-            this.innerRotation,
-            rotation - startAngle + this.lastAngleInner,
+          this.innerRotation,
+          rotation - startAngle + this.lastAngleInner,
         );
         this.innerRotation = rotation;
       }
@@ -536,7 +591,7 @@ export default {
     planetDragStart() {
       this.placingPlanet = true;
     },
-    planetDragEnd(){
+    planetDragEnd() {
       this.placingPlanet = false;
     },
     dropPlanet(event) {
@@ -546,8 +601,12 @@ export default {
         planet.placed = true;
       }
       planet.position = {
-        x: Number(event.offsetX) - Number(event.dataTransfer.getData("startOffsetX")),
-        y: Number(event.offsetY) - Number(event.dataTransfer.getData("startOffsetY")),
+        x:
+          Number(event.offsetX) -
+          Number(event.dataTransfer.getData("startOffsetX")),
+        y:
+          Number(event.offsetY) -
+          Number(event.dataTransfer.getData("startOffsetY")),
       };
       // to suppress reactivity
       planet.adaptedSize = Math.max(this.adaptedSize, 0);
@@ -572,7 +631,7 @@ export default {
       const screenSize = this.screenSize;
       const smallerSide = Math.min(
         screenSize.width - widthOffset,
-        screenSize.height - heightOffset
+        screenSize.height - heightOffset,
       );
       const result = Math.min(DEFAULT_SIZE, smallerSide);
       if (this.showRektaszension) {
@@ -581,7 +640,7 @@ export default {
       return result;
     },
     adaptedRektaszensionSize() {
-      return this.adaptedSize * (1090/1000); // 1090 is the size (in px) of the rektaszension disc
+      return this.adaptedSize * (1090 / 1000); // 1090 is the size (in px) of the rektaszension disc
     },
     adaptedSizeStyle() {
       return `${this.adaptedSize}px`;
@@ -602,7 +661,7 @@ export default {
         {
           hours: undefined,
           minutes: undefined,
-        }
+        },
       );
     },
     convertedDate() {
@@ -620,8 +679,11 @@ export default {
       };
     },
     dropZoneStyle() {
-      return { // translate middle + rotate
-        transform: `translate(-50%, -50%) rotate(${this.finalRotation.inner + this.finalRotation.entire}deg)`,
+      return {
+        // translate middle + rotate
+        transform: `translate(-50%, -50%) rotate(${
+          this.finalRotation.inner + this.finalRotation.entire
+        }deg)`,
       };
     },
     outerDiscStyle() {
@@ -650,7 +712,7 @@ export default {
       const dayNumber = Math.floor(
         (new Date(this.convertedDate) -
           new Date(this.convertedDate.getFullYear(), 0, 0)) /
-          (1000 * 60 * 60 * 24)
+          (1000 * 60 * 60 * 24),
       );
       return -((dayNumber / 365) * 360 - rotationsoffset);
     },
@@ -669,7 +731,8 @@ export default {
     },
     mezTime() {
       // Mitteleuropäische Zeit
-      if (this.timezone === "MESZ") { // Mitteleuropäische SommerZeit
+      if (this.timezone === "MESZ") {
+        // Mitteleuropäische SommerZeit
         // subtract 1 hour
         return this.manipulateTime(-1);
       }
@@ -699,7 +762,10 @@ export default {
     },
     deklinationRotation(newValue, oldValue) {
       this.normalizeAngles();
-      this.finalRotation.deklination = this.getNearestDegree(oldValue, newValue);
+      this.finalRotation.deklination = this.getNearestDegree(
+        oldValue,
+        newValue,
+      );
     },
 
     time() {
@@ -784,7 +850,8 @@ html[data-theme="dark"] #stars {
   position: absolute;
 }
 
-#entireDisc, #deklination {
+#entireDisc,
+#deklination {
   pointer-events: none;
   width: 100%;
   height: 100%;
@@ -800,7 +867,8 @@ html[data-theme="dark"] #stars {
   color: transparent; /*hide alt text*/
 }
 
-#entireDisc, #deklination {
+#entireDisc,
+#deklination {
   scale: v-bind(scale);
 }
 
@@ -818,7 +886,11 @@ html[data-theme="dark"] #stars {
   position: absolute;
   top: 50%;
   left: calc(
-    50% + ((var(--adaptedSize) - (60px * (var(--adaptedSizeRaw) / (1000 - 90)))) / 2)
+    50% +
+      (
+        (var(--adaptedSize) - (60px * (var(--adaptedSizeRaw) / (1000 - 90)))) /
+          2
+      )
   );
   width: calc(30px * (var(--adaptedSizeRaw) / 1000));
   height: calc(5px * (var(--adaptedSizeRaw) / 1000));
@@ -892,7 +964,7 @@ html[data-theme="dark"] #mozContainer {
   margin: 5px 0;
   text-align: center;
   border-collapse: collapse;
-  font-size: .89em;
+  font-size: 0.89em;
 }
 #controlTable td {
   padding: 5px;

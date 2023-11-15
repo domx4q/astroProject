@@ -558,11 +558,11 @@ export default {
             description = response.data.extract_html;
             if (description.includes("<p>")) {
               description = description.substring(
-                description.indexOf("<p>") + 3
+                description.indexOf("<p>") + 3,
               );
               description = description.substring(
                 0,
-                description.indexOf("</p>")
+                description.indexOf("</p>"),
               );
             }
             this.planetInfo.description = description;
@@ -639,7 +639,7 @@ export default {
         "Fehler",
         `${messageContent} ${defaultAppend}`,
         10000,
-        "error"
+        "error",
       );
     },
     removeMessage(message) {
@@ -681,7 +681,7 @@ export default {
       const texture = await this.planet.createTexture(image);
       this.textureLoadingProgress = Math.max(
         Math.random() * 0.25 + 0.4,
-        this.textureLoadingProgress
+        this.textureLoadingProgress,
       );
       clearInterval(a);
       const b = setInterval(increaser, 200);
@@ -719,7 +719,7 @@ export default {
             "Status",
             "Datei erfolgreich geladen",
             3000,
-            "success"
+            "success",
           );
         }
       } catch (e) {
@@ -727,7 +727,7 @@ export default {
           "Fehler",
           "Datei konnte nicht geladen werden",
           3000,
-          "error"
+          "error",
         );
       }
       this.sortPlanets();
@@ -761,7 +761,7 @@ export default {
       }
       if (this.lastPlanetChild) {
         this.planets = this.planets.filter(
-          (p) => p.uuid !== this.currentPlanet.uuid
+          (p) => p.uuid !== this.currentPlanet.uuid,
         );
       }
       if (planet.isChild) {
@@ -796,7 +796,7 @@ export default {
         this.planet.getFieldOfView() / this.planet.getMaximumFieldOfView();
       this.planet.setAttribute(
         "orbit-sensitivity",
-        this.defaultOrbitSensi * Math.pow(zoom, 2)
+        this.defaultOrbitSensi * Math.pow(zoom, 2),
       );
       this.zoomFactor = zoom;
     },
@@ -815,7 +815,7 @@ export default {
 
       const positionAndNormal = this.planet.positionAndNormalFromPoint(
         xClick,
-        yClick
+        yClick,
       );
       const position = positionAndNormal.position;
       const normal = positionAndNormal.normal;
@@ -884,7 +884,7 @@ export default {
       }
       this.download(
         "hotspots-" + this.currentPlanet.annotationsKey + ".txt",
-        JSON.stringify(hotspots)
+        JSON.stringify(hotspots),
       );
     },
     updateLastHotspot() {
@@ -953,7 +953,7 @@ export default {
         this.changePlanet(
           SOLAR_SYSTEM.findPlanet(this.defaultPlanet),
           true,
-          true
+          true,
         );
         setTimeout(() => {
           // do this manually because when set to false in data but not manually changed, then it won't update
@@ -1072,7 +1072,9 @@ export default {
   height: 20px;
   z-index: 1000;
 
-  transition: transform 0.4s ease-in-out, filter 0.2s ease-in-out;
+  transition:
+    transform 0.4s ease-in-out,
+    filter 0.2s ease-in-out;
 }
 
 #planetInfo .iconHolder:hover,
@@ -1147,7 +1149,9 @@ html[data-theme="dark"] #planetInfo {
   --clickColor: #bb1920;
 
   color: var(--normalColor);
-  transition: color 0.14s ease-in-out, filter 0.14s ease-in-out;
+  transition:
+    color 0.14s ease-in-out,
+    filter 0.14s ease-in-out;
 }
 
 #planetInfo .description a:hover {
@@ -1211,7 +1215,9 @@ li.planet-selector {
   border: none;
   outline: none;
 
-  transition: background-color 0.2s linear, color 0.2s linear;
+  transition:
+    background-color 0.2s linear,
+    color 0.2s linear;
 }
 
 li.planet-selector.moon {
@@ -1254,7 +1260,10 @@ li.planet-selector.moon.parentActive.last {
   opacity: var(--max-hotspot-opacity);
   z-index: 5000;
 
-  transition: height 0.2s linear, width 0.2s linear, opacity 0.2s linear;
+  transition:
+    height 0.2s linear,
+    width 0.2s linear,
+    opacity 0.2s linear;
 }
 
 .hotspot:not([data-visible]) {
@@ -1275,7 +1284,10 @@ li.planet-selector.moon.parentActive.last {
   box-shadow: rgba(0, 0, 0, 0.25) 0 2px 4px;
   color: rgba(0, 0, 0, 0.8);
   display: block;
-  font-family: Futura, Helvetica Neue, sans-serif;
+  font-family:
+    Futura,
+    Helvetica Neue,
+    sans-serif;
   font-size: 16px;
   font-weight: 700;
   left: calc(100% + 1em);
@@ -1287,7 +1299,9 @@ li.planet-selector.moon.parentActive.last {
   width: max-content;
   scale: 1;
 
-  transition: all 0.5s ease, opacity 0.2s ease; /*transition applied to every object because scale is not available*/
+  transition:
+    all 0.5s ease,
+    opacity 0.2s ease; /*transition applied to every object because scale is not available*/
 }
 
 .hotspot.action,
@@ -1505,14 +1519,18 @@ model-viewer::part(default-progress-bar) {
   height: 5px;
   z-index: 5000;
   /*surprisingly a longer duration on the width is looking really good*/
-  transition: opacity 0.5s ease, width 0.7s ease;
+  transition:
+    opacity 0.5s ease,
+    width 0.7s ease;
 }
 
 #progress-bar.hide {
   opacity: 0;
   width: 0;
 
-  transition: opacity 0.3s ease, width 0.7s ease;
+  transition:
+    opacity 0.3s ease,
+    width 0.7s ease;
 }
 
 #planetInfo .accent {

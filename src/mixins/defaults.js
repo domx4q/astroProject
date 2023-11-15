@@ -67,7 +67,7 @@ export default {
           let r = (d + Math.random() * 16) % 16 | 0;
           d = Math.floor(d / 16);
           return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
-        }
+        },
       );
       return uuid;
     },
@@ -78,7 +78,7 @@ export default {
       var element = document.createElement("a");
       element.setAttribute(
         "href",
-        "data:text/plain;charset=utf-8," + encodeURIComponent(text)
+        "data:text/plain;charset=utf-8," + encodeURIComponent(text),
       );
       element.setAttribute("download", filename);
 

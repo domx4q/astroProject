@@ -53,7 +53,7 @@ const routes = [
         props: (route) => ({
           raw_text: route.query.text || route.query.t,
         }),
-      }
+      },
     ],
   },
   {
@@ -97,16 +97,17 @@ const routes = [
           if (process.env.NODE_ENV !== "development") {
             router.push({ name: "home" }); // skipcq: JS-0129
           }
-        }
+        },
       },
       {
         path: "download",
         name: "download",
         alias: ["/download", "/dl", "dl"],
         beforeEnter() {
-          window.location.href = "https://github.com/domx4q/astroProject/releases/latest"
-        }
-      }
+          window.location.href =
+            "https://github.com/domx4q/astroProject/releases/latest";
+        },
+      },
     ],
   },
 ];
@@ -128,7 +129,7 @@ if (process.env.BASE_URL === "/astroProject/") {
     scrollBehavior() {
       // possible Function parameters: to, from, savedPosition
       return { top: 0 }; // always scroll to top
-    }
+    },
   });
 }
 
