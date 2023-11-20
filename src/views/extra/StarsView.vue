@@ -87,6 +87,11 @@
             type="checkbox"
           />
           <FormKit
+            v-model="showCircumPolar"
+            label="Zirkumpolarkreis einblenden"
+            type="checkbox"
+          />
+          <FormKit
             v-model="fileInput"
             accept="image/*"
             help="Neue Sternkarte hochladen (1000x1000px)"
@@ -293,6 +298,17 @@
         src="@/assets/extra/images/deklination.png"
       />
     </div>
+    <div id="circumpolar"
+      ref="circumpolar"
+      v-if="showCircumPolar"
+    >
+      <img
+        ref="circumpolar"
+        alt="Zirkumpolar kreis"
+        src="@/assets/extra/images/zirkumpolarkreis.png"
+        v-if="showCircumPolar"
+      />
+    </div>
   </div>
 </template>
 
@@ -357,6 +373,7 @@ export default {
       transitionSpeed: 1,
       showRektaszension: false,
       showDeklination: false,
+      showCircumPolar: false,
 
       fileInput: null,
 
@@ -815,6 +832,7 @@ html[data-theme="dark"] #stars {
 #innerDisc img,
 #outerDisc img,
 #deklination img,
+#circumpolar img,
 #dropContainer,
 #planetHolder {
   width: v-bind(adaptedSizeStyle);
@@ -851,7 +869,8 @@ html[data-theme="dark"] #stars {
 }
 
 #entireDisc,
-#deklination {
+#deklination,
+#circumpolar {
   pointer-events: none;
   width: 100%;
   height: 100%;
@@ -860,7 +879,8 @@ html[data-theme="dark"] #stars {
 #outerDisc,
 #innerDisc,
 #entireDisc,
-#deklination {
+#deklination,
+#circumpolar {
   width: 100%;
   height: 100%;
   position: absolute;
@@ -868,7 +888,8 @@ html[data-theme="dark"] #stars {
 }
 
 #entireDisc,
-#deklination {
+#deklination,
+#circumpolar {
   scale: v-bind(scale);
 }
 
