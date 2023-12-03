@@ -78,6 +78,12 @@ const routes = [
         component: () => import("../views/extra/StarsView.vue"),
       },
       {
+        path: "sun",
+        alias: ["/sun", "/solar", "/sonnenkuppel"],
+        name: "sun",
+        component: () => import("../views/extra/SonnenkuppelView.vue"),
+      },
+      {
         path: "example",
         name: "example",
         component: () => import("../views/extra/ExampleView.vue"),
