@@ -659,11 +659,17 @@ export default {
     adaptedRektaszensionSize() {
       return this.adaptedSize * (1090 / 1000); // 1090 is the size (in px) of the rektaszension disc
     },
+    adaptedDeklinationSize() {
+      return this.adaptedSize * (1100 / 1000);
+    },
     adaptedSizeStyle() {
       return `${this.adaptedSize}px`;
     },
     adaptedRektaszensionSizeStyle() {
       return `${this.adaptedRektaszensionSize}px`;
+    },
+    adaptedDeklinationSizeStyle() {
+      return `${this.adaptedDeklinationSize}px`;
     },
     showFullSidePanel() {
       return this.screenSize.width - this.adaptedSize > 480;
@@ -750,14 +756,12 @@ export default {
       // Mitteleuropäische Zeit
       if (this.timezone === "MESZ") {
         // Mitteleuropäische SommerZeit
-        // subtract 1 hour
         return this.manipulateTime(-1);
       }
       return this.time;
     },
     mozTime() {
       // Mittlere Ortszeit
-      // subtract 32 minutes
       return this.manipulateTime(0, -32, this.mezTime);
     },
   },
@@ -866,6 +870,10 @@ html[data-theme="dark"] #stars {
   width: 100%;
   height: 100%;
   position: absolute;
+}
+#deklination > img {
+  width: v-bind(adaptedDeklinationSizeStyle) !important;
+  height: v-bind(adaptedDeklinationSizeStyle) !important;
 }
 
 #entireDisc,
