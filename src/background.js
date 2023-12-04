@@ -77,6 +77,12 @@ async function createWindow() {
               win.loadURL("app://./index.html/#/extra/stars");
             },
           },
+          {
+            label: "Sonnenkuppel (3D)",
+            click: () => {
+              win.loadURL("app://./index.html/#/extra/sun");
+            },
+          }
         ],
       },
     ];
