@@ -422,7 +422,7 @@ export default {
         hour: "2-digit",
         minute: "2-digit",
       });
-      if (LOCAL_TIME - MEZ_TIME === 0) {
+      if (LOCAL_TIME.toString() === MEZ_TIME.toString()) {
         this.timezone = "MEZ";
       } else {
         this.timezone = "MESZ";
