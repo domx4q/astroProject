@@ -1,5 +1,5 @@
 <template>
-  <FullscreenUnityRenderer module="Sonnenkuppel"/>
+  <FullscreenUnityRenderer module="Sonnenkuppel" use-module-prefix/>
 </template>
 
 <script>
