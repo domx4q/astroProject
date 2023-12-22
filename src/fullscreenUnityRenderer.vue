@@ -1,6 +1,6 @@
 <template>
   <div id="main">
-    <UnityRenderer :module="module" />
+    <UnityRenderer :module="module" :use-module-prefix="useModulePrefix" />
   </div>
 </template>
 
@@ -16,6 +16,10 @@ export default {
     module: {
       type: String,
       required: true,
+    },
+    useModulePrefix: {
+      type: Boolean,
+      default: false,
     },
   },
 }

@@ -10,17 +10,25 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  useModulePrefix: {
+    type: Boolean,
+    default: false,
+  },
 });
 const module = props.module;
 
 onMounted(() => {
   if (!unityComponent) {
     const publicPath = process.env.BASE_URL;
+    let prefix = "WebGL";
+    if (props.useModulePrefix) {
+      prefix = module;
+    }
     unityComponent = new UnityWebgl(canvasRef.value, {
-      loaderUrl: `${publicPath}unity/${module}/Build/WebGL.loader.js`,
-      dataUrl: `${publicPath}unity/${module}/Build/WebGL.data`,
-      frameworkUrl: `${publicPath}unity/${module}/Build/WebGL.framework.js`,
-      codeUrl: `${publicPath}unity/${module}/Build/WebGL.wasm`,
+      loaderUrl: `${publicPath}unity/${module}/Build/${prefix}.loader.js`,
+      dataUrl: `${publicPath}unity/${module}/Build/${prefix}.data`,
+      frameworkUrl: `${publicPath}unity/${module}/Build/${prefix}.framework.js`,
+      codeUrl: `${publicPath}unity/${module}/Build/${prefix}.wasm`,
     });
   }
 });
