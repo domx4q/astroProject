@@ -1,24 +1,31 @@
-FROM ubuntu:23.10 as base
-EXPOSE 3000
+FROM alpine:3.14 as base
 
 WORKDIR /opt
-ENTRYPOINT ["./dockerEntrypoint.sh"]
-ENV DEBIAN_FRONTEND=noninteractive
-ENV TZ=Europe/Berlin
-ENV TERM=xterm
 
-# Install Python, Git, screen, curl and npm
-# skipcq: DOK-DL3008,  DOK-DL3015
-RUN apt-get update && apt-get install -y python3 python3-pip curl git screen npm openssl && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-# Install Node.js via nvm
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
-RUN . ~/.nvm/nvm.sh && nvm install --lts
+# Set environment variables
+ENV TZ=Europe/Berlin \
+    TERM=xterm
+    DEBIAN_FRONTEND=noninteractive
+
+# Install necessary packages
+RUN apk update && apk add --no-cache \
+    nodejs \
+    npm \
+    git \
+    screen \
+    openssl
+
+# Expose the required port
+EXPOSE 3000
+
+# Set the entrypoint
+ENTRYPOINT ["./dockerEntrypoint.sh"]
 
 # Download the App
 FROM base as download_app
-RUN git clone --single-branch "https://github.com/domx4q/astroProject.git"
-# COPY . /opt/astroProject
 
+# Clone the repository
+RUN git clone --single-branch "https://github.com/domx4q/astroProject.git" /opt/astroProject
+
+# Set working directory for the app
 WORKDIR /opt/astroProject
