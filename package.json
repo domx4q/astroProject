@@ -22,7 +22,7 @@
   },
   "main": "background.js",
   "dependencies": {
-    "@formkit/addons": "^1.5.0",
+    "@formkit/addons": "^1.5.1",
     "@formkit/auto-animate": "^1.0.0-pre-alpha.3",
     "@formkit/i18n": "^1.5.0",
     "@formkit/inputs": "^1.4.0",
