@@ -30,7 +30,7 @@
     "@formkit/vue": "^1.5.2",
     "@google/model-viewer": "3.4.0",
     "animate.css": "^4.1.1",
-    "axios": "^1.6.5",
+    "axios": "^1.6.6",
     "clientjs": "^0.2.1",
     "core-js": "^3.35.1",
     "electron-is-dev": "^3.0.1",
