@@ -61,7 +61,7 @@
     "eslint": "^8.56.0",
     "eslint-plugin-vue": "^9.21.1",
     "file-loader": "^6.2.0",
-    "husky": "^9.0.7",
+    "husky": "^9.0.10",
     "jest": "^27.0.5",
     "prettier": "^3.2.4",
     "pretty-quick": "^4.0.0",
