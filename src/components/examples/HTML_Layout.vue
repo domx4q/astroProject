@@ -4,9 +4,11 @@
       <div class="wrapper">
         <div id="box">
           <p class="red">Normaler Ursprung</p>
+          <p class="green">Ursprung ohne translate</p>
           <p class="blue">Versetzter Ursprung</p>
           <div class="marker"></div>
           <div id="second" class="marker"></div>
+          <div id="third" class="marker"></div>
         </div>
       </div>
     </div>
@@ -74,6 +76,13 @@ export default {
   background-color: rgba(0, 0, 255, .7);
   z-index: 3;
 }
+#third {
+  top: 50%;
+  left: 50%;
+  background-color: rgba(0, 255, 0, .7);
+  z-index: 2;
+  transform: none;
+}
 
 p {
   color: #fff;
@@ -89,6 +98,9 @@ p {
 
 .blue {
   color: #6464ff;
+}
+.green {
+  color: #00ff00;
 }
 
 .wrapper {
