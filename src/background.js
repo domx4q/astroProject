@@ -12,8 +12,9 @@ import {
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS3_DEVTOOLS } from "electron-devtools-installer";
 import { autoUpdater, AppUpdater } from "electron-updater";
-const isDev = require("electron-is-dev");
 const isDevelopment = process.env.NODE_ENV !== "production";
+
+const isDev = !app.isPackaged; // electron-is-dev does not work
 
 const USE_AUTO_UPDATER = false;
 
