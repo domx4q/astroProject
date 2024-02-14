@@ -46,6 +46,13 @@
               <span>MOZ:</span> <b>{{ mozTime }}</b>
             </div>
             <FormKit v-model="date" label="Datum" type="date" />
+            <Details
+                :default_open="detailsConfig.Zeitlauf"
+                title="Zeitlauf"
+                @toggle="toggleDetails('Zeitlauf')"
+            >
+              <Zeitlauf @tick="processTick"/>
+            </Details>
           </Details>
         </Details>
         <Details
@@ -319,6 +326,7 @@ import defaults from "@/mixins/defaults";
 import CollapsableContainer from "@/components/collapsableContainer.vue";
 import StarDiscPlanet from "@/components/StarDiscPlanet.vue";
 import StarsExtra from "@/mixins/StarsExtra";
+import Zeitlauf from "@/components/zeitlauf.vue";
 
 function createDateAsUTC(date, offset = 0) {
   return new Date(
@@ -337,6 +345,7 @@ export default {
   name: "StarsView",
   mixins: [defaults, StarsExtra],
   components: {
+    Zeitlauf,
     Planet: StarDiscPlanet,
     CollapsableContainer,
     ThemeSwitch,
@@ -379,11 +388,12 @@ export default {
 
       detailsConfig: {
         Zeit: true,
-        Zeitpunkt: false,
+        Zeitpunkt: false || true, // todo undo
+        Zeitlauf: false || true, // todo undo
         Ausrichtung: false,
         Einstellungen: false,
         Informationen: true,
-        Anleitung: true,
+        Anleitung: true && false, // todo undo
         Author: false,
         Grundlagen: false,
 
@@ -630,6 +640,15 @@ export default {
     },
     removeAllPlanets() {
       this.planets.forEach((p) => (p.placed = false));
+    },
+    processTick(timeObj) {
+      // date: "2023-01-01",
+      // time: "00:00",
+      this.time = timeObj.toLocaleTimeString("de-DE", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      this.date = this.convertDate(timeObj);
     },
   },
   computed: {
