@@ -15,7 +15,8 @@ RUN apt update && apt install -y \
 FROM base as download_app
 
 WORKDIR /opt/astroProject
-RUN #git clone --single-branch "https://github.com/domx4q/astroProject.git" /opt/astroProject
+# RUN git clone --single-branch "https://github.com/domx4q/astroProject.git" /opt/astroProject
+# for local or github:
 COPY . /opt/astroProject
 
 EXPOSE 3000

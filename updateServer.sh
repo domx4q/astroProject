@@ -1,5 +1,3 @@
-ls -al
-pwd
 git fetch --all
 git checkout --force master
 git reset --hard origin/master
