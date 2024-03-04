@@ -1,12 +1,13 @@
-#!/bin/sh
+#!/bin/bash
 
 # create the daemon screen if not already created
 if screen -list | grep -q "AUTO-astro"; then
   echo "Screen exists"
 else
   echo "Screen does not exist"
-  screen -dmS AUTO-astro
-  screen -S AUTO-astro -X stuff $'cd /opt/astroProject\n./updateServer.sh\n'
+  screen -dmS AUTO-astro bash
+  screen -S AUTO-astro -X stuff $"cd /opt/astroProject\n"
+  screen -S AUTO-astro -X stuff $"./updateServer.sh\n"
 fi
 
 # this will run forever

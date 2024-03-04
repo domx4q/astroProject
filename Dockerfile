@@ -1,24 +1,23 @@
-FROM ubuntu:23.10 as base
-EXPOSE 3000
+FROM node:16 as base
 
 WORKDIR /opt
-ENTRYPOINT ["./dockerEntrypoint.sh"]
-ENV DEBIAN_FRONTEND=noninteractive
-ENV TZ=Europe/Berlin
-ENV TERM=xterm
 
-# Install Python, Git, screen, curl and npm
-# skipcq: DOK-DL3008,  DOK-DL3015
-RUN apt-get update && apt-get install -y python3 python3-pip curl git screen npm openssl && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-# Install Node.js via nvm
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
-RUN . ~/.nvm/nvm.sh && nvm install --lts
+ENV TZ=Europe/Berlin \
+    TERM=xterm \
+    DEBIAN_FRONTEND=noninteractive
 
-# Download the App
+# Install necessary packages
+RUN apt update && apt install -y \
+    git \
+    screen \
+    openssl
+
 FROM base as download_app
-RUN git clone --single-branch "https://github.com/domx4q/astroProject.git"
-# COPY . /opt/astroProject
 
 WORKDIR /opt/astroProject
+# RUN git clone --single-branch "https://github.com/domx4q/astroProject.git" /opt/astroProject
+# for local or github:
+COPY . /opt/astroProject
+
+EXPOSE 3000
+ENTRYPOINT ["./dockerEntrypoint.sh"]
