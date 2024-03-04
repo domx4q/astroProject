@@ -49,6 +49,9 @@ echo "Node version: $(node -v)"
 echo "NPM version: $(npm -v)"
 #endregion
 
+$SHELL=/bin/bash
+rm -f ~/.screenrc
+echo "shell /bin/bash" > ~/.screenrc # to use bash as default shell
 screen -dmS listen_for_exception # to create a fallback session, to skip future checks if screen is initialized
 screen -wipe
 screen -dmS astro bash -c "cd /opt/astroProject && ./updateDaemon.sh"

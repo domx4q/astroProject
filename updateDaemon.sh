@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # create the daemon screen if not already created
 if screen -list | grep -q "AUTO-astro"; then
