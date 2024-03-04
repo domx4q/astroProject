@@ -5,6 +5,7 @@ import {
   protocol,
   BrowserWindow,
   Menu,
+  globalShortcut,
   MenuItem,
   shell,
   dialog,
@@ -12,8 +13,9 @@ import {
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS3_DEVTOOLS } from "electron-devtools-installer";
 import { autoUpdater, AppUpdater } from "electron-updater";
-const isDev = require("electron-is-dev");
 const isDevelopment = process.env.NODE_ENV !== "production";
+
+const isDev = !app.isPackaged; // electron-is-dev does not work
 
 const USE_AUTO_UPDATER = false;
 
@@ -60,36 +62,89 @@ async function createWindow() {
   }
   win.maximize();
 
+  let extrasEnabled = false;
   function addMenus() {
-    const template = [
-      {
-        label: "Anwendungen",
-        submenu: [
-          {
-            label: "Planeten (3D)",
-            click: () => {
-              win.loadURL("app://./index.html");
+    let template;
+    if (!extrasEnabled) {
+      template = [
+        {
+          label: "Anwendungen",
+          submenu: [
+            {
+              label: "Planeten (3D)",
+              click: () => {
+                win.loadURL("app://./index.html");
+              },
             },
-          },
-          {
-            label: "Drehbare Sternkarte",
-            click: () => {
-              win.loadURL("app://./index.html/#/extra/stars");
+            {
+              label: "Drehbare Sternkarte",
+              click: () => {
+                win.loadURL("app://./index.html/#/extra/stars");
+              },
             },
-          },
-          {
-            label: "Sonnenkuppel (3D)",
-            click: () => {
-              win.loadURL("app://./index.html/#/extra/sun");
+            {
+              label: "Sonnenkuppel (3D)",
+              click: () => {
+                win.loadURL("app://./index.html/#/extra/sun");
+              },
+            }
+          ],
+        },
+      ];
+
+    } else {
+      template = [ // ChatGPT generated code
+        {
+          label: "Anwendungen",
+          submenu: [
+            {
+              label: "Planeten (3D)",
+              click: () => {
+                win.loadURL("app://./index.html");
+              },
             },
-          }
-        ],
-      },
-    ];
+            {
+              label: "Drehbare Sternkarte",
+              click: () => {
+                win.loadURL("app://./index.html/#/extra/stars");
+              },
+            },
+            {
+              label: "Sonnenkuppel (3D)",
+              click: () => {
+                win.loadURL("app://./index.html/#/extra/sun");
+              },
+            },
+            // Easter Category
+            {
+              label: "Easter Eggs",
+              submenu: [
+                {label: "Uhr", click: () => win.loadURL("app://./index.html#/easter/clock")},
+                {label: "Snake", click: () => win.loadURL("app://./index.html#/easter/snake")},
+                {label: "Pacman", click: () => win.loadURL("app://./index.html#/easter/pacman")},
+                {label: "Farbsimulation", click: () => win.loadURL("app://./index.html#/easter/colors")},
+                {label: "Großer Text", click: () => win.loadURL("app://./index.html#/easter/text")},
+              ],
+            },
+            // Extra Category
+            {
+              label: "Zusätzliche Funktionen",
+              submenu: [
+                {label: "Beispiel", click: () => win.loadURL("app://./index.html#/extra/example")},
+              ],
+            },
+          ],
+        },
+      ];
+    }
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
   }
   addMenus();
+  globalShortcut.register("F4", () => {
+    extrasEnabled = !extrasEnabled;
+    addMenus();
+  });
 
   win.webContents.on("did-finish-load", () => {
     const version = app.getVersion();
@@ -178,3 +233,7 @@ if (isDevelopment) {
     });
   }
 }
+
+app.on("will-quit", () => {
+  globalShortcut.unregisterAll();
+});
