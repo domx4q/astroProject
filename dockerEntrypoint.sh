@@ -1,6 +1,6 @@
 #!/bin/bash
 
- set +e # do not exit on error
+set +e # do not exit on error
 
 #region certificates
 CERT_DIR=/opt/certs
@@ -42,12 +42,6 @@ fi
 #endregion
 
 #region Install dependencies
-. ~/.nvm/nvm.sh && nvm install --lts
-
-apt-get install -y npm
-nvm install --lts
-nvm use --lts
-
 npm install -g serve
 npm install -g @vue/cli
 

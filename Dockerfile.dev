@@ -5,7 +5,9 @@ WORKDIR /app
 
 COPY package*.json ./
 RUN npm install
+RUN npm install -g serve
 
 COPY . .
 
-CMD ["npm", "run", "serve"]
+EXPOSE 3000
+CMD ["npm", "run", "docker:serve" ]
