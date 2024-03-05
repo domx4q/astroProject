@@ -28,8 +28,6 @@ export default {
   watch: {
     change() {
       this.showPopup = true;
-      console.log("QR-Code changed");
-      console.log(this.cSrc)
     }
   }
 }
