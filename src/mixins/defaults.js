@@ -6,6 +6,9 @@ export default {
 
       __resizeUUID: this.genUUID(),
       __connectionUUID: this.genUUID(),
+
+      mainQR: require("@/assets/qr-codes/main.png"),
+      starsQR: require("@/assets/qr-codes/stars.png"),
     };
   },
   mounted() {
