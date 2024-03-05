@@ -155,7 +155,9 @@
               rel="noopener noreferrer"
               target="_blank"
               >GitHub</a
-            >
+            > <button @click="openPopout" class="clean-button">
+            <icon icon="pepicons:qr-code"/>
+          </button>
           </Details>
           <Details
             :default_open="detailsConfig.Grundlagen"
@@ -309,6 +311,7 @@
         v-if="showCircumPolar"
       />
     </div>
+    <QRCode :change="showPopup" :src="starsQR"/>
   </div>
 </template>
 
@@ -319,6 +322,7 @@ import defaults from "@/mixins/defaults";
 import CollapsableContainer from "@/components/collapsableContainer.vue";
 import StarDiscPlanet from "@/components/StarDiscPlanet.vue";
 import StarsExtra from "@/mixins/StarsExtra";
+import QRCode from "@/components/QRCode.vue";
 
 function createDateAsUTC(date, offset = 0) {
   return new Date(
@@ -337,6 +341,7 @@ export default {
   name: "StarsView",
   mixins: [defaults, StarsExtra],
   components: {
+    QRCode,
     Planet: StarDiscPlanet,
     CollapsableContainer,
     ThemeSwitch,
@@ -390,6 +395,7 @@ export default {
         pl_Benutzung: true,
         pl_Planeten: false,
       },
+      showPopup: "0",
     };
   },
   mounted() {
@@ -408,6 +414,14 @@ export default {
     }, 1000);
   },
   methods: {
+    openPopout() {
+      // a bit weird code because we need an update
+      const old = this.showPopup;
+      while (this.showPopup === old) {
+        this.showPopup = Math.random().toString();
+      }
+    },
+
     toggleDetails(name) {
       this.detailsConfig[name] = !this.detailsConfig[name];
     },
@@ -1001,5 +1015,23 @@ html[data-theme="dark"] #mozContainer {
 }
 #controlTable td:first-child {
   text-align: left;
+}
+
+.popup-content img {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+.clean-button {
+  background-color: #0f8fe1;
+  color: white;
+  border: none;
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-size: 1.1em;
 }
 </style>

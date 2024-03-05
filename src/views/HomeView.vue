@@ -376,6 +376,9 @@
                   >GitHub</a
                 >
                 verfügbar.
+                <button @click="openPopout" class="clean-button">
+                  <icon icon="pepicons:qr-code"/>
+                </button>
               </p>
             </Dropdown>
           </div>
@@ -422,6 +425,7 @@
       Copyright: {{ currentPlanet.copyright }}
     </div>
   </Transition>
+  <QRCode :change="showPopup" :src="mainQR"/>
 </template>
 
 <script>
@@ -443,11 +447,13 @@ import themeSwitch from "@/components/themeSwitch";
 // import planets from "@/assets/data/planets.json"
 import annotations from "@/assets/data/annotations.json";
 import axios from "axios";
+import QRCode from "@/components/QRCode.vue";
 
 import("@google/model-viewer");
 export default {
   name: "HomeView",
   components: {
+    QRCode,
     Message: message,
     Dropdown: dropdown,
     ThemeSwitch: themeSwitch,
@@ -499,6 +505,7 @@ export default {
       hotspots: [],
       messages: [],
       textureInputForm: null,
+      showPopup: "0",
 
       SOLAR_SYSTEM: SOLAR_SYSTEM,
     };
@@ -619,6 +626,13 @@ export default {
     this.totalPlanetCount = this.getTotalPlanetCount();
   },
   methods: {
+    openPopout() {
+      // a bit weird code because we need an update
+      const old = this.showPopup;
+      while (this.showPopup === old) {
+        this.showPopup = Math.random().toString();
+      }
+    },
     errorHandler(error) {
       console.error(error);
       let messageContent = "Ein Fehler ist aufgetreten.";
@@ -1435,6 +1449,24 @@ body.ctrlDown .hotspot > * {
   padding: 1px 3px;
   border-radius: 3px;
   color: var(--text-color);
+}
+
+.popup-content img {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+.clean-button {
+  background-color: #0f8fe1;
+  color: white;
+  border: none;
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-size: 1.1em;
 }
 </style>
 <style>
