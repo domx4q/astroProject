@@ -48,6 +48,8 @@ async function createWindow() {
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
       contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
     },
+    fullscreenable: true,
+    simpleFullscreen: true,
     icon: __dirname + "/img/icons/favicon-256x256.png",
   });
 
@@ -65,77 +67,97 @@ async function createWindow() {
   let extrasEnabled = false;
   function addMenus() {
     let template;
-    if (!extrasEnabled) {
-      template = [
+    template = [
+      {
+        label: "Anwendungen",
+        submenu: [
+          {
+            label: "Planeten (3D)",
+            accelerator: "CmdOrCtrl + 1",
+            click: () => {
+              win.loadURL("app://./index.html");
+            },
+          },
+          {
+            label: "Drehbare Sternkarte",
+            accelerator: "CmdOrCtrl + 2",
+            click: () => {
+              win.loadURL("app://./index.html/#/extra/stars");
+            },
+          },
+          {
+            label: "Sonnenkuppel (3D)",
+            accelerator: "CmdOrCtrl + 3",
+            click: () => {
+              win.loadURL("app://./index.html/#/extra/sun");
+            },
+          }
+        ],
+      },
+      {
+        label: "Ansicht",
+        submenu: [
+          { role: "reload" },
+          { role: "forceReload" },
+          // { role: 'toggleDevTools' },
+          { type: "separator" },
+          { role: "resetZoom" },
+          { role: "zoomIn" },
+          { role: "zoomOut" },
+          { type: "separator" },
+          { role: "togglefullscreen" },
+            // extended fullscreen (also hide menu)
+          { label: "Vollständiges Vollbild", accelerator: "CmdOrCtrl + F11", click: () => {
+            win.setFullScreen(!win.isFullScreen());
+            win.setMenuBarVisibility(!win.isFullScreen());
+            }}
+        ]
+      },
+    ];
+    if (extrasEnabled) {
+      // concat this object to template[0]
+      /*
+        // Easter Category
+        { type: "separator" },
         {
-          label: "Anwendungen",
+          label: "Easter Eggs",
           submenu: [
-            {
-              label: "Planeten (3D)",
-              click: () => {
-                win.loadURL("app://./index.html");
-              },
-            },
-            {
-              label: "Drehbare Sternkarte",
-              click: () => {
-                win.loadURL("app://./index.html/#/extra/stars");
-              },
-            },
-            {
-              label: "Sonnenkuppel (3D)",
-              click: () => {
-                win.loadURL("app://./index.html/#/extra/sun");
-              },
-            }
+            {label: "Uhr", click: () => win.loadURL("app://./index.html#/easter/clock")},
+            {label: "Snake", click: () => win.loadURL("app://./index.html#/easter/snake")},
+            {label: "Pacman", click: () => win.loadURL("app://./index.html#/easter/pacman")},
+            {label: "Farbsimulation", click: () => win.loadURL("app://./index.html#/easter/colors")},
+            {label: "Großer Text", click: () => win.loadURL("app://./index.html#/easter/text")},
           ],
         },
-      ];
-
-    } else {
-      template = [ // ChatGPT generated code
+        // Extra Category
         {
-          label: "Anwendungen",
+          label: "Zusätzliche Funktionen",
           submenu: [
-            {
-              label: "Planeten (3D)",
-              click: () => {
-                win.loadURL("app://./index.html");
-              },
-            },
-            {
-              label: "Drehbare Sternkarte",
-              click: () => {
-                win.loadURL("app://./index.html/#/extra/stars");
-              },
-            },
-            {
-              label: "Sonnenkuppel (3D)",
-              click: () => {
-                win.loadURL("app://./index.html/#/extra/sun");
-              },
-            },
-            // Easter Category
-            {
-              label: "Easter Eggs",
-              submenu: [
-                {label: "Uhr", click: () => win.loadURL("app://./index.html#/easter/clock")},
-                {label: "Snake", click: () => win.loadURL("app://./index.html#/easter/snake")},
-                {label: "Pacman", click: () => win.loadURL("app://./index.html#/easter/pacman")},
-                {label: "Farbsimulation", click: () => win.loadURL("app://./index.html#/easter/colors")},
-                {label: "Großer Text", click: () => win.loadURL("app://./index.html#/easter/text")},
-              ],
-            },
-            // Extra Category
-            {
-              label: "Zusätzliche Funktionen",
-              submenu: [
-                {label: "Beispiel", click: () => win.loadURL("app://./index.html#/extra/example")},
-              ],
-            },
+            {label: "Beispiel", click: () => win.loadURL("app://./index.html#/extra/example")},
           ],
-        },
-      ];
+        }
+       */
+      template[0].submenu.push(
+          // Easter Category
+          {type: "separator"},
+          {
+            label: "Easter Eggs",
+            submenu: [
+              {label: "Uhr", click: () => win.loadURL("app://./index.html#/easter/clock")},
+              {label: "Snake", click: () => win.loadURL("app://./index.html#/easter/snake")},
+              {label: "Pacman", click: () => win.loadURL("app://./index.html#/easter/pacman")},
+              {label: "Farbsimulation", click: () => win.loadURL("app://./index.html#/easter/colors")},
+              {label: "Großer Text", click: () => win.loadURL("app://./index.html#/easter/text")},
+            ],
+          },
+          // Extra Category
+          {
+            label: "Zusätzliche Funktionen",
+            submenu: [
+              {label: "Beispiel", click: () => win.loadURL("app://./index.html#/extra/example")},
+            ],
+          }
+      );
     }
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
