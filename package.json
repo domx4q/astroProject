@@ -34,7 +34,7 @@
     "axios": "^1.6.7",
     "clientjs": "^0.2.1",
     "core-js": "^3.36.0",
-    "electron-updater": "^6.1.8",
+    "electron-updater": "^6.1.9",
     "register-service-worker": "^1.7.2",
     "unity-webgl": "latest",
     "vue": "^3.4.18",
