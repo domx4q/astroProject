@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Login to Docker
-        run: docker login -u domx4q -p dckr_pat_XRoQfUTJZlptcmQ3hEOzTBp59Sg
+        run: docker login -u domx4q -p ${{ secrets.DOCKER_TOKEN }}
       - name: Build the Docker image
         run: docker build . --file Dockerfile --tag domx4q/astro:autoGit
       - name: Push the image
