@@ -8,7 +8,7 @@
 import UnityRenderer from "@/components/unityRenderer.vue";
 
 export default {
-  name: 'FullscreenUnityRenderer',
+  name: "FullscreenUnityRenderer",
   components: {
     UnityRenderer
   },
