@@ -115,28 +115,6 @@ async function createWindow() {
       },
     ];
     if (extrasEnabled) {
-      // concat this object to template[0]
-      /*
-        // Easter Category
-        { type: "separator" },
-        {
-          label: "Easter Eggs",
-          submenu: [
-            {label: "Uhr", click: () => win.loadURL("app://./index.html#/easter/clock")},
-            {label: "Snake", click: () => win.loadURL("app://./index.html#/easter/snake")},
-            {label: "Pacman", click: () => win.loadURL("app://./index.html#/easter/pacman")},
-            {label: "Farbsimulation", click: () => win.loadURL("app://./index.html#/easter/colors")},
-            {label: "Großer Text", click: () => win.loadURL("app://./index.html#/easter/text")},
-          ],
-        },
-        // Extra Category
-        {
-          label: "Zusätzliche Funktionen",
-          submenu: [
-            {label: "Beispiel", click: () => win.loadURL("app://./index.html#/extra/example")},
-          ],
-        }
-       */
       template[0].submenu.push(
           // Easter Category
           {type: "separator"},
