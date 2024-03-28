@@ -26,7 +26,7 @@
     "@formkit/addons": "^1.6.0",
     "@formkit/auto-animate": "^1.0.0-pre-alpha.3",
     "@formkit/i18n": "^1.5.3",
-    "@formkit/inputs": "^1.5.9",
+    "@formkit/inputs": "^1.6.1",
     "@formkit/pro": "^0.122.11",
     "@formkit/vue": "^1.6.0",
     "@google/model-viewer": "3.4.0",
