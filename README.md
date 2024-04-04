@@ -1,3 +1,23 @@
+<style>
+  .custom .fixed-width {
+    width: 33.3%; /* Distribute the width evenly for three columns */
+  }
+  .custom img {
+    max-width: 100%;
+    height: auto;
+    display: block; /* This will remove any extra space at the bottom of the image */
+  }
+  .custom table {
+    width: 100%;
+    table-layout: fixed; /* This prevents the table from expanding beyond the specified width */
+  }
+  .custom th,
+  .custom td {
+    text-align: center;
+  }
+</style>
+
+
 [![Codespaces Prebuilds](https://github.com/domx4q/astroProject/actions/workflows/codespaces/create_codespaces_prebuilds/badge.svg)](https://github.com/domx4q/astroProject/actions/workflows/codespaces/create_codespaces_prebuilds)
 [![Docker Image CI](https://github.com/domx4q/astroProject/actions/workflows/docker-image.yml/badge.svg)](https://github.com/domx4q/astroProject/actions/workflows/docker-image.yml)
 
@@ -7,9 +27,13 @@
 
 # Allgemein
 
-Die angefertigte Projektarbeit ist [hier](Astronomie%20Projektarbeit.pdf) direkt verfügbar.
-Sie kann auch vom [CFG Schülerlabor Astronomie](https://www.schuelerlabor-astronomie.de/) abgerufen werden.
-Dort stehen noch weitere Informationen zu dieser Projektarbeit zur Verfügung.
+Die angefertigte Projektarbeit im Rahmen des Astronomie-Projektkurses kann [hier](Astronomie%20Projektarbeit.pdf)
+direkt eingesehen werden. Sie kann auch
+vom <nobr>[CFG Schülerlabor Astronomie](https://www.schuelerlabor-astronomie.de/)</nobr>
+abgerufen werden. Dort stehen noch weitere Informationen über die Projektarbeit zur Verfügung.
+
+Die <nobr>[Besondere Lernleistung](Besondere%20Lernleistung.pdf)</nobr> ist ebenfalls in dieser GitHub Repository zu
+finden.
 
 ## Hilfreiche <u>Links</u>
 
@@ -19,48 +43,51 @@ Dort stehen noch weitere Informationen zu dieser Projektarbeit zur Verfügung.
 | https://astro-project-pi.vercel.app/   | Zugang zur App [(Vercel)](https://vercel.com/)             |
 | https://domx4q.github.io/astroProject/ | Zugang zur App [(GitHub Pages)](https://pages.github.com/) |
 
-<sup>1</sup> Da ich für diesen Server zahlen muss, werde ich diesen
-eventuell kündigen, oder für andere Projekte nutzen. In diesem Fall wird
-der Link nicht mehr funktionieren. Ich werde versuchen, falls das
-geschieht, dass hier zu vermerken.
+<sup>1</sup> Da ich für diesen Server zahlen muss, werde ich diesen eventuell kündigen, oder für andere Projekte nutzen.
+In diesem Fall wird der Link nicht mehr funktionieren. Ich werde versuchen, falls es dazu kommt, diese Änderung hier zu
+vermerken.
 
 ## QR-Codes
 
-Für Präsentationen oder ähnliches können die folgenden QR-Codes
-verwendet werden.
-
-|                                                          App                                                          |                                                          Sternenscheibe                                                           |
-|:---------------------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------------------------------:|
-| ![QR-Code zur App](https://raw.githubusercontent.com/domx4q/astroProject/master/.github/images/qrcode_astro_main.png) | ![QR-Code zur Sternenscheibe](https://raw.githubusercontent.com/domx4q/astroProject/master/.github/images/qrcode_astro_stars.png) |
+Für Präsentationen oder ähnliches können die folgenden QR-Codes verwendet werden.
+<table class="custom">
+  <tr>
+    <th class="fixed-width">App</th>
+    <th class="fixed-width">Sternenscheibe</th>
+    <th class="fixed-width">Sonnenkuppel</th>
+  </tr>
+  <tr>
+    <td><img src=".github/images/qrcode_astro_main.png" alt="QR-Code zur App"></td>
+    <td><img src=".github/images/qrcode_astro_stars.png" alt="QR-Code zur Sternenscheibe"></td>
+    <td><img src=".github/images/qrcode_astro_sun.png" alt="QR-Code zur Sonnenkuppel"></td>
+  </tr>
+</table>
 
 # Installation
 
 ## Normale Installation
 
-Für die normale Installation wird ein Docker Container benötigt.
-Dieser kann mit folgendem Befehl erstellt werden:
+Für die normale Installation wird ein Docker Container benötigt. Dieser kann mit folgendem Befehl erstellt werden:
 
 ```
 docker run -p 443:3000 -d -it -e SELFSIGNED=true --restart always domx4q/astro:autoGit
 ```
 
-Wenn ein vorhandenes Zertifikat vorliegt, dann kann der Container
-mit dem folgenden Befehl mit dem Zertifikat gestartet werden:
+Wenn ein vorhandenes Zertifikat vorliegt, dann kann der Container mit dem folgenden Befehl mit dem Zertifikat gestartet
+werden:
 
 ```
 docker run -p 443:3000 -d -it -v /path/to/certificates/cert.crt:/opt/certs/cert.crt:ro -v /path/to/certificates/privatekey.key:/opt/certs/cert.key:ro --restart always domx4q/astro:autoGit
 ```
 
-Dabei muss `/path/to/certificates/cert.crt` durch den Pfad zur
-Zertifikatsdatei und `/path/to/certificates/privatekey.key` durch den
-Pfad zur privaten Schlüsseldatei ersetzt werden.
+Dabei muss `/path/to/certificates/cert.crt` durch den Pfad zur Zertifikatsdatei
+und `/path/to/certificates/privatekey.key` durch den Pfad zur privaten Schlüsseldatei ersetzt werden.
 ***
 
 ## Eigene Weiterentwicklung
 
-Wenn sich die Datei `package.json` geändert hat oder auch bei der
-Ersteinrichtung, ist es nötig den folgenden Befehl auszuführen, da die
-neuen Abhängigkeiten installiert werden müssen.
+Wenn sich die Datei `package.json` geändert hat und auch bei der Ersteinrichtung, ist es nötig den folgenden Befehl
+auszuführen, da die neuen Abhängigkeiten installiert werden müssen.
 
 ```
 npm install
@@ -68,10 +95,9 @@ npm install
 
 ### Live-Server
 
-Um die getätigten Änderungen live zu sehen, kann der folgende Befehl
-verwendet werden. Dieser Server muss nach einer Änderung nicht neu
-gestartet werden, da dieser die Änderungen automatisch erkennt und
-basierend auf diesen, unterschiedliche Teile des Servers neu lädt.
+Um die getätigten Änderungen live zu sehen, kann der folgende Befehl verwendet werden. Dieser Server muss nach einer
+Änderung nicht neu gestartet werden, da dieser die Änderungen automatisch erkennt und basierend auf diesen,
+unterschiedliche Teile des Servers neu lädt.
 
 ```
 npm run serve
@@ -79,10 +105,8 @@ npm run serve
 
 ### Erstellen der App (Build)
 
-Um die App zu erstellen, kann der folgende Befehl verwendet werden.
-Dieser erstellt die App in das Verzeichnis `dist/`. Dabei wird das
-Resultat optimiert und minimiert, um die beste Performance in der
-Produktionsumgebung zu erreichen.
+Um die App zu erstellen, kann der folgende Befehl verwendet werden. Dieser erstellt die App in das Verzeichnis `dist/`.
+Dabei wird das Resultat optimiert und minimiert, um die beste Performance in der Produktionsumgebung zu erreichen.
 
 ```
 npm run build
@@ -90,9 +114,8 @@ npm run build
 
 ### Formatierung des Codes
 
-Um den Code zu formatieren, kann der folgende Befehl
-verwendet werden. Dabei werden vordefinierte Regeln
-aus der Datei `.eslintrc.js` angewendet.
+Um den Code zu formatieren, kann der folgende Befehl verwendet werden. Dabei werden vordefinierte Regeln aus der Datei
+`.eslintrc.js` angewendet.
 
 ```
 npm run lint
