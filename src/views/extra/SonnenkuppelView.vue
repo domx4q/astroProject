@@ -6,7 +6,7 @@
 import FullscreenUnityRenderer from "@/fullscreenUnityRenderer.vue";
 
 export default {
-  name: 'SonnenkuppelView',
+  name: "SonnenkuppelView",
   components: {
     FullscreenUnityRenderer
   },

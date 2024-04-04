@@ -12,7 +12,6 @@
     "serve": "vue-cli-service serve",
     "docker:serve": "npm run build && serve -s dist -p 3000",
     "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
     "format": "prettier --write src",
     "electron:build": "vue-cli-service electron:build",
