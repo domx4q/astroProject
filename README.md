@@ -1,23 +1,3 @@
-<style>
-  .custom .fixed-width {
-    width: 33.3%; /* Distribute the width evenly for three columns */
-  }
-  .custom img {
-    max-width: 100%;
-    height: auto;
-    display: block; /* This will remove any extra space at the bottom of the image */
-  }
-  .custom table {
-    width: 100%;
-    table-layout: fixed; /* This prevents the table from expanding beyond the specified width */
-  }
-  .custom th,
-  .custom td {
-    text-align: center;
-  }
-</style>
-
-
 [![Codespaces Prebuilds](https://github.com/domx4q/astroProject/actions/workflows/codespaces/create_codespaces_prebuilds/badge.svg)](https://github.com/domx4q/astroProject/actions/workflows/codespaces/create_codespaces_prebuilds)
 [![Docker Image CI](https://github.com/domx4q/astroProject/actions/workflows/docker-image.yml/badge.svg)](https://github.com/domx4q/astroProject/actions/workflows/docker-image.yml)
 
@@ -50,17 +30,22 @@ vermerken.
 ## QR-Codes
 
 Für Präsentationen oder ähnliches können die folgenden QR-Codes verwendet werden.
-<table class="custom">
-  <tr>
-    <th class="fixed-width">App</th>
-    <th class="fixed-width">Sternenscheibe</th>
-    <th class="fixed-width">Sonnenkuppel</th>
-  </tr>
-  <tr>
-    <td><img src=".github/images/qrcode_astro_main.png" alt="QR-Code zur App"></td>
-    <td><img src=".github/images/qrcode_astro_stars.png" alt="QR-Code zur Sternenscheibe"></td>
-    <td><img src=".github/images/qrcode_astro_sun.png" alt="QR-Code zur Sonnenkuppel"></td>
-  </tr>
+
+<table width="100%">
+  <thead>
+    <tr>
+      <th width="33.3%">App</th>
+      <th width="33.3%">Sternenscheibe</th>
+      <th width="33.3%">Sonnenkuppel</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td width="33.3%"><img src=".github/images/qrcode_astro_main.png" alt="QR-Code zur App"/></td>
+      <td width="33.3%"><img src=".github/images/qrcode_astro_stars.png" alt="QR-Code zur Sternenscheibe"/></td>
+      <td width="33.3%"><img src=".github/images/qrcode_astro_sun.png" alt="QR-Code zur Sonnenkuppel"/></td>
+    </tr>
+  </tbody>
 </table>
 
 # Installation
