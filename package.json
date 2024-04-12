@@ -1,8 +1,8 @@
 {
   "name": "astro",
-  "version": "1.7.7",
+  "version": "2.0.0",
   "private": false,
-  "description": "This repo contains the source code for the Astro website. It's a App to visualize planet maps and get information about them.",
+  "description": "Diese Repository enthält den Quellcode für meine Besondere Lernleistung im Schuljahr 2023/2024. Die verschiedenen Apps sind: Planetenapp, Drehbare Sternenkarte und die Digitale Sonnenkuppel.",
   "author": {
     "email": "ev3dom@gmx.de",
     "name": "Dominik Fuchs",
