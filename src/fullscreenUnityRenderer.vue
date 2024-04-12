@@ -10,7 +10,7 @@ import UnityRenderer from "@/components/unityRenderer.vue";
 export default {
   name: "FullscreenUnityRenderer",
   components: {
-    UnityRenderer
+    UnityRenderer,
   },
   props: {
     module: {
@@ -22,7 +22,7 @@ export default {
       default: false,
     },
   },
-}
+};
 </script>
 
 <style scoped>

@@ -377,7 +377,7 @@
                 >
                 verfügbar.
                 <button @click="openPopout" class="clean-button">
-                  <icon icon="pepicons:qr-code"/>
+                  <icon icon="pepicons:qr-code" />
                 </button>
               </p>
             </Dropdown>
@@ -425,7 +425,7 @@
       Copyright: {{ currentPlanet.copyright }}
     </div>
   </Transition>
-  <QRCode :change="showPopup" :src="mainQR"/>
+  <QRCode :change="showPopup" :src="mainQR" />
 </template>
 
 <script>

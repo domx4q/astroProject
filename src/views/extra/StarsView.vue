@@ -155,9 +155,10 @@
               rel="noopener noreferrer"
               target="_blank"
               >GitHub</a
-            > <button @click="openPopout" class="clean-button">
-            <icon icon="pepicons:qr-code"/>
-          </button>
+            >
+            <button @click="openPopout" class="clean-button">
+              <icon icon="pepicons:qr-code" />
+            </button>
           </Details>
           <Details
             :default_open="detailsConfig.Grundlagen"
@@ -300,10 +301,7 @@
         src="@/assets/extra/images/deklination.png"
       />
     </div>
-    <div id="circumpolar"
-      ref="circumpolar"
-      v-if="showCircumPolar"
-    >
+    <div id="circumpolar" ref="circumpolar" v-if="showCircumPolar">
       <img
         ref="circumpolar"
         alt="Zirkumpolar kreis"
@@ -311,7 +309,7 @@
         v-if="showCircumPolar"
       />
     </div>
-    <QRCode :change="showPopup" :src="starsQR"/>
+    <QRCode :change="showPopup" :src="starsQR" />
   </div>
 </template>
 

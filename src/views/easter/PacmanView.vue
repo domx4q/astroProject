@@ -8,7 +8,7 @@ import FullscreenUnityRenderer from "@/fullscreenUnityRenderer.vue";
 export default {
   name: "PacmanView",
   components: {
-    FullscreenUnityRenderer
+    FullscreenUnityRenderer,
   },
-}
+};
 </script>

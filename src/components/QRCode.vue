@@ -2,7 +2,7 @@
   <div v-if="showPopup" class="popup" @click="showPopup = false">
     <div class="popup-content">
       <h2>QR-Code</h2>
-      <img :src="src" alt="Der QR-Code konnte nicht geladen werden.">
+      <img :src="src" alt="Der QR-Code konnte nicht geladen werden." />
     </div>
   </div>
 </template>
@@ -12,28 +12,27 @@ export default {
   props: {
     change: {
       type: String,
-      default: "0"
+      default: "0",
     },
     src: {
       type: String,
-      default: "@/assets/qr-codes/main.png"
-    }
+      default: "@/assets/qr-codes/main.png",
+    },
   },
   data() {
     return {
       showPopup: false,
-      image: null
+      image: null,
     };
   },
   watch: {
     change() {
       this.showPopup = true;
-    }
-  }
-}
+    },
+  },
+};
 </script>
 <style scoped>
-
 #planetInfo p {
   margin: 0;
   padding: 0;
@@ -44,8 +43,9 @@ export default {
   --clickColor: #bb1920;
 
   color: var(--normalColor);
-  transition: color 0.14s ease-in-out,
-  filter 0.14s ease-in-out;
+  transition:
+    color 0.14s ease-in-out,
+    filter 0.14s ease-in-out;
 }
 
 #planetInfo .description a:hover {
