@@ -39,7 +39,7 @@
     "vue": "^3.4.20",
     "vue-router": "^4.3.0",
     "vuex": "^4.0.0",
-    "webgl-fluid": "^0.3.7"
+    "webgl-fluid": "^0.3.8"
   },
   "devDependencies": {
     "@babel/core": "^7.24.4",
