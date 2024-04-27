@@ -1,4 +1,4 @@
-FROM node:16 as base
+FROM node:18 as base
 
 WORKDIR /opt
 
@@ -21,4 +21,4 @@ RUN git clone --single-branch "https://github.com/domx4q/astroProject.git" /opt/
 # COPY . /opt/astroProject
 
 EXPOSE 3000
-ENTRYPOINT ["./dockerEntrypoint.sh"]
+ENTRYPOINT ["/opt/astroProject/dockerEntrypoint.sh"]
