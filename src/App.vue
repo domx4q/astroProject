@@ -27,6 +27,7 @@
     <!--hide (grund: stört und fällt auf)-->
     <div id="previewBadge" class="badge" v-if="beta">Preview</div>
   </Transition>
+  <RouterNavigation />
 </template>
 <script>
 import update from "@/mixins/update";
@@ -34,9 +35,11 @@ import defaults from "@/mixins/defaults";
 import ImportantPrompt from "@/components/importantPrompt";
 
 import { ClientJS } from "clientjs";
+import RouterNavigation from "@/components/routerNavigation.vue";
 export default {
   name: "app",
   components: {
+    RouterNavigation,
     ImportantPrompt,
   },
   data() {
@@ -94,6 +97,15 @@ export default {
 };
 </script>
 <style>
+@font-face {
+  font-family: "Roboto";
+  src: url("~@/assets/fonts/Roboto/Roboto-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+
+}
+
+
 /*specific*/
 #previewBadge {
   font-size: calc(0.8em * 3);
@@ -160,35 +172,35 @@ html[data-theme="dark"] #app {
 
 @-webkit-keyframes backgroundAnimation {
   0% {
-    background-position: 0% 58%;
+    background-position: 0 58%;
   }
   50% {
     background-position: 100% 43%;
   }
   100% {
-    background-position: 0% 58%;
+    background-position: 0 58%;
   }
 }
 @-moz-keyframes backgroundAnimation {
   0% {
-    background-position: 0% 58%;
+    background-position: 0 58%;
   }
   50% {
     background-position: 100% 43%;
   }
   100% {
-    background-position: 0% 58%;
+    background-position: 0 58%;
   }
 }
 @keyframes backgroundAnimation {
   0% {
-    background-position: 0% 58%;
+    background-position: 0 58%;
   }
   50% {
     background-position: 100% 43%;
   }
   100% {
-    background-position: 0% 58%;
+    background-position: 0 58%;
   }
 }
 html[data-theme="dark"] option {
