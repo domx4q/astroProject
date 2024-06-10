@@ -34,7 +34,7 @@ onMounted(() => {
 });
 onBeforeUnmount(() => {
   if (unityComponent) {
-    unityComponent.destroy();
+    unityComponent.unload();
     unityComponent = null;
   }
 });
