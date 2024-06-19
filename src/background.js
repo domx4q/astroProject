@@ -153,7 +153,7 @@ async function createWindow() {
           submenu: [
             {
               label: "Übersicht",
-              click: () => win.loadURL("app://./index.html#/extra/overview"),
+              click: () => win.loadURL("app://./index.html#/overview"),
             },
             {
               label: "Beispiel",
