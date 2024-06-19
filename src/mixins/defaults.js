@@ -9,6 +9,7 @@ export default {
 
       mainQR: require("@/assets/qr-codes/main.png"),
       starsQR: require("@/assets/qr-codes/stars.png"),
+      sunQR: require("@/assets/qr-codes/sun.png"),
     };
   },
   mounted() {
@@ -27,6 +28,10 @@ export default {
     },
     isMobile() {
       return this.$store.state.client.isMobile;
+    },
+    embedded() {
+      const query = new URLSearchParams(window.location.search);
+      return query.get("embed") === "true";
     },
     isFirefox() {
       return this.$store.state.client.browser === "Firefox";

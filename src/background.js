@@ -152,6 +152,10 @@ async function createWindow() {
           label: "Zusätzliche Funktionen",
           submenu: [
             {
+              label: "Übersicht",
+              click: () => win.loadURL("app://./index.html#/extra/overview"),
+            },
+            {
               label: "Beispiel",
               click: () => win.loadURL("app://./index.html#/extra/example"),
             },
