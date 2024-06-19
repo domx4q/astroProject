@@ -10,7 +10,6 @@
               :ref="'i-'+ route.routerName"
               :src="route.path + '?no-nav&embed=true'"
               allow="fullscreen"
-              frameborder="0"
               sandbox="allow-scripts allow-same-origin"
           ></iframe>
         </div>
