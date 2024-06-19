@@ -1,6 +1,7 @@
 <template>
   <ThemeSwitch only-logic/>
   <div id="background">
+    <h1>App-Übersicht</h1>
     <div id="main">
       <div v-for="route in routes" :key="route.name" class="app-container">
         <h2>{{ route.name }}</h2>
@@ -78,6 +79,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 
   font-family: "Roboto", sans-serif;
 }
@@ -86,11 +88,11 @@ export default {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  width: 100%;
+  width: calc(100% - 20px);
   height: 100%;
   justify-content: center;
   align-items: center;
-  margin: 10px
+  margin: 10px;
 }
 
 .app-container {
@@ -101,6 +103,13 @@ export default {
 h2 {
   margin-bottom: 10px;
   margin-left: 10px;
+}
+
+h1 {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .app-wrapper {
