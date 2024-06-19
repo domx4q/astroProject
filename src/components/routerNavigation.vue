@@ -17,15 +17,16 @@ export default {
   data() {
     return {
       routes: [
-        { name: "Planetenapp", path: "/" },
-        { name: "Sternenkarte", path: "/stars" },
-        { name: "Sonnenkuppel", path: "/sun" },
+        { name: "Planetenapp", path: "/", routerName: "home" },
+        { name: "Sternenkarte", path: "/stars", routerName: "stars" },
+        { name: "Sonnenkuppel", path: "/sun", routerName: "sun" },
       ],
     };
   },
   computed: {
     show() {
-      return this.$route.name !== "not-found";
+      const query = new URLSearchParams(window.location.search);
+      return !["not-found", "overview"].includes(this.$route.name) && !query.has("no-nav");
     },
   },
 }

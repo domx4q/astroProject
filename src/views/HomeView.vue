@@ -284,7 +284,7 @@
         </div>
       </Transition>
       <Transition
-        v-if="!isMobile"
+        v-if="!isMobile && (!embedded || screenSize.width > 850)"
         enter-active-class="animate__animated animate__fadeInRightBig"
         leave-active-class="animate__animated animate__fadeOutRightBig"
       >
@@ -422,7 +422,7 @@
     leave-active-class="animate__animated animate__fadeOutRightBig"
   >
     <div id="textureCopyright" class="badge">
-      Copyright: {{ currentPlanet.copyright }}
+      Textur: {{ currentPlanet.copyright }}
     </div>
   </Transition>
   <QRCode :change="showPopup" :src="mainQR" />
