@@ -36,10 +36,6 @@ export default {
     isFirefox() {
       return this.$store.state.client.browser === "Firefox";
     },
-    isFullscreen() {
-      const uuid = this.__resizeUUID; // check after size has changed
-      return document.fullscreenElement !== null;
-    },
     theme() {
       return this.$store.state.theme;
     },

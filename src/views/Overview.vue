@@ -60,7 +60,7 @@ export default {
       }
     },
     fullscreen(name) {
-      const iframe = this.$refs["i-" + name][0];
+      const iframe = this.$refs[`i-${name}`][0];
       iframe.requestFullscreen();
     },
   }
