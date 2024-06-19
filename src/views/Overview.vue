@@ -14,10 +14,13 @@
           ></iframe>
         </div>
         <div class="action-bar">
-          <button class="clean-button qr-button" @click="openPopout(route.routerName)">
+          <router-link :to="route.path" title="Zur Seite" class="router-link clean-button">
+            <icon icon="bx:link"/>
+          </router-link>
+          <button class="clean-button qr-button" @click="openPopout(route.routerName)" title="QR-Code">
             <icon icon="pepicons:qr-code"/>
           </button>
-          <button class="clean-button" @click="fullscreen(route.routerName)">
+          <button class="clean-button" @click="fullscreen(route.routerName)" title="Vollbild">
             <icon icon="bx:fullscreen"/>
           </button>
           <QRCode :change="popoutCounts[route.routerName]" :src="qrMappping[route.routerName]"/>

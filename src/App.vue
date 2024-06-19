@@ -241,4 +241,21 @@ hr {
 ::-webkit-scrollbar-button {
   display: none;
 }
+
+.router-link {
+  text-decoration: none;
+  color: hsl(216, 78%, 55%);
+}
+.router-link:hover {
+  color: hsl(216, 78%, 45%);
+}
+.router-link:active {
+  color: hsl(216, 78%, 35%);
+}
+.router-link:focus {
+  color: hsl(216, 78%, 35%);
+}
+.router-link:visited {
+  color: hsl(216, 78%, 55%);
+}
 </style>
