@@ -61,6 +61,11 @@ const routes = [
           raw_text: route.query.text || route.query.t,
         }),
       },
+      {
+        path: "twister",
+        name: "twister",
+        component: () => import("../views/easter/TwisterView.vue"),
+      }
     ],
   },
   {
