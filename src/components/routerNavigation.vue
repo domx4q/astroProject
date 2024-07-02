@@ -26,7 +26,11 @@ export default {
   computed: {
     show() {
       const query = new URLSearchParams(window.location.search);
-      return !["not-found", "overview"].includes(this.$route.name) && !query.has("no-nav");
+      let easter = false;
+      if (this.$route.name) { // this is necessary to avoid errors when the component is not mounted
+        easter = this.$route.fullPath.includes("easter");
+      }
+      return !["not-found", "overview"].includes(this.$route.name) && !query.has("no-nav") && !easter;
     },
   },
 }
