@@ -1,7 +1,7 @@
 <template>
-  <ThemeSwitch only-logic/>
+  <ThemeSwitch only-logic override-theme="dark"/>
   <div id="container" :class="{mobile:isMobile, computer:!isMobile}">
-    <div id="controls">
+    <div id="controls" :class="{boulder: !climbing}">
       <FormKit
         type="taglist"
         name="colors"
@@ -14,10 +14,13 @@
         :close-on-select="false"
         />
       <FormKit
-        type="checkbox"
+        type="toggle"
         name="climbing"
-        :label="climbing ? 'Klettern' : 'Bouldern'"
+        label="Modus"
+        on-value-label="Klettern"
+        off-value-label="Bouldern"
         v-model="climbing"
+        id="mode"
         />
 
       <FormKit
@@ -70,8 +73,8 @@ export default {
         {name: "Stein-Wechsel", probability: 1},
         {name: "Farb-Wechsel", probability: 1},
 
-        {name: "Höher", probability: 1, type: "direction"},
-        {name: "Tiefer", probability: 1, type: "direction"},
+        {name: "Oben", probability: 1, type: "direction"},
+        {name: "Unten", probability: 1, type: "direction"},
         {name: "Rechts", probability: 1, type: "direction"},
         {name: "Links", probability: 1, type: "direction"},
 
@@ -200,6 +203,10 @@ export default {
   text-align: center;
 }
 
+.normalText .formkit-label {
+  color: white;
+}
+
 #body {
   color: red;
 }
@@ -208,5 +215,12 @@ export default {
 }
 #prefix {
   color: white;
+}
+</style>
+
+<style>
+.boulder [data-id="mode"] .formkit-value-label {
+  color: hsl(0, 0%, 82%);
+
 }
 </style>
