@@ -35,7 +35,7 @@
     "electron-updater": "^6.2.1",
     "register-service-worker": "^1.7.2",
     "unity-webgl": "latest",
-    "vue": "^3.4.30",
+    "vue": "^3.4.34",
     "vue-router": "^4.4.0",
     "vuex": "^4.0.0",
     "webgl-fluid": "^0.3.8"
