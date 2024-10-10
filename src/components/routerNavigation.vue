@@ -26,7 +26,7 @@ export default {
   computed: {
     show() {
       const query = new URLSearchParams(window.location.search);
-      return !["not-found", "overview"].includes(this.$route.name) && !query.has("no-nav");
+      return !["not-found", "overview", "text"].includes(this.$route.name) && !query.has("no-nav");
     },
   },
 }
