@@ -26,7 +26,7 @@
     "@formkit/i18n": "^1.6.7",
     "@formkit/inputs": "^1.6.1",
     "@formkit/pro": "^0.127.5",
-    "@formkit/vue": "^1.6.5",
+    "@formkit/vue": "^1.6.7",
     "@google/model-viewer": "3.5.0",
     "animate.css": "^4.1.1",
     "axios": "^1.7.4",
