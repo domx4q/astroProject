@@ -58,7 +58,7 @@
     "electron": "^32.2.0",
     "electron-devtools-installer": "^3.2.0",
     "eslint": "^8.57.0",
-    "eslint-plugin-vue": "^9.27.0",
+    "eslint-plugin-vue": "^9.29.0",
     "file-loader": "^6.2.0",
     "husky": "^9.1.6",
     "jest": "^27.5.1",
